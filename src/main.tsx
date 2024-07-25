@@ -5,6 +5,8 @@ import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <div className="font-sora w-full h-full">
+      <App />
+    </div>
   </React.StrictMode>,
 );
