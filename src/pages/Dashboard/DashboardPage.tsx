@@ -12,15 +12,15 @@ const DashboardPage = () => {
                 <div className="text-lg font-bold text-[#374151]">Sista aktiviteten</div>
                 <div className="flex-1 my-5 flex flex-col gap-2 overflow-y-scroll">
                     <LastActivityItem logoUrl="/logo/logo2.png" title="Noah rum" activity="Sista aktiviteten" createdAt="2024-03-25" />
-                    {/* <LastActivityItem logoUrl="/logo/logo2.png" title="Noah rum" activity="Sista aktiviteten" createdAt="2024-03-25" /> */}
-                    {/* <LastActivityItem logoUrl="/logo/logo2.png" title="Noah rum" activity="Sista aktiviteten" createdAt="2024-03-25" /> */}
+                    <LastActivityItem logoUrl="/logo/logo2.png" title="Noah rum" activity="Sista aktiviteten" createdAt="2024-03-25" />
+                    <LastActivityItem logoUrl="/logo/logo2.png" title="Noah rum" activity="Sista aktiviteten" createdAt="2024-03-25" />
                 </div>
                 <div>
                     <Button className="float-right py-2">Läs mer</Button>
                 </div>
             </div>
             <div className="col-span-9 rounded-xl bg-white p-3">
-                <img src="/Calendar.png" className="mx-auto "/>
+                {/* <img src="/Calendar.png" className="mx-auto "/> */}
             </div>
 
             <div className="col-span-4 row-span-2 rounded-xl bg-white p-5 flex flex-col">
