@@ -7,10 +7,11 @@ type RoomListItemProps = {
     logoUrl: string,
     activity: string,
     pending?: number,
+    [key: string]: any,
 }
-const RoomListItem = ({ title, pending, createdAt, activity, logoUrl }: RoomListItemProps) => {
+const RoomListItem = ({ title, pending, createdAt, activity, logoUrl, ...props }: RoomListItemProps) => {
     return (
-        <div className="flex gap-2">
+        <button className="flex gap-2 text-start" {...props}>
             <div className="rounded-xl overflow-hidden"><img src={logoUrl} className="w-[120px] h-[90px]"/></div>
 
             <div className="flex flex-col flex-1 py-2">
@@ -27,7 +28,7 @@ const RoomListItem = ({ title, pending, createdAt, activity, logoUrl }: RoomList
                     <button className="bg-[#E9E9F3] p-1 rounded"><img src="/Message.svg" /></button>
                 )}
             </div>
-        </div>
+        </button>
     )
 }
 

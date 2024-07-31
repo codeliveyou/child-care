@@ -2,13 +2,14 @@ import react from "react"
 import EventListItem from "./components/EventListItem";
 import EventItem from "../globalcomponents/EventItem";
 import Pagination from "../globalcomponents/Pagination";
+import CalendarItem from "./components/CalendarItem";
 
 const CalendarPage = () => {
     return <>
-        <div className="flex w-full h-full p-5 pt-0 gap-5">
+        <div className="flex w-full h-full p-5 pt-0 gap-5 text-[#374151]">
             <div className="flex-1 flex flex-col gap-3">
-                <div className="flex-1 bg-white rounded-xl">
-
+                <div className="flex-1 bg-white rounded-xl py-2 px-4">
+                    <CalendarItem />
                 </div>
                 <div className="flex-1 bg-white rounded-xl flex flex-col p-5 gap-3">
                     <div className="text-2xl font-semibold pb-5">Dagens evenemang</div>

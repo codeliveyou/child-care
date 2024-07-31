@@ -7,7 +7,7 @@ type InputProps = {
     value?: string;
 };
 const Input = ({className, placeholder, value} : InputProps) => {
-    return <input className={twMerge("border-[#1D19E542] border rounded-lg text-black text-lg py-3 px-5 outline-none", className)} placeholder={placeholder} value={value}/>
+    return <input className={twMerge("border-[#1D19E542] border rounded-lg text-lg py-3 px-5 outline-none text-[#374151]", className)} placeholder={placeholder} value={value}/>
 };
 
 export default Input;

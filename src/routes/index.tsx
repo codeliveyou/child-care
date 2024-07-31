@@ -11,6 +11,7 @@ import DashboardPage from "../pages/dashboard/DashboardPage";
 import FilesPage from "../pages/files/FilesPage";
 import MainLayout from "../pages/MainLayout";
 import RoomListPage from "../pages/room/RoomListPage";
+import RoomPage from "../pages/room/RoomPage";
 import CreateRoomMain from "../pages/room_create/CreateRoomMain";
 import RoomCreateOnboardingMain from "../pages/room_create/RoomCreateOnboardingMain";
 import SettingsPage from "../pages/settings/SetttingsPage";
@@ -64,7 +65,8 @@ const routes = [
             {path: "rooms", element: <RoomListPage />},
             {path: "calendar", element: <CalendarPage />},
             {path: "files", element: <FilesPage />},
-            {path: "settings", element: <SettingsPage />}
+            {path: "settings", element: <SettingsPage />},
+            {path: "room/:id", element: <RoomPage />}
         ]
     }
 ];
