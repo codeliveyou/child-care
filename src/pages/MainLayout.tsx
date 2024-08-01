@@ -34,7 +34,7 @@ const MainLayout  = () => {
                         </button>
 
                         <button onClick={() => navigate("/rooms")}
-                            style={{color: pathname === "/rooms" ? colors.blue : colors.gray }}><RoomSVG />
+                            style={{color: pathname.startsWith("/room") ? colors.blue : colors.gray }}><RoomSVG />
                         </button>
 
                         <button onClick={() => navigate("/calendar")}

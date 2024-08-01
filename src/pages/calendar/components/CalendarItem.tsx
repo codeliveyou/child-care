@@ -1,13 +1,16 @@
-import react from "react"
+import react, { useState } from "react"
 import Button from "../../globalcomponents/Button";
 import LeftSVG from "../../../assets/left.svg?react"
 import DateCell from "./DateCell";
+import AddCalendarEventDialog from "./AddCalendarEventDialog";
 
 const CalendarItem = () => {
+    const [isDialogShowed, setIsDialodShowed] = useState<boolean>(false);
     return <div className="flex flex-col gap-4">
+        <AddCalendarEventDialog isOpen={isDialogShowed} onClose={() => setIsDialodShowed(false)} />
         <div className="flex justify-between items-center">
             <div className="text-xl font-bold">Kalender</div>
-            <Button className="text-4xl p-0 px-2">+</Button>
+            <Button className="text-4xl p-0 px-2" onClick={() => setIsDialodShowed(true)}>+</Button>
         </div>
         <div>
             <div className="flex gap-2">

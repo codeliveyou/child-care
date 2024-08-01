@@ -13,7 +13,7 @@ const DateCell: React.FC<DateCellProps> = ({ value, eventNum = 0, status = "defa
 
     return (
         <div
-            className={`aspect-square flex items-center justify-center relative m-2 ${isSelected ? "rounded-full" : ""}`}
+            className={`aspect-square flex items-center justify-center relative h-10 w-10 m-auto ${isSelected ? "rounded-full" : ""}`}
             style={isSelected ? { backgroundColor: colors.blue } : {}}
         >
             <div className={`text-center ${isOutOfMonth ? "text-[#B6C2E1]" : ""} ${isSelected ? "text-white" : ""}`}>
