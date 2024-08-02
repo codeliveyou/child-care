@@ -8,18 +8,19 @@ import { useNavigate } from "react-router-dom";
 const RoomCreateOnboarding2 = () => {
     const navigate = useNavigate();
     return <>
-        <div className="flex w-full h-full">
+        <div className="w-full h-full flex items-center justify-center bg-[E9E9F3]">
+        <div className="w-[60%] h-[60%] rounded-xl overflow-hidden flex border-[#B6C2E1] border">
             <div className="flex-1 flex flex-col relative p-10" style={{ backgroundColor: colors.blue }}>
                 <div><TradeMark /></div>
 
                 <div className="flex-1 flex justify-center items-center">
                     <div className="text-white">
-                        <div className="text-5xl font-extrabold">
+                        <div className="text-3xl font-extrabold">
                             <p>1 STEG</p>
                             <p>Avatar inställningar</p>
                         </div>
-                        <div className="text-[#9E9CEF] mt-10 text-2xl">
-                            <div className="py-6">I det här steget kommer du att kunna välja en av de medföljande avatarerna och rösterna.</div>
+                        <div className="text-[#9E9CEF] mt-10 text-lg">
+                            <div className="py-4">I det här steget kommer du att kunna välja en av de medföljande avatarerna och rösterna.</div>
                             <ul style={{ listStyleType: "disc" }} className="pl-6 flex flex-col gap-6">
                                 <li>Glöm inte att när du väljer en avatar ska utseendet och rösten matcha varandra.</li>
                                 <li>Om du hoppar över att välja en röst i det här steget kommer din avatar att tala med din ursprungliga röst.</li>
@@ -43,6 +44,7 @@ const RoomCreateOnboarding2 = () => {
                             onClick={() => navigate("/room/create/onboarding#1")}>Tillbaka</Button>
                 </div>
             </div>
+        </div>
         </div>
     </>
 };

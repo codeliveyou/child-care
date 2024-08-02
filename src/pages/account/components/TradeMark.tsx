@@ -7,7 +7,7 @@ type TradeMarkProps = {
     className?: string;
 }
 const TradeMark = ({className, color = colors.white}: TradeMarkProps) => {
-    return <div className={twMerge("text-3xl font-extrabold", className)} style={{color}}>ChildCare</div>
+    return <div className={twMerge("text-2xl font-extrabold", className)} style={{color}}>ChildCare</div>
 }
 
 export default TradeMark;

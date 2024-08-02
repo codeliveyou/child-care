@@ -8,13 +8,16 @@ import { useNavigate } from "react-router-dom";
 const SignUp = () => {
     const navigate = useNavigate();
     return <>
-    <div className="flex w-full h-full">
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-[#6BDCF5] to-[#B6C2E1] relative">
+        
+        <img src="/background.jpg" className="absolute w-full h-full opacity-5"></img>
+    <div className="flex w-[60%] h-[70%] rounded-xl overflow-hidden z-10">
 
         <div className="flex-[3] bg-white relative flex items-center justify-center">
 
             <div className="absolute top-10 left-10"><TradeMark color={colors.blue} /></div>
-            <div className="flex flex-col w-[60%] gap-4">
-                <div className="text-5xl font-extrabold" style={{color: colors.textBlack}}>Skapa ett konto</div>
+            <div className="flex flex-col w-[60%] gap-2">
+                <div className="text-3xl font-extrabold" style={{color: colors.textBlack}}>Skapa ett konto</div>
                 <Input placeholder="E-post" className="w-full" />
                 <Input placeholder="Vård / Företag" className="w-full" />
                 <Input placeholder="Användarnamn" className="w-full" />
@@ -49,6 +52,7 @@ const SignUp = () => {
         </div>
 
 
+    </div>
     </div>
 </>
 };

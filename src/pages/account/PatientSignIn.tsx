@@ -8,37 +8,41 @@ import { useNavigate } from "react-router-dom";
 const PatientSignIn = () => {
     const navigate = useNavigate();
     return <>
-    <div className="flex w-full h-full">
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-[#6BDCF5] to-[#B6C2E1] relative">
 
-        <div className="flex-[3] bg-white relative flex items-center justify-center">
+            <img src="/background.jpg" className="absolute w-full h-full opacity-5"></img>
+            <div className="flex w-[60%] h-[70%] rounded-xl overflow-hidden z-10">
 
-            <div className="absolute top-10 left-10"><TradeMark color={colors.blue} /></div>
-            <div className="flex flex-col w-[60%] gap-4">
-                <div className="text-5xl font-extrabold" style={{color: colors.textBlack}}>Patient rum</div>
-                <Input placeholder="Rum-ID eller Perssonnumer" className="w-full" />
-                <Button className="w-full mt-5" >Delta</Button>
-                <div><label className="text-gray-400 flex items-center"><input type="checkbox" className="mr-5 w-6 h-6"/>Fortsätt att vara inloggad</label></div>
-            </div>
+                <div className="flex-[3] bg-white relative flex items-center justify-center">
 
-
-        </div>
-
-        <div className="flex-[2] bg-[#211DEF] p-10 flex flex-col">
-
-            <div className="flex-1 flex justify-center items-center">
-                <div className="text-white">
-                    <div className="text-5xl font-extrabold">Patient rum</div>
-                    <div className="text-[#9E9CEF] mt-20 text-2xl">
-                    Denna sida är avsedd för patienter eller personer som får vård genom vår tjänst.
+                    <div className="absolute top-10 left-10"><TradeMark color={colors.blue} /></div>
+                    <div className="flex flex-col w-[60%] gap-4">
+                        <div className="text-5xl font-extrabold" style={{ color: colors.textBlack }}>Patient rum</div>
+                        <Input placeholder="Rum-ID eller Perssonnumer" className="w-full" />
+                        <Button className="w-full mt-5" >Delta</Button>
+                        <div><label className="text-gray-400 flex items-center"><input type="checkbox" className="mr-5 w-6 h-6" />Fortsätt att vara inloggad</label></div>
                     </div>
+
+
                 </div>
+
+                <div className="flex-[2] bg-[#211DEF] p-10 flex flex-col">
+
+                    <div className="flex-1 flex justify-center items-center">
+                        <div className="text-white">
+                            <div className="text-5xl font-extrabold">Patient rum</div>
+                            <div className="text-[#9E9CEF] mt-20 text-2xl">
+                                Denna sida är avsedd för patienter eller personer som får vård genom vår tjänst.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="self-end"><Button onClick={() => navigate('/signin')}>Logga In </Button></div>
+                </div>
+
+
             </div>
-
-            <div className="self-end"><Button onClick={() => navigate('/signin')}>Logga In </Button></div>
         </div>
-
-
-    </div>
     </>
 };
 

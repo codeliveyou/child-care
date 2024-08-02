@@ -8,7 +8,10 @@ import { useNavigate } from "react-router-dom";
 const SignIn = () => {
     const navigate = useNavigate();
     return <>
-        <div className="flex w-full h-full">
+    <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-[#6BDCF5] to-[#B6C2E1] relative">
+        
+<img src="/background.jpg" className="absolute w-full h-full opacity-5"></img>
+        <div className="flex w-[60%] h-[70%] z-10 rounded-xl overflow-hidden">
 
 
             <div className="flex-1 bg-[#211DEF] p-10 flex flex-col">
@@ -16,8 +19,8 @@ const SignIn = () => {
 
                 <div className="flex-1 flex justify-center items-center">
                     <div className="text-white">
-                        <div className="text-5xl font-extrabold">Välkommen!</div>
-                        <div className="text-[#9E9CEF] mt-20 text-2xl">
+                        <div className="text-3xl font-extrabold mt-10">Välkommen!</div>
+                        <div className="text-[#9E9CEF] mt-10 text-xl">
                             <div className="my-4">Denna sida innehåller tre sätt att logga in på.</div>
                             <ul style={{listStyleType: "disc"}} className="pl-6 flex flex-col gap-4">
                                 <li>Skapa ett användarkonto som kan skapa och bjuda in deltagare till rum</li>
@@ -34,8 +37,8 @@ const SignIn = () => {
 
             <div className="flex-1 bg-white relative flex items-center justify-center">
 
-                <div className="flex flex-col w-[60%] gap-4">
-                    <div className="text-5xl font-extrabold" style={{color: colors.textBlack}}>Logga In</div>
+                <div className="flex flex-col w-[60%] gap-3">
+                    <div className="text-3xl font-extrabold" style={{color: colors.textBlack}}>Logga In</div>
                     <Input placeholder="Användarnamn" className="w-full" />
                     <Input placeholder="Lösenord" className="w-full" />
                     <div className="text-[#211DEF] underline">Har du glömd lösenordet?</div>
@@ -52,6 +55,8 @@ const SignIn = () => {
                 </div>
 
             </div>
+        </div>
+        
         </div>
     </>
 };
