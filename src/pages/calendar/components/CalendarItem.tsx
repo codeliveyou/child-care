@@ -12,7 +12,7 @@ const CalendarItem = () => {
             <AddCalendarEventDialog isOpen={isDialogShowed} onClose={() => setIsDialogShowed(false)} />
             <div className="flex justify-between items-center">
                 <div className="text-xl font-bold">Kalender</div>
-                <Button className="text-4xl p-0 px-2" onClick={() => setIsDialogShowed(true)}>+</Button>
+                <Button className="text-4xl p-0 px-4" onClick={() => setIsDialogShowed(true)}>+</Button>
             </div>
             <div className="flex gap-2">
                 <div className="flex gap-1">

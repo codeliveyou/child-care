@@ -12,7 +12,7 @@ type RoomListItemProps = {
 const RoomListItem = ({ title, pending, createdAt, activity, logoUrl, ...props }: RoomListItemProps) => {
     return (
         <button className="flex gap-2 text-start" {...props}>
-            <div className="rounded-xl overflow-hidden"><img src={logoUrl} className="w-[120px] h-[90px]"/></div>
+            <div className="rounded-xl overflow-hidden"><img src={logoUrl} className="w-[120px] h-[90px] object-cover"/></div>
 
             <div className="flex flex-col flex-1 py-2">
                 <div className="text-xl font-bold">{title}</div>
@@ -20,7 +20,7 @@ const RoomListItem = ({ title, pending, createdAt, activity, logoUrl, ...props }
                 <div className="text-[#B6C2E1] text-sm">{activity} </div>
                 <div className="text-[#B6C2E1] text-sm">Skapades rapport {createdAt} </div>
             </div>
-            <div className="flex flex-col items-center justify-between py-3">
+            <div className="flex flex-col items-center justify-between py-3  h-full">
                 <div className="text-[#B6C2E1] text-sm">{createdAt}</div>
                 {pending ? (
                     <div className="rounded-full w-6 h-6 text-white text-center flex items-center justify-center" style={{backgroundColor: colors.blue}}><p>{pending}</p></div>

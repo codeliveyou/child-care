@@ -12,8 +12,13 @@ const DateCell: React.FC<DateCellProps> = ({ value, eventNum = 0, status = "defa
     const isOutOfMonth = status === "outofmonth";
 
     return (
-        <div className={`aspect-square flex items-center justify-center relative h-10 w-10 m-auto ${isSelected ? "rounded-full" : ""}`} style={isSelected ? { backgroundColor: colors.blue } : {}}>
-            <div className={`text-center ${isOutOfMonth ? "text-[#B6C2E1]" : ""} ${isSelected ? "text-white" : ""}`}>
+        <div
+            className={`aspect-square flex items-center justify-center relative h-16 w-16  m-auto `}
+        >
+            {
+                isSelected && <div className="rounded-full w-10 h-10 -z-0 absolute" style={{ backgroundColor: colors.blue }} />
+            }
+            <div className={`text-center z-10 ${isOutOfMonth ? "text-[#B6C2E1]" : ""} ${isSelected ? "text-white" : ""}`}>
                 {value}
             </div>
             {eventNum > 0 && (

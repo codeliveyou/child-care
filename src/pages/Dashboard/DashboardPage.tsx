@@ -21,10 +21,8 @@ const DashboardPage = () => {
                 {/* Section for displaying last activities */}
                 <div className="col-span-3 rounded-xl bg-white p-4 flex flex-col">
                     <div className="text-lg font-bold text-[#374151]">Sista aktiviteten</div>
-                    <div className="flex-1 my-5 flex flex-col gap-2 overflow-y-scroll">
+                    <div className="flex-1 my-5 flex flex-col gap-2 overflow-y-auto">
                         {/* Last activity items */}
-                        <LastActivityItem logoUrl="/logo/logo2.png" title="Noah rum" activity="Sista aktiviteten" createdAt="2024-03-25" />
-                        <LastActivityItem logoUrl="/logo/logo2.png" title="Noah rum" activity="Sista aktiviteten" createdAt="2024-03-25" />
                         <LastActivityItem logoUrl="/logo/logo2.png" title="Noah rum" activity="Sista aktiviteten" createdAt="2024-03-25" />
                     </div>
                     {/* Button for more details */}
@@ -41,7 +39,7 @@ const DashboardPage = () => {
                 {/* Room list section */}
                 <div className="col-span-4 row-span-2 rounded-xl bg-white p-5 flex flex-col">
                     <div className="text-lg font-bold text-[#374151]">Rum lista</div>
-                    <div className="flex-1 my-5 flex flex-col gap-2 overflow-y-scroll">
+                    <div className="flex-1 my-5 flex flex-col gap-2 overflow-y-auto">
                         {/* Room list items */}
                         <RoomListItem logoUrl="/logo/logo2.png" title="Noah rum" pending={5} createdAt="2024-03-25" />
                         <RoomListItem logoUrl="/logo/logo2.png" title="Noah rum" createdAt="2024-03-25" />
@@ -55,7 +53,7 @@ const DashboardPage = () => {
                 {/* Video reports section */}
                 <div className="col-span-4 row-span-2 rounded-xl bg-white p-5 flex flex-col">
                     <div className="text-lg font-bold text-[#374151]">Video rapport</div>
-                    <div className="flex-1 my-5 flex flex-col gap-2 overflow-y-scroll">
+                    <div className="flex-1 my-5 flex flex-col gap-2 overflow-y-auto">
                         {/* Video report items */}
                         <VideoListItem logoUrl="/video/video1.jpg" title="Noah rum" createdAt="2024-03-25" />
                         <VideoListItem logoUrl="/video/video1.jpg" title="Noah rum" createdAt="2024-03-25" />
@@ -70,7 +68,7 @@ const DashboardPage = () => {
                 {/* DOCs reports section */}
                 <div className="col-span-4 row-span-2 rounded-xl bg-white p-5 flex flex-col">
                     <div className="text-lg font-bold text-[#374151]">DOCs rapport </div>
-                    <div className="flex-1 my-5 flex flex-col gap-2 overflow-y-scroll">
+                    <div className="flex-1 my-5 flex flex-col gap-2 overflow-y-auto">
                         {/* DOCs report items */}
                         <DocListItem filetype="doc" title="Noah rum" createdAt="2024-03-25" />
                         <DocListItem filetype="pdf" title="Noah rum" createdAt="2024-03-25" />

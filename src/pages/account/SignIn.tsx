@@ -44,8 +44,8 @@ const SignIn = () => {
                     {/* Form for sign-in */}
                     <div className="flex flex-col w-[60%] gap-3">
                         <div className="text-3xl font-extrabold" style={{color: colors.textBlack}}>Logga In</div>
-                        <Input placeholder="Användarnamn" className="w-full" />
-                        <Input placeholder="Lösenord" className="w-full" />
+                        <Input placeholder="Användarnamn" className="w-full text-lg" />
+                        <Input placeholder="Lösenord" className="w-full text-lg" />
                         <div className="text-[#211DEF] underline">Har du glömd lösenordet?</div>
                         <Button className="w-full">Logga In</Button>
                         <div className="text-center w-full text-gray-400">Or use Bank ID</div>
@@ -58,8 +58,8 @@ const SignIn = () => {
 
                     {/* Buttons to navigate to different sign-in options */}
                     <div className="absolute bottom-10 right-10">
-                        <Button textColor="#000" backgroundColor="#FFF" className="border-[#1D19E542] mr-5" onClick={() => navigate("/patient_signin")}>Patient</Button>
-                        <Button textColor="#000" backgroundColor="#FFF" className="border-[#1D19E542]" onClick={() => navigate("/guest_signin")}>Gäst</Button>
+                        <Button textColor="#000" backgroundColor="#FFF" className="border-[#1D19E542] mr-5 py-2 px-4" onClick={() => navigate("/patient_signin")}>Patient</Button>
+                        <Button textColor="#000" backgroundColor="#FFF" className="border-[#1D19E542] py-2 px-4" onClick={() => navigate("/guest_signin")}>Gäst</Button>
                     </div>
                 </div>
             </div>
