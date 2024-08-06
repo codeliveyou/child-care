@@ -1,19 +1,26 @@
-import react from "react"
+import React from "react";
 
 type VideoListItemProps = {
     title: string,
     createdAt: string,
     logoUrl: string,
 }
-const VideoListItem = ({title, createdAt, logoUrl}: VideoListItemProps) => {
-    return <div className="flex gap-2">
-        <div className="rounded-xl overflow-hidden"><img src={logoUrl} width={150} /></div>
-        <div className="flex flex-col p-5">
-            <div className="text-xl font-bold">{title}</div>
-            <div className="flex-1"></div>
-            <div className="text-[#B6C2E1] text-sm">Skapades rapport {createdAt} </div>
+
+const VideoListItem = ({ title, createdAt, logoUrl }: VideoListItemProps) => {
+    return (
+        <div className="flex gap-2">
+            {/* Display video thumbnail */}
+            <div className="rounded-xl overflow-hidden"><img src={logoUrl} width={150} /></div>
+            
+            <div className="flex flex-col p-5">
+                {/* Display video title */}
+                <div className="text-xl font-bold">{title}</div>
+                <div className="flex-1"></div>
+                {/* Display creation date */}
+                <div className="text-[#B6C2E1] text-sm">Skapades rapport {createdAt} </div>
+            </div>
         </div>
-    </div>
+    );
 }
 
 export default VideoListItem;

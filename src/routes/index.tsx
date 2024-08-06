@@ -16,57 +16,58 @@ import CreateRoomMain from "../pages/room_create/CreateRoomMain";
 import RoomCreateOnboardingMain from "../pages/room_create/RoomCreateOnboardingMain";
 import SettingsPage from "../pages/settings/SetttingsPage";
 
+// Array of route objects defining the application's navigation structure
 const routes = [
     {
-        path: "/signin",
-        element: <SignIn />,
+        path: "/signin",            // Route path for sign in
+        element: <SignIn />,        // Component to render for this route
     },
     {
-        path: "/signup",
-        element: <SignUp />,
+        path: "/signup",            // Route path for sign up
+        element: <SignUp />,        // Component to render for this route
     },
     {
-        path: "/guest_signin",
-        element: <GuestSignIn />,
+        path: "/guest_signin",      // Route path for guest sign in
+        element: <GuestSignIn />,   // Component to render for this route
     },
     {
-        path: "/patient_signin",
-        element: <PatientSignIn />,
+        path: "/patient_signin",    // Route path for patient sign in
+        element: <PatientSignIn />, // Component to render for this route
     },
     {
-        path: "/bank_qr",
-        element: <BankQR />,
+        path: "/bank_qr",           // Route path for bank QR
+        element: <BankQR />,        // Component to render for this route
     },
     {
-        path: "/signup/payment",
-        element: <PaymentTypeSelect />
+        path: "/signup/payment",                // Route path for payment setup
+        element: <PaymentTypeSelect />          // Component to render for this route
     },
     {
-        path: "/signup/payment/subscription",
-        element: <Subscription />
+        path: "/signup/payment/subscription",   // Route path for subscription payment setup
+        element: <Subscription />               // Component to render for this route
     },
     {
-        path: "/signup/payment/hourly",
-        element: <Hourly />
+        path: "/signup/payment/hourly",         // Route path for hourly payment setup
+        element: <Hourly />                     // Component to render for this route
     },
     {
-        path: "/room/create",
-        element: <CreateRoomMain />
+        path: "/room/create",           // Route path for creating a room
+        element: <CreateRoomMain />     // Component to render for this route
     },
     {
-        path: "/room/create/onboarding",
-        element: <RoomCreateOnboardingMain />,
+        path: "/room/create/onboarding",        // Route path for room creation onboarding
+        element: <RoomCreateOnboardingMain />,  // Component to render for this route
     },
     {
-        path: "/",
-        element: <MainLayout />,
-        children: [
-            {index: true, element: <DashboardPage />},
-            {path: "rooms", element: <RoomListPage />},
-            {path: "calendar", element: <CalendarPage />},
-            {path: "files", element: <FilesPage />},
-            {path: "settings", element: <SettingsPage />},
-            {path: "room/:id", element: <RoomPage />}
+        path: "/",                    // Root path
+        element: <MainLayout />,      // Main layout component to render for this route
+        children: [                   // Nested routes within MainLayout
+            { index: true, element: <DashboardPage /> },  // Default index route for Dashboard
+            { path: "rooms", element: <RoomListPage /> }, // Route for room list
+            { path: "calendar", element: <CalendarPage /> }, // Route for calendar
+            { path: "files", element: <FilesPage /> },   // Route for files
+            { path: "settings", element: <SettingsPage /> }, // Route for settings
+            { path: "room/:id", element: <RoomPage /> }  // Dynamic route for a specific room
         ]
     }
 ];
