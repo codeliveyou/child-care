@@ -1,94 +1,158 @@
-import React, { useState } from "react";
-import EventListItem from "./components/EventListItem";
-import EventItem from "../globalcomponents/EventItem";
-import Pagination from "../globalcomponents/Pagination";
-import CalendarItem from "./components/CalendarItem";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
-const CalendarPage = () => {
-    return (
-        <>
-            {/* Framer Motion container for animation */}
-            <motion.div
-                className="flex w-full h-full p-5 pt-0 gap-5 text-[#374151]"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-                {/* Left section containing Calendar */}
-                <div className="flex-1 flex flex-col gap-3">
-                    <div className="flex-1 bg-white rounded-xl py-2 px-4">
-                        {/* Calendar component */}
-                        <CalendarItem />
-                    </div>
-                    <div className="flex-1 bg-white rounded-xl flex flex-col p-5 gap-3">
-                        {/* Today's events section */}
-                        <div className="text-2xl font-semibold pb-5">Dagens evenemang</div>
-                        {/* Event list items */}
-                        <EventListItem
-                            title="Möte med Noah och Elsa"
-                            content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                            date="02 Aug 2024"
-                        />
-                        <EventListItem
-                            title="Anna besök av personal"
-                            content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo."
-                            date="02 Aug 2024"
-                        />
-                    </div>
-                </div>
+import EventListItem from "../../components/calendar/EventListItem";
+import Pagination from "../../components/room/Pagination";
+import MonthCalendar from "../../components/calendar/MonthCalendar";
+import TodayEventItem from "../../components/calendar/TodayEventItem";
 
-                {/* Right section containing Events */}
-                <div className="flex-[2] h-full bg-white rounded-xl flex flex-col p-5 gap-3">
-                    <div className="text-2xl font-semibold">Evenemang</div>
-                    <div className="flex flex-1 flex-col">
-                        {/* Event items */}
-                        <EventItem
-                            date="14 Juni"
-                            startTime="10:00"
-                            endTime="12:00"
-                            DoW="Mondag"
-                            fulldate="02 Aug 2024"
-                            title="Möte med Noah och Elsa"
-                            content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                        />
-                        <EventItem
-                            date="12 Juni"
-                            startTime="10:00"
-                            endTime="12:00"
-                            DoW="Mondag"
-                            fulldate="02 Aug 2024"
-                            title="Möte Elsa"
-                            content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                        />
-                        <EventItem
-                            date="11 Juni"
-                            startTime="10:00"
-                            endTime="12:00"
-                            DoW="Mondag"
-                            fulldate="02 Aug 2024"
-                            title="Noah rapport"
-                            content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                        />
-                        <EventItem
-                            date="4 Juni"
-                            startTime="10:00"
-                            endTime="12:00"
-                            DoW="Mondag"
-                            fulldate="02 Aug 2024"
-                            title="Noah och Elsa"
-                            content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                        />
-                    </div>
-                    {/* Pagination component */}
-                    <div className="flex justify-center">
-                        <Pagination />
-                    </div>
-                </div>
-            </motion.div>
-        </>
-    );
+const eventData = [
+  {
+    date: "14 Juni",
+    time: {
+      start: "10:00",
+      end: "12:00",
+    },
+    weekday: "Mondag",
+    targetDate: "02 Aug 2024",
+    title: "Möte med Noah och Elsa",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  },
+  {
+    date: "12 Juni",
+    time: {
+      start: "10:00",
+      end: "12:00",
+    },
+    weekday: "Onsdag",
+    targetDate: "02 Aug 2024",
+    title: "Möte Elsa",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  },
+  {
+    date: "11 Juni",
+    time: {
+      start: "10:00",
+      end: "12:00",
+    },
+    weekday: "Onsdag",
+    targetDate: "02 Aug 2024",
+    title: "Noah rapport",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  },
+  {
+    date: "4 Juni",
+    time: {
+      start: "10:00",
+      end: "12:00",
+    },
+    weekday: "Onsdag",
+    targetDate: "02 Aug 2024",
+    title: "Noah och Elsa",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  },
+  {
+    date: "1 Juni",
+    time: {
+      start: "10:00",
+      end: "12:00",
+    },
+    weekday: "Onsdag",
+    targetDate: "02 Aug 2024",
+    title: "Möte och Elsa",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  },
+  {
+    date: "21 Maj",
+    time: {
+      start: "10:00",
+      end: "12:00",
+    },
+    weekday: "Onsdag",
+    targetDate: "02 Aug 2024",
+    title: "Möte och Anna",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  },
+];
+
+const todayEventData = [
+  {
+    title: "Möte med Noah och Elsa",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    date: "02 Aug 2024",
+  },
+  {
+    title: "Anna besök av personal",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.",
+    date: "02 Aug 2024",
+  },
+  {
+    title: "Elsa besök av personal",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.",
+    date: "02 Aug 2024",
+  },
+];
+
+const CalendarPage = () => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPage] = useState<number>(5);
+
+  return (
+    <>
+      {/* Framer Motion container for animation */}
+      <motion.div
+        className="flex w-full h-full gap-4 text-primary-text"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Left section containing Calendar */}
+        <div className="max-w-[400px] w-full flex flex-col gap-2.5 shrink-0 overflow-y-auto">
+          {/* Calendar component */}
+          <MonthCalendar />
+          <div className="grow p-4 pr-1.5 flex flex-col gap-2.5 bg-white rounded-xl overflow-y-auto">
+            {/* Today's events section */}
+            <p className="text-xl font-semibold">Dagens evenemang</p>
+            {/* Event list items */}
+            <div className="grow pr-2 overflow-y-auto">
+              {todayEventData.map((eventItem, index) => (
+                <TodayEventItem key={index} {...eventItem} />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right section containing Events */}
+        <div className="h-full grow p-4 pr-1.5 flex flex-col gap-2.5 bg-white rounded-xl overflow-y-auto">
+          <p className="text-xl font-semibold">Evenemang</p>
+          <div className="grow flex flex-col pr-2 overflow-y-auto">
+            {/* Event items */}
+            {eventData.map((eventItem, index) => (
+              <EventListItem key={index} {...eventItem} />
+            ))}
+          </div>
+          {/* Pagination component */}
+          <div className="py-2 flex justify-center">
+            <Pagination
+              currentPage={currentPage}
+              totalPage={totalPage}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        </div>
+      </motion.div>
+    </>
+  );
 };
 
 export default CalendarPage;

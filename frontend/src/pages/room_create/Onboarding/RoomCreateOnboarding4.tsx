@@ -1,56 +1,71 @@
-import React from "react";
-import SignOutButton from "../../globalcomponents/SignOutButton";
-import LogoButton from "../../globalcomponents/LogoButton";
-import { colors } from "../../../constants/colors";
-import TradeMark from "../../account/components/TradeMark";
-import ClipBoardLabel from "../../globalcomponents/ClipboardLabel";
-import Button from "../../globalcomponents/Button";
 import { useNavigate } from "react-router-dom";
 
+import TradeMark from "../../account/components/TradeMark";
+import Button from "../../globalcomponents/Button";
+import Input from "../../../components/common/Input";
+
 const RoomCreateOnboarding4 = () => {
-    const navigate = useNavigate();
-    
-    return (
-        <div className="w-full h-full flex items-center justify-center relative bg-[#E9E9F3]">
-            {/* Sign out button */}
-            <SignOutButton className="absolute top-10 right-10" />
-            
-            {/* Logo button */}
-            <LogoButton className="absolute bottom-5 left-5" />
+  const navigate = useNavigate();
 
-            {/* Main content */}
-            <div className="w-[60%] max-w-[640px] rounded-xl p-10 flex flex-col gap-5 items-center" style={{backgroundColor: colors.blue}}>
-                {/* Trademark */}
-                <TradeMark className="self-start" />
-                
-                {/* Title */}
-                <div className="text-center text-white text-3xl font-extrabold mt-5">
-                    <p>Noah rum</p>
-                    <p>är redo att användas.</p>
-                </div>
-                
-                {/* Description */}
-                <div className="text-center text-[#9E9CEF] text-xl">
-                    Siffrorna nedan hjälper dig att bjuda in en patient eller moderator till det här rummet.
-                </div>
-                
-                {/* Patient ID */}
-                <div className="flex text-white text-xl items-center gap-3">
-                    <span className="w-32 text-right">Patient ID:</span>
-                    <ClipBoardLabel>#123445456546</ClipBoardLabel>
-                </div>
-                
-                {/* Guest ID */}
-                <div className="flex text-white text-xl items-center gap-3">
-                    <span className="w-32 text-right">Gäst ID:</span>
-                    <ClipBoardLabel>#123445456546</ClipBoardLabel>
-                </div>
-
-                {/* Finish button */}
-                <Button backgroundColor="#E9E9F3" textColor="#211DEF" className="mt-10" onClick={() => navigate("/")}>Klart</Button>
+  return (
+    <div className="w-full h-full flex items-center justify-center">
+      <div className="py-6 px-8 w-2/3 bg-primary-background rounded-xl">
+        <div className="w-full flex flex-col items-center gap-y-3">
+          <TradeMark className="pb-6 text-xl leading-6 self-start" />
+          <div className="font-extrabold text-center text-[32px] leading-10 text-white">
+            <p>Noah rum</p>
+            <p>är redo att användas.</p>
+          </div>
+          <p className="px-8 text-center text-lg leading-6 text-focused-background">
+            Siffrorna nedan hjälper dig att bjuda in en patient eller moderator
+            till det här rummet.
+          </p>
+          <div className="flex flex-col items-center gap-y-2.5 px-12">
+            <div className="w-full flex items-center justify-end gap-x-2.5">
+              <p className="text-lg leading-6 text-light-background">
+                Patient ID:
+              </p>
+              <div className="relative">
+                <Input
+                  name="patientID"
+                  value="#123445456546"
+                  className="px-4 py-2.5 border border-disabled-text bg-primary-background text-disabled-text"
+                />
+                <span className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer">
+                  <img src="/icons/copy.svg" alt="Copy icon" />
+                </span>
+              </div>
             </div>
+            <div className="w-full flex items-center justify-end gap-x-2.5">
+              <p className="text-lg leading-6 text-light-background">
+                Gäst ID:
+              </p>
+              <div className="relative">
+                <Input
+                  name="patientID"
+                  value="#234234fdf2345"
+                  className="px-4 py-2.5 border border-disabled-text bg-primary-background text-disabled-text"
+                />
+                <span className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer">
+                  <img src="/icons/copy.svg" alt="Copy icon" />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="pt-4 flex justify-center">
+            <Button
+              className="py-2 px-4 text-base leading-5 !bg-light-background !text-primary-background"
+              onClick={() => {
+                navigate("/room/0");
+              }}
+            >
+              Klart
+            </Button>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default RoomCreateOnboarding4;

@@ -1,136 +1,272 @@
-import react from "react";
-import { colors } from "../../constants/colors";
+import { useEffect, useState } from "react";
+import { FaChevronLeft } from "react-icons/fa6";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
+import { motion } from "framer-motion";
+
 import Input from "../globalcomponents/Input";
-import Button from "../globalcomponents/Button";
 import SendSVG from "../../assets/send.svg?react";
+import RoomCall from "../../components/room/RoomCall";
+import ActionButton from "../../components/common/ActionButton";
 import ChatItem from "./components/ChatItem";
 
-import LeftSVG from "../../assets/left.svg?react";
-import ShareSVG from "../../assets/call/share.svg?react";
-import MuteSVG from "../../assets/call/mute.svg?react";
-import InfoSVG from "../../assets/call/info.svg?react";
-import CallSVG from "../../assets/call/call.svg?react";
-import MicSVG from "../../assets/call/mic.svg?react";
-import CameraSVG from "../../assets/call/camera.svg?react";
-import StopSVG from "../../assets/call/stop.svg?react";
+interface ITabItem {
+  title: string;
+  key: string;
+}
 
-import { motion } from "framer-motion";
-import ShareDialog from "./components/ShareDialog";
+const tabItems: ITabItem[] = [
+  {
+    title: "Patient",
+    key: "patient",
+  },
+  {
+    title: "Gäst",
+    key: "guest",
+  },
+];
+
+const patientMessages = [
+  {
+    name: "Elsa",
+    messages: [
+      {
+        user: "AI-Alex",
+        role: "AI",
+        message: "Hej Elsa! Vad gör du?",
+      },
+      {
+        user: "Elsa",
+        role: "patient",
+        message: "Hej! Pratar du med mig?",
+      },
+    ],
+  },
+];
+
+const guestMessages = [
+  {
+    name: "Anna",
+    messages: [
+      {
+        user: "Johan Prompt",
+        role: "me",
+        message:
+          "Hej, Anna. Jag behöver din expertis när det gäller en ung patient som jag såg tidigare idag. Det är en 6-årig pojke med återkommande magbesvär och frekventa buksmärtor.",
+      },
+      {
+        user: "Anna",
+        role: "guest",
+        message:
+          "Hej, Johan. Jag är här för att hjälpa till med det. Berätta mer om patienten och hans symptom.",
+      },
+    ],
+  },
+  {
+    name: "Lukas",
+    messages: [
+      {
+        user: "Johan Prompt",
+        role: "me",
+        message:
+          "Hej, Lukas. Jag behöver din expertis när det gäller en ung patient som jag såg tidigare idag. Det är en 6-årig pojke med återkommande magbesvär och frekventa buksmärtor.",
+      },
+      {
+        user: "Lukas",
+        role: "guest",
+        message:
+          "Hej, Lukas. Jag är här för att hjälpa till med det. Berätta mer om patienten och hans symptom.",
+      },
+    ],
+  },
+  {
+    name: "Sara",
+    messages: [
+      {
+        user: "Johan Prompt",
+        role: "me",
+        message:
+          "Hej, Sara. Jag behöver din expertis när det gäller en ung patient som jag såg tidigare idag. Det är en 6-årig pojke med återkommande magbesvär och frekventa buksmärtor.",
+      },
+      {
+        user: "Sara",
+        role: "guest",
+        message:
+          " och symtom kan det vara värt att överväga en pediatrisk gastroenterologisk bedömning för att utesluta eller bekräfta tillstånd som laktosintolerans, IBS eller andra mag-tarmrelaterade störningar.",
+      },
+    ],
+  },
+];
 
 const RoomPage = () => {
-    return (
-        <motion.div
-            className="p-5 pt-0 flex gap-5 w-full h-full text-[#374151]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-        >
-            {/* <ShareDialog isOpen={true} /> */}
-            {/* Left panel containing call controls and chat */}
-            <div className="flex-1 flex flex-col gap-5">
-                <div className="flex justify-between items-center">
-                    {/* Back button */}
-                    <div className="flex gap-2 items-center">
-                        <LeftSVG />
-                        <span className="text-lg">Tillbaka</span>
-                    </div>
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = useSearchParams();
+  const pathname = location.pathname;
 
-                    {/* Room title and date */}
-                    <div className="flex flex-col">
-                        <div className="text-lg font-bold" style={{ color: colors.blue }}>Elsas rum</div>
-                        <div className="text-sm">2 Mars, 2024</div>
-                    </div>
-                </div>
+  const [activePanel, setActivePanel] = useState<string>("guest");
+  const [activeUser, setActiveUser] = useState<string>("Lukas");
+  const [messageList, setMessageList] = useState<any[]>([]);
 
-                {/* Video call and controls */}
-                <div className="relative rounded-xl overflow-hidden">
-                    <img src="/call/you.jpg" alt="You" />
-                    <img src="/call/me.png" alt="Me" className="absolute top-5 right-5 w-40 border-[#E9E9F3] border rounded-lg shadow-2xl" />
-                    <button className="bg-[#211DEF] p-3 absolute top-5 left-5 rounded-lg"><ShareSVG /></button>
-                    <div className="absolute bottom-5 flex justify-center gap-5 items-center w-full">
-                        <div className="rounded-full bg-white w-10 h-10 flex items-center justify-center"><MuteSVG /></div>
-                        <div className="rounded-full bg-white w-10 h-10 flex items-center justify-center"><InfoSVG /></div>
-                        <div className="rounded-xl bg-[#00CB51] w-14 h-14 flex items-center justify-center"><CallSVG /></div>
-                        <div className="rounded-full bg-white w-10 h-10 flex items-center justify-center"><MicSVG /></div>
-                        <div className="rounded-full bg-white w-10 h-10 flex items-center justify-center"><CameraSVG /></div>
+  const handleTabItemClick = (tabItem: ITabItem) => () => {
+    navigate(`${pathname}?${new URLSearchParams({ message: tabItem.key })}`);
+  };
 
-                        <div className="absolute left-5">
-                            <div className="rounded-full bg-[#FE0000] w-12 h-12 flex items-center justify-center"><StopSVG /></div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Chat section */}
-                <div className="flex gap-5">
-                    {/* Patient chat */}
-                    <div className="flex-1 bg-white rounded-lg p-5 flex flex-col gap-2">
-                        <div className="text-xl font-bold">Chatt med patient</div>
-                        <hr className="border" />
-                        <ul className="list-disc pl-5 text-[#37415180]">
-                            <li>Tillgång till patient chatt</li>
-                            <li>Förmåga att skriva AI-prompt</li>
-                        </ul>
-                        <div className="flex-1"></div>
-                        <div className="flex gap-2 justify-end">
-                            <button className="rounded-lg bg-[#374151] text-[#E9E9F3] w-8 h-8">L</button>
-                            <button className="rounded-lg bg-[#374151] text-[#E9E9F3] w-8 h-8">A</button>
-                            <button className="rounded-lg bg-[#374151] text-[#E9E9F3] w-8 h-8">S</button>
-                            <button className="rounded-lg bg-white text-[#B6C2E1] w-8 h-8 text-2xl border-[#B6C2E1] border">+</button>
-                        </div>
-                    </div>
-
-                    {/* Patient files section */}
-                    <div className="flex-1 bg-white rounded-lg p-5 flex flex-col gap-2">
-                        <div className="text-xl font-bold">Filer av patient</div>
-                        <hr className="border" />
-                        <ul className="list-disc pl-5 text-[#37415180]">
-                            <li>Gäst kan se patientfiler</li>
-                            <li>Gäst kan lägga till filer och se patientinformation</li>
-                        </ul>
-                        <div className="flex-1"></div>
-                        <div className="flex gap-2 justify-end">
-                            <button className="rounded-lg bg-[#374151] text-[#E9E9F3] w-8 h-8">L</button>
-                            <button className="rounded-lg bg-white text-[#B6C2E1] w-8 h-8 text-2xl border-[#B6C2E1] border">+</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Right panel for participant controls */}
-            <div className="bg-white rounded-lg w-80 p-2 flex flex-col gap-5">
-                <div className="bg-[#E9E9F3] flex rounded-xl p-1 font-bold text-lg">
-                    <button className="flex-1 p-2">Patient</button>
-                    <button className="flex-1 bg-white rounded-xl p-2 flex gap-2 items-center justify-center" style={{ color: colors.blue }}>
-                        <span>Gäst</span>
-                        <div className="rounded-lg text-white px-2 py-0 font-thin text-base" style={{ backgroundColor: colors.blue }}>L</div>
-                    </button>
-                </div>
-
-                {/* Chat items */}
-                <div className="flex-1 flex flex-col gap-5">
-                    <ChatItem
-                        avatarUrl="/logo/logo1.jpg"
-                        name="Johan Prompt"
-                        content="Hej, Lukas. Jag behöver din expertis när det gäller en ung patient som jag såg tidigare idag. Det är en 6-årig pojke med återkommande magbesvär och frekventa buksmärtor."
-                        alignment="left"
-                    />
-                    <ChatItem
-                        avatarUrl="/logo/logo2.png"
-                        name="Dr. Lukas"
-                        content="Hej, Lukas. Jag är här för att hjälpa till med det. Berätta mer om patienten och hans symptom."
-                        alignment="right"
-                    />
-                </div>
-
-                {/* Input for sending messages */}
-                <div className="flex gap-2 m-2">
-                    <Input placeholder="Skriva ett meddelande" className="text-base px-2 py-0 flex-1" />
-                    <Button className="p-2"><SendSVG /></Button>
-                </div>
-            </div>
-        </motion.div>
+  useEffect(() => {
+    const role = (searchParams[0].get("message") as string) || "guest";
+    const userList =
+      role === "guest"
+        ? guestMessages.map((item) => item.name)
+        : patientMessages.map((item) => item.name);
+    const messages = role === "guest" ? guestMessages : patientMessages;
+    const user = (searchParams[0].get("user") as string) || userList[0];
+    setActivePanel(role);
+    setActiveUser(user);
+    setMessageList(
+      messages.find((message) => message.name === user)?.messages || []
     );
+  }, [searchParams]);
+
+  return (
+    <motion.div
+      className="w-full h-full flex gap-x-4 text-primary-text"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* <ShareDialog isOpen={true} /> */}
+      {/* Left panel containing call controls and chat */}
+      <div className="grow pt-2 h-full flex flex-col gap-y-4">
+        <div className="py-2 flex justify-between items-center">
+          {/* Back button */}
+          <div className="flex gap-2 items-center">
+            <span className="w-6 h-6 flex items-center justify-center">
+              <FaChevronLeft />
+            </span>
+            <p className="text-xl leading-6">Tillbaka</p>
+          </div>
+
+          {/* Room title and date */}
+          <div className="flex flex-col items-end gap-y-1">
+            <p className="font-bold text-xl leading-5 text-primary-background">
+              Elsas rum
+            </p>
+            <p className="text-sm leading-4">2 Mars, 2024</p>
+          </div>
+        </div>
+
+        {/* Video call and controls */}
+        <RoomCall className="grow" />
+
+        {/* Chat section */}
+        <div className="grid grid-cols-2 gap-4">
+          {/* Patient chat */}
+          <div className="bg-white rounded-lg p-4 flex flex-col gap-2">
+            <div className="pb-2 border-b-2 border-b-light-background">
+              <p className="text-xl leading-6 font-bold">Chatt med patient</p>
+            </div>
+            <ul className="list-disc pl-5 py-5 text-primary-text/50">
+              <li>Tillgång till patient chatt</li>
+              <li>Förmåga att skriva AI-prompt</li>
+            </ul>
+            <div className="flex gap-2 justify-end">
+              <button className="rounded-lg bg-[#374151] text-[#E9E9F3] w-8 h-8">
+                L
+              </button>
+              <button className="rounded-lg bg-[#374151] text-[#E9E9F3] w-8 h-8">
+                A
+              </button>
+              <button className="rounded-lg bg-[#374151] text-[#E9E9F3] w-8 h-8">
+                S
+              </button>
+              <button className="rounded-lg bg-white text-[#B6C2E1] w-8 h-8 text-2xl border-[#B6C2E1] border">
+                +
+              </button>
+            </div>
+          </div>
+
+          {/* Patient files section */}
+          <div className="bg-white rounded-lg p-5 flex flex-col gap-2">
+            <div className="pb-2 border-b-2 border-b-light-background">
+              <p className="text-xl leading-6 font-bold">Filer av patient</p>
+            </div>
+            <ul className="list-disc pl-5 py-5 text-primary-text/50">
+              <li>Gäst kan se patientfiler</li>
+              <li>Gäst kan lägga till filer och se patientinformation</li>
+            </ul>
+            <div className="flex gap-2 justify-end">
+              <button className="rounded-lg bg-[#374151] text-[#E9E9F3] w-8 h-8">
+                L
+              </button>
+              <button className="rounded-lg bg-white text-[#B6C2E1] w-8 h-8 text-2xl border-[#B6C2E1] border">
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right panel for participant controls */}
+      <div className="p-2 flex flex-col gap-2.5 bg-white rounded-2xl w-80">
+        <div className="p-2 grid grid-cols-2 gap-x-2 bg-[#E9E9F3] rounded-xl font-bold text-lg">
+          {tabItems.map((tabItem, index) => (
+            <button
+              key={index}
+              className={twMerge(
+                "p-2 flex-1 flex items-center justify-center gap-2",
+                activePanel === tabItem.key &&
+                  "bg-white rounded-xl text-primary-background"
+              )}
+              onClick={handleTabItemClick(tabItem)}
+            >
+              <p>{tabItem.title}</p>
+              {tabItem.key === "guest" && (
+                <span className="rounded-lg text-white px-2 py-0 font-thin text-base bg-primary-background">
+                  {activeUser.charAt(0).toUpperCase()}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Chat items */}
+        <div className="flex-1 flex flex-col gap-2.5">
+          {messageList.map((message, index) => (
+            <ChatItem
+              key={index}
+              name={message.user}
+              role={message.role}
+              content={message.message}
+            />
+          ))}
+          {/* <ChatItem
+            avatarUrl="/logo/logo1.jpg"
+            name="Johan Prompt"
+            content="Hej, Lukas. Jag behöver din expertis när det gäller en ung patient som jag såg tidigare idag. Det är en 6-årig pojke med återkommande magbesvär och frekventa buksmärtor."
+            alignment="left"
+          />
+          <ChatItem
+            avatarUrl="/logo/logo2.png"
+            name="Dr. Lukas"
+            content="Hej, Lukas. Jag är här för att hjälpa till med det. Berätta mer om patienten och hans symptom."
+            alignment="right"
+          /> */}
+        </div>
+
+        {/* Input for sending messages */}
+        <div className="flex gap-2 m-2">
+          <Input
+            placeholder="Skriva ett meddelande"
+            className="text-base px-5 py-3 flex-1 bg-light-background border-none"
+          />
+          <ActionButton className="bg-primary-background">
+            <SendSVG />
+          </ActionButton>
+        </div>
+      </div>
+    </motion.div>
+  );
 };
 
 export default RoomPage;

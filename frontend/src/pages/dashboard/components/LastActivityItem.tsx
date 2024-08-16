@@ -1,28 +1,30 @@
-import React from "react";
-
 type LastActivityItemProps = {
-    title: string,
-    activity: string,
-    createdAt: string,
-    logoUrl: string,
-}
+  title: string;
+  imageUri: string;
+  activity: string;
+};
 
-const LastActivityItem = ({ title, activity, createdAt, logoUrl }: LastActivityItemProps) => {
-    return (
-        <div className="flex gap-2">
-            {/* Display logo */}
-            <div className="rounded-xl overflow-hidden"><img src={logoUrl} width={80} /></div>
-            
-            <div className="flex flex-col">
-                {/* Display title */}
-                <div className="text-xl font-bold">{title}</div>
-                <div className="flex-1"></div>
-                {/* Display activity and creation date */}
-                <div className="text-[#B6C2E1] text-sm">{activity}</div>
-                <div className="text-[#B6C2E1] text-sm">Skapades rapport {createdAt} </div>
-            </div>
-        </div>
-    );
-}
+const LastActivityItem = ({
+  title,
+  imageUri,
+  activity,
+}: LastActivityItemProps) => {
+  return (
+    <div className="flex gap-2">
+      {/* Display logo */}
+      <div className="rounded-xl overflow-hidden">
+        <img src={imageUri} className="w-[72px] h-[72px]" />
+      </div>
+
+      <div className="flex flex-col">
+        {/* Display title */}
+        <div className="text-xl font-bold">{title}</div>
+        {/* Display activity and creation date */}
+        <div className="text-disabled-text text-xs">Sista aktiviteten</div>
+        <div className="text-disabled-text text-xs">{activity}</div>
+      </div>
+    </div>
+  );
+};
 
 export default LastActivityItem;
