@@ -31,6 +31,7 @@ const sidebarItems = [
     title: "Rooms",
     icon: <RoomSVG />,
     path: "/rooms",
+    subPath: "/room/",
   },
   {
     title: "Calendar",
@@ -72,9 +73,9 @@ const MainLayout = () => {
   };
 
   useEffect(() => {
-    const userType = searchParams[0].get("message") as string;
-    const currentUser = searchParams[0].get("user") as string;
+    const userType = (searchParams[0].get("message") as string) || "guest";
     const userList = userType === "patient" ? patientList : guestList;
+    const currentUser = (searchParams[0].get("user") as string) || userList[0];
 
     setUserType(userType);
     setUserList(userList);
@@ -151,7 +152,8 @@ const MainLayout = () => {
                       key={index}
                       className={twMerge(
                         "py-2 px-5 flex items-center gap-x-4 hover:text-primary-background cursor-pointer",
-                        pathname === item.path
+                        pathname === item.path ||
+                          (item.subPath && pathname.startsWith(item.subPath))
                           ? "text-primary-background"
                           : "text-disabled-text"
                       )}
