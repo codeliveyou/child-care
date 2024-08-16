@@ -10,7 +10,7 @@ function SearchInput() {
         <div className="relative flex justify-end">
           <motion.input
             placeholder="Sök"
-            className="outline-none rounded-lg pl-4 pr-12 h-full"
+            className="outline-none rounded-lg py-4 pl-4 pr-12 h-full"
             onMouseLeave={() => {
               setIsExpand(false);
             }}
