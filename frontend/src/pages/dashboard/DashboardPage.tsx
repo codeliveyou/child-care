@@ -188,7 +188,14 @@ const DashboardPage = () => {
               </div>
               {/* Button for adding rooms */}
               <div className="pt-7 self-end">
-                <Button className="py-2">Lägg till rum</Button>
+                <Button
+                  className="py-2"
+                  onClick={() => {
+                    navigate("/room/create/onboarding");
+                  }}
+                >
+                  Lägg till rum
+                </Button>
               </div>
             </div>
           </div>
