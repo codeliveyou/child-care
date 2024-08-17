@@ -65,7 +65,7 @@ function ReportDialog({ open, onClose, title, lastDate }: ReportDialogProps) {
           </div>
 
           <button
-            className="py-2 px-4 rounded-lg text-white text-sm leading-4 bg-primary-background"
+            className="py-2 px-4 rounded-lg text-white text-sm leading-4 bg-primary-background outline-none"
             onClick={() => {
               setIsEditing(!isEditing);
             }}
@@ -111,8 +111,8 @@ function ReportDialog({ open, onClose, title, lastDate }: ReportDialogProps) {
         )}
         <div className="grow pt-2 px-8 pr-1 flex flex-col overflow-y-auto">
           <div
-            contentEditable
-            className="pr-6 flex flex-col gap-y-8 outline-none overflow-y-auto"
+            contentEditable={isEditing}
+            className="pr-6 flex flex-col gap-y-8 outline-none overflow-y-auto scrollbar"
           >
             <h1 className="text-5xl font-semibold">Medicinsk Rapport</h1>
             <div className="leading-5 font-semibold">

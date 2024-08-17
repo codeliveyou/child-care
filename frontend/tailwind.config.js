@@ -7,7 +7,8 @@ export default {
         sora: ['Sora', 'sans-serif'],
       },
       backgroundImage: {
-        'primary-gradient': 'linear-gradient(to bottom, #0000009C 0%, #000000 100%)'
+        'primary-gradient': 'linear-gradient(to bottom, #0000009C 0%, #000000 100%)',
+        'auth-gradient': 'linear-gradient(to bottom, #6BDCF5 0%, #B6C2E1 100%)'
       },
       colors: {
         primary: {
@@ -17,7 +18,11 @@ export default {
           placeholder: '#6F6F6F'
         },
         light: {
-          background: '#E9E9F3'
+          background: '#E9E9F3',
+          border: '#DBF6D4',
+        },
+        dark: {
+          background: '#1C1C1C'
         },
         focused: {
           background: '#9E9CEF',
@@ -29,5 +34,5 @@ export default {
       }
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar')],
 };

@@ -20,7 +20,7 @@ const Button = ({
   return (
     <button
       className={twMerge(
-        "border-white border rounded-lg text-lg py-3 px-5",
+        "border-white border rounded-lg text-lg py-3 px-5 hover:opacity-90 active:opacity-80",
         className
       )}
       style={{ backgroundColor: backgroundColor, color: textColor }}

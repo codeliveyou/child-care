@@ -58,7 +58,7 @@ function EventDialog({
     <Dialog
       open={open}
       onClose={onClose}
-      className="bg-white rounded-lg p-8"
+      className="text-primary-text bg-white rounded-lg p-8"
       maxWidth={staging === Staging.Confirm ? "sm" : "xs"}
     >
       <div className="px-2 flex flex-col gap-y-1 text-primary-text">
@@ -89,15 +89,11 @@ function EventDialog({
             </h1>
             <div className="space-y-1 mb-4">
               <p className="pl-2 text-xs">Händelsenamn</p>
-              <Input
-                name="name"
-                placeholder="Noah och Elsa"
-                className="w-full"
-              />
+              <Input name="name" value="Noah och Elsa" className="w-full" />
             </div>
             <div className="space-y-1 mb-4">
               <p className="pl-2 text-xs">Patient / Rum namn</p>
-              <Input name="room" placeholder="Noah" className="w-full" />
+              <Input name="room" value="Noah" className="w-full" />
             </div>
             <div className="space-y-1 mb-4">
               <p className="pl-2 text-xs">Tid</p>
@@ -105,7 +101,7 @@ function EventDialog({
                 <div className="space-y-1 grow">
                   <Input
                     name="start"
-                    placeholder="12/03/2024 11:00"
+                    value="12/03/2024 11:00"
                     className="text-center w-full"
                   />
                   <p className="pl-2 text-disabled-text text-xs">Start tid</p>
@@ -114,7 +110,7 @@ function EventDialog({
                 <div className="space-y-1 grow">
                   <Input
                     name="end"
-                    placeholder="12/03/2024 13:00"
+                    value="12/03/2024 13:00"
                     className="text-center w-full"
                   />
                   <p className="pl-2 text-disabled-text text-xs">Slut tid</p>
@@ -123,14 +119,15 @@ function EventDialog({
               <Checkbox
                 label="Ange bara start tid"
                 className="text-xs leading-4 text-disabled-text"
+                inputClass="border border-disabled-text"
               />
             </div>
             <div className="space-y-1 mb-4">
               <p className="pl-2 text-xs">Beskrivning</p>
               <TextField
                 name="description"
-                placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-                className="w-full"
+                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                className="w-full leading-5"
               />
             </div>
             <div className="self-end">

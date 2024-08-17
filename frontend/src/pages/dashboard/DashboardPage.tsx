@@ -35,24 +35,24 @@ const activityData = [
 const roomData = [
   {
     name: "Elsa rum",
-    imageUri: "/images/room/1.png",
+    imageUri: "/images/dashboard/room/1.png",
     badge: 5,
   },
   {
     name: "Noah rum",
-    imageUri: "/images/room/2.png",
+    imageUri: "/images/dashboard/room/2.png",
     activity: "Skapades nästa möte",
     badge: 2,
   },
   {
     name: "Anna Lindberg",
-    imageUri: "/images/room/3.png",
+    imageUri: "/images/dashboard/room/3.png",
     activity: "Video samtal",
     badge: 2,
   },
   {
     name: "Elsa",
-    imageUri: "/images/room/4.png",
+    imageUri: "/images/dashboard/room/4.png",
     activity: "Skapades rapport 2024-02-23",
   },
 ];

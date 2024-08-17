@@ -1,11 +1,10 @@
+import { Navigate } from "react-router-dom";
 import BankQR from "../pages/account/BankQR";
-import GuestSignIn from "../pages/account/GuestSignIn";
-import PatientSignIn from "../pages/account/PatientSignIn";
-import Hourly from "../pages/account/payment_setup/Hourly";
-import PaymentTypeSelect from "../pages/account/payment_setup/PaymentTypeSelect";
-import Subscription from "../pages/account/payment_setup/Subscription";
-import SignIn from "../pages/account/SignIn";
-import SignUp from "../pages/account/SignUp";
+import GuestLogin from "../pages/auth/GuestLogin";
+import Payment from "../pages/auth/Payment";
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
+import AuthLayout from "../pages/AuthLayout";
 import CalendarPage from "../pages/calendar/CalendarPage";
 import DashboardPage from "../pages/dashboard/DashboardPage";
 import FilesPage from "../pages/files/FilesPage";
@@ -16,40 +15,14 @@ import AIStructureList from "../pages/room_create/AIStructureList";
 import CreateRoomMain from "../pages/room_create/CreateRoomMain";
 import RoomCreateOnboardingMain from "../pages/room_create/RoomCreateOnboardingMain";
 import SettingsPage from "../pages/settings/SetttingsPage";
+import PatientLogin from "../pages/auth/PatientLogin";
+import PaymentDetail from "../pages/auth/PaymentDetail";
 
 // Array of route objects defining the application's navigation structure
 const routes = [
   {
-    path: "/signin", // Route path for sign in
-    element: <SignIn />, // Component to render for this route
-  },
-  {
-    path: "/signup", // Route path for sign up
-    element: <SignUp />, // Component to render for this route
-  },
-  {
-    path: "/guest_signin", // Route path for guest sign in
-    element: <GuestSignIn />, // Component to render for this route
-  },
-  {
-    path: "/patient_signin", // Route path for patient sign in
-    element: <PatientSignIn />, // Component to render for this route
-  },
-  {
     path: "/bank_qr", // Route path for bank QR
     element: <BankQR />, // Component to render for this route
-  },
-  {
-    path: "/signup/payment", // Route path for payment setup
-    element: <PaymentTypeSelect />, // Component to render for this route
-  },
-  {
-    path: "/signup/payment/subscription", // Route path for subscription payment setup
-    element: <Subscription />, // Component to render for this route
-  },
-  {
-    path: "/signup/payment/hourly", // Route path for hourly payment setup
-    element: <Hourly />, // Component to render for this route
   },
   {
     path: "/room/create", // Route path for creating a room
@@ -63,6 +36,19 @@ const routes = [
     path: "/room/create/ai-structure",
     element: <MainLayout />,
     children: [{ index: true, element: <AIStructureList /> }],
+  },
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      { index: true, element: <Navigate to={"sign-in"} /> },
+      { path: "sign-in", element: <Login /> },
+      { path: "sign-up", element: <Register /> },
+      { path: "guest-signin", element: <GuestLogin /> },
+      { path: "patient-signin", element: <PatientLogin /> },
+      { path: "payment", element: <Payment /> },
+      { path: "payment-detail", element: <PaymentDetail /> },
+    ],
   },
   {
     path: "/", // Root path

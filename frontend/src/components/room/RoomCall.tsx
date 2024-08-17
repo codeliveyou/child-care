@@ -5,9 +5,10 @@ import ActionButton from "../common/ActionButton";
 
 interface RoomCallProps {
   className?: string;
+  onShare: () => void;
 }
 
-function RoomCall({ className = "" }: RoomCallProps) {
+function RoomCall({ className = "", onShare }: RoomCallProps) {
   return (
     <div
       className={twMerge(
@@ -21,7 +22,7 @@ function RoomCall({ className = "" }: RoomCallProps) {
         className="absolute top-1/2 -translate-y-1/2 w-full h-auto"
       />
       <div className="absolute top-0 p-2.5 w-full flex justify-between">
-        <ActionButton className="bg-primary-background">
+        <ActionButton className="bg-primary-background" onClick={onShare}>
           <img src="/icons/call/share.svg" className="w-6 h-6" />
         </ActionButton>
         <img

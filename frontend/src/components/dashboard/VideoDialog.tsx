@@ -22,7 +22,9 @@ const VideoDialog = ({ open, onClose }: VideoDialogProps) => {
       <div className="absolute top-0 py-2 px-4 flex justify-between items-center w-full">
         <p className="text-xl leading-6 text-white">Noah möte</p>
         <div className="flex gap-x-3 items-center">
-          <p className="text-sm leading-4 text-white">Igår 11:25</p>
+          <p className="text-sm leading-4 text-light-background font-normal">
+            Igår 11:25
+          </p>
           <span
             className="w-6 h-6 flex items-center justify-center text-white text-xl cursor-pointer"
             onClick={onClose}

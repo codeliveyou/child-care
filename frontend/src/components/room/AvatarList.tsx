@@ -6,6 +6,7 @@ const avatarUris = [
   "/images/room/avatar/2.png",
   "/images/room/avatar/3.png",
   "/images/room/avatar/4.png",
+  "/images/room/avatar/5.png",
 ];
 
 function AvatarList() {
@@ -13,25 +14,27 @@ function AvatarList() {
 
   return (
     <div className="flex items-center gap-x-2.5">
-      <div className="relative w-36 shrink-0">
-        <img
-          src={avatarUris[activeIndex]}
-          className="w-full h-auto rounded-lg"
-        />
+      <div className="relative shrink-0">
+        <div className="relative w-36 h-60 rounded-lg overflow-hidden">
+          <img
+            src={avatarUris[activeIndex]}
+            className="absolute aspect-square h-full"
+          />
+        </div>
         <img
           src="/icons/room/check-circle.svg"
           alt="Check icon"
-          className="absolute -top-1 -right-2"
+          className="absolute -top-1 -right-2 z-50"
         />
       </div>
-      <div className="grow flex gap-x-2.5 overflow-x-auto">
+      <div className="relative grow pb-4 flex gap-x-2.5 overflow-x-auto">
         {avatarUris.map((avatarUri, index) => (
           <img
             key={index}
             src={avatarUri}
             alt="Avatar"
             className={twMerge(
-              "w-[100px] h-auto rounded-lg opacity-50 hover:opacity-70 active:opacity-80 cursor-pointer",
+              "w-[100px] h-32 rounded-lg opacity-50 hover:opacity-70 active:opacity-80 cursor-pointer",
               index === activeIndex ? "hidden" : "block"
             )}
             onClick={() => {

@@ -238,12 +238,12 @@ const SettingsPage = () => {
             <Input
               name="answer"
               value="Skriv ett svar"
-              className="border border-primary-border/25 py-2.5 px-5"
+              className="border border-primary-border/25 py-2.5 px-5 bg-white/30"
             />
             <Input
               name="keyword"
               value="Skriv nyckelord"
-              className="border border-primary-border/25 py-2.5 px-5"
+              className="border border-primary-border/25 py-2.5 px-5 bg-white/30"
             />
           </div>
           <p className="text-disabled-text text-xs leading-4">
@@ -261,17 +261,17 @@ const SettingsPage = () => {
               <Input
                 name="name"
                 value="Johan Anders"
-                className="border border-primary-border/25 py-2.5 px-5"
+                className="border border-primary-border/25 py-2.5 px-5 bg-white/30"
               />
               <Input
                 name="email"
                 value="johan.anders@region.se"
-                className="border border-primary-border/25 py-2.5 px-5"
+                className="border border-primary-border/25 py-2.5 px-5 bg-white/30"
               />
               <Input
                 name="address"
                 value="Värmlands central sjukhuset"
-                className="border border-primary-border/25 py-2.5 px-5"
+                className="border border-primary-border/25 py-2.5 px-5 bg-white/30"
               />
             </div>
             <div className="grow flex flex-col justify-end gap-2.5">
@@ -279,17 +279,17 @@ const SettingsPage = () => {
               <Input
                 name="password"
                 value="Nuvarande lösenord"
-                className="border border-primary-border/25 py-2.5 px-5"
+                className="border border-primary-border/25 py-2.5 px-5 bg-white/30"
               />
               <Input
                 name="newpass"
                 value="Nytt lösenord"
-                className="border border-primary-border/25 py-2.5 px-5"
+                className="border border-primary-border/25 py-2.5 px-5 bg-white/30"
               />
               <Input
                 name="confirmpass"
                 value="Upprepa lösenord"
-                className="border border-primary-border/25 py-2.5 px-5"
+                className="border border-primary-border/25 py-2.5 px-5 bg-white/30"
               />
             </div>
           </div>

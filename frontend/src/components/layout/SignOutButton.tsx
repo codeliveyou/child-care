@@ -10,7 +10,7 @@ const SignOutButton = ({ className }: SignOutButtonProps) => {
   return (
     <Button
       className={twMerge("p-4", className)}
-      onClick={() => navigate("/signup")}
+      onClick={() => navigate("/auth/sign-in")}
     >
       <img src="/SignOut.svg" width={20} height={20} />
     </Button>
