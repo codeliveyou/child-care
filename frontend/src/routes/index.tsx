@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import BankQR from "../pages/account/BankQR";
+
 import GuestLogin from "../pages/auth/GuestLogin";
 import Payment from "../pages/auth/Payment";
 import Login from "../pages/auth/Login";
@@ -17,13 +17,11 @@ import RoomCreateOnboardingMain from "../pages/room_create/RoomCreateOnboardingM
 import SettingsPage from "../pages/settings/SetttingsPage";
 import PatientLogin from "../pages/auth/PatientLogin";
 import PaymentDetail from "../pages/auth/PaymentDetail";
+import LoginWithBank from "../pages/auth/LoginWithBank";
+import RegisterWithBank from "../pages/auth/RegisterWithBank";
 
 // Array of route objects defining the application's navigation structure
 const routes = [
-  {
-    path: "/bank_qr", // Route path for bank QR
-    element: <BankQR />, // Component to render for this route
-  },
   {
     path: "/room/create", // Route path for creating a room
     element: <CreateRoomMain />, // Component to render for this route
@@ -48,6 +46,9 @@ const routes = [
       { path: "patient-signin", element: <PatientLogin /> },
       { path: "payment", element: <Payment /> },
       { path: "payment-detail", element: <PaymentDetail /> },
+      { path: "signin-with-bank", element: <LoginWithBank /> },
+      { path: "signup-with-bank", element: <RegisterWithBank /> },
+      // { path: 'bank-signin', element: <}
     ],
   },
   {

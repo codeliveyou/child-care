@@ -47,7 +47,12 @@ const Register = () => {
               <span className="text-primary-text/50 text-xs text-center">
                 Or use Bank ID
               </span>
-              <Button className="py-2.5 border border-primary-border/25 text-base !text-disabled-text !bg-white">
+              <Button
+                className="py-2.5 border border-primary-border/25 text-base !text-disabled-text !bg-white"
+                onClick={() => {
+                  navigate("/auth/signup-with-bank");
+                }}
+              >
                 Bank ID
               </Button>
               <span className="text-[10px] text-disabled-text">
