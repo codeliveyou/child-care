@@ -29,8 +29,8 @@ function FolderList({ folders }: FolderListProps) {
           </span>
           <p
             className={twMerge(
-              "leading-5",
-              activeIndex === index ? "text-xl leading-7" : ""
+              "text-base leading-5",
+              activeIndex === index ? "text-lg leading-6" : ""
             )}
           >
             {folder}

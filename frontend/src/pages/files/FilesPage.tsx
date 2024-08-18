@@ -13,6 +13,7 @@ import FolderList from "../../components/folder/FolderList";
 import ReportDialog from "../../components/dashboard/ReportDialog";
 import VideoDialog from "../../components/dashboard/VideoDialog";
 import FileListItem from "../../components/folder/FileListItem";
+import { FaPlus } from "react-icons/fa6";
 
 const latestFiles: IFileListItem[] = [
   {
@@ -131,10 +132,13 @@ const FilesPage = () => {
               ]}
             />
           </div>
-          <div>
+          <div className="flex justify-end">
             {/* Button to create a new folder */}
-            <Button className="float-right flex items-center gap-2 py-1">
-              <span className="text-3xl">+</span>Skapa ett mapp
+            <Button className="py-2 px-4 flex items-center gap-2 text-base leading-5">
+              <span className="w-6 h-6 flex items-center justify-center">
+                <FaPlus size={20} />
+              </span>
+              Skapa ett mapp
             </Button>
           </div>
         </div>
@@ -142,28 +146,32 @@ const FilesPage = () => {
         {/* Right panel with recent files */}
         <div className="p-4 pr-1.5 flex flex-col bg-white col-span-2 rounded-xl overflow-y-auto">
           <div className="grow pr-2 flex flex-col gap-y-2.5 overflow-x-auto">
-            <p className="text-xl font-semibold">Senaste filer</p>
-            <div className="flex gap-2 overflow-x-auto pb-1.5">
-              {/* Displaying recent FileItem1 components */}
-              {latestFiles.map((fileItem, index) => (
-                <FileListItem
-                  key={index}
-                  {...fileItem}
-                  type={fileItem.type as FileFormat}
-                  onClick={handleFileItemClick(fileItem)}
-                />
-              ))}
+            <div className="flex flex-col gap-y-2.5">
+              <p className="text-xl font-semibold">Senaste filer</p>
+              <div className="pb-1.5 flex gap-2 overflow-x-auto scrollbar scrollbar-none">
+                {/* Displaying recent FileItem1 components */}
+                {latestFiles.map((fileItem, index) => (
+                  <FileListItem
+                    key={index}
+                    {...fileItem}
+                    type={fileItem.type as FileFormat}
+                    onClick={handleFileItemClick(fileItem)}
+                  />
+                ))}
+              </div>
             </div>
-            <p className="text-xl font-semibold">Filer</p>
-            <div className="grow py-2 pr-2 flex flex-wrap gap-2.5 overflow-y-auto">
-              {/* Displaying FileItem2 components */}
-              {fileData.map((fileItem, index) => (
-                <FileTileItem
-                  key={index}
-                  {...fileItem}
-                  onClick={handleFileItemClick(fileItem)}
-                />
-              ))}
+            <div className="grow flex flex-col gap-y-2.5 overflow-y-auto">
+              <p className="text-xl font-semibold">Filer</p>
+              <div className="py-2 pr-2 flex flex-wrap gap-2.5 overflow-y-auto">
+                {/* Displaying FileItem2 components */}
+                {fileData.map((fileItem, index) => (
+                  <FileTileItem
+                    key={index}
+                    {...fileItem}
+                    onClick={handleFileItemClick(fileItem)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
