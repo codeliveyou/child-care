@@ -131,7 +131,7 @@ const PaymentDetail = () => {
               </p>
               <Input
                 name="ssn"
-                value="853423-5432"
+                placeholder="853423-5432"
                 className="py-2.5 px-5 !bg-white/30 border !border-primary-border/25 rounded-none"
               />
               <Button className="!py-2.5 text-base leading-5 !bg-dark-background !text-light-background !rounded-none">

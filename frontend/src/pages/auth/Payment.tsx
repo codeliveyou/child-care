@@ -20,7 +20,7 @@ const Payment = () => {
               </p>
               <Input
                 name="code"
-                value="Företag kod"
+                placeholder="Företag kod"
                 className="border border-white/50 py-2.5 px-5 text-light-background bg-white/10"
               />
               <p className="text-[10px] leading-3 text-disabled-text">

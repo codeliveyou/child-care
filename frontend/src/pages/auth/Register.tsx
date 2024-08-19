@@ -18,22 +18,22 @@ const Register = () => {
               <p className="font-extrabold text-2xl">Skapa ett konto</p>
               <Input
                 name="email"
-                value="E-post"
+                placeholder="E-post"
                 className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
               />
               <Input
                 name="business"
-                value="Vård / Företag"
+                placeholder="Vård / Företag"
                 className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
               />
               <Input
                 name="username"
-                value="Användarnamn"
+                placeholder="Användarnamn"
                 className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
               />
               <Input
                 name="password"
-                value="Lösenord"
+                placeholder="Lösenord"
                 className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
               />
               <Button

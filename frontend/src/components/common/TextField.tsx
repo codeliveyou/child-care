@@ -17,10 +17,10 @@ function TextField({
     <textarea
       rows={3}
       name={name}
-      value={value}
+      defaultValue={value}
       placeholder={placeholder}
       className={twMerge(
-        "rounded-lg bg-light-background py-2 px-4 font-light text-sm leading-4 outline-none",
+        "rounded-lg placeholder:text-primary-text bg-light-background py-2 px-4 font-light text-sm leading-4 outline-none",
         className
       )}
     />

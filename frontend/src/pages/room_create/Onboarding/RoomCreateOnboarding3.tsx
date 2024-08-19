@@ -216,7 +216,7 @@ const RoomCreateOnboarding3 = () => {
                 <p className="font-bold leading-5">AI-begränsningar</p>
                 <Input
                   name="keyword"
-                  value="Nyckelord"
+                  placeholder="Nyckelord"
                   className="py-2.5 px-5 border border-primary-border/25 bg-white"
                 />
                 <div className="flex flex-wrap gap-1">
@@ -234,12 +234,12 @@ const RoomCreateOnboarding3 = () => {
                 <p className="font-bold leading-5">AI-svars mönster</p>
                 <Input
                   name="answer"
-                  value="Skriv ett svar"
+                  placeholder="Skriv ett svar"
                   className="py-2.5 px-5 border border-primary-border/25 bg-white"
                 />
                 <Input
                   name="keyword"
-                  value="Skriv nyckelord"
+                  placeholder="Skriv nyckelord"
                   className="py-2.5 px-5 border border-primary-border/25 bg-white"
                 />
               </div>

@@ -89,11 +89,15 @@ function EventDialog({
             </h1>
             <div className="space-y-1 mb-4">
               <p className="pl-2 text-xs">Händelsenamn</p>
-              <Input name="name" value="Noah och Elsa" className="w-full" />
+              <Input
+                name="name"
+                placeholder="Noah och Elsa"
+                className="w-full"
+              />
             </div>
             <div className="space-y-1 mb-4">
               <p className="pl-2 text-xs">Patient / Rum namn</p>
-              <Input name="room" value="Noah" className="w-full" />
+              <Input name="room" placeholder="Noah" className="w-full" />
             </div>
             <div className="space-y-1 mb-4">
               <p className="pl-2 text-xs">Tid</p>
@@ -101,7 +105,7 @@ function EventDialog({
                 <div className="space-y-1 grow">
                   <Input
                     name="start"
-                    value="12/03/2024 11:00"
+                    placeholder="12/03/2024 11:00"
                     className="text-center w-full"
                   />
                   <p className="pl-2 text-disabled-text text-xs">Start tid</p>
@@ -110,7 +114,7 @@ function EventDialog({
                 <div className="space-y-1 grow">
                   <Input
                     name="end"
-                    value="12/03/2024 13:00"
+                    placeholder="12/03/2024 13:00"
                     className="text-center w-full"
                   />
                   <p className="pl-2 text-disabled-text text-xs">Slut tid</p>
@@ -126,7 +130,7 @@ function EventDialog({
               <p className="pl-2 text-xs">Beskrivning</p>
               <TextField
                 name="description"
-                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                 className="w-full leading-5"
               />
             </div>

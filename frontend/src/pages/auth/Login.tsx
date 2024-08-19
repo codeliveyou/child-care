@@ -53,12 +53,12 @@ const Login = () => {
               <p className="font-extrabold text-2xl">Logga in</p>
               <Input
                 name="username"
-                value="Användarnamn"
+                placeholder="Användarnamn"
                 className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
               />
               <Input
                 name="password"
-                value="Lösenord"
+                placeholder="Lösenord"
                 className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
               />
               <Link

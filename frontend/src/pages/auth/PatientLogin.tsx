@@ -17,7 +17,7 @@ const PatientLogin = () => {
               <p className="font-extrabold text-2xl">Patient rum</p>
               <Input
                 name="roomID"
-                value="Rum-ID eller Perssonnumer"
+                placeholder="Rum-ID eller Perssonnumer"
                 className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
               />
               <Button

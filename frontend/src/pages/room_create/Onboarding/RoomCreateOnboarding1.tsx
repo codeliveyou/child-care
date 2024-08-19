@@ -43,22 +43,22 @@ const RoomCreateOnboarding1 = () => {
 
           <Input
             name="room"
-            value="Rum namn"
+            placeholder="Rum namn"
             className="py-2.5 px-5 border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
           />
           <Input
             name="patient"
-            value="Patient namn"
+            placeholder="Patient namn"
             className="py-2.5 px-5 border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
           />
           <Input
             name="patientID"
-            value="Patient personnumret"
+            placeholder="Patient personnumret"
             className="py-2.5 px-5 border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
           />
           <Input
             name="avatar"
-            value="Avatar namn"
+            placeholder="Avatar namn"
             className="py-2.5 px-5 border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
           />
         </div>

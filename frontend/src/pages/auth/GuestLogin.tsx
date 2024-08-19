@@ -17,12 +17,12 @@ const GuestLogin = () => {
               <p className="font-extrabold text-2xl">Gäst konto</p>
               <Input
                 name="name"
-                value="Gästnamn"
+                placeholder="Gästnamn"
                 className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
               />
               <Input
                 name="keyID"
-                value="Nyckel ID"
+                placeholder="Nyckel ID"
                 className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
               />
               <Button
