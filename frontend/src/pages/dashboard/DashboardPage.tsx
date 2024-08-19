@@ -69,8 +69,13 @@ const videoData = [
     activity: "Igår 11:25",
   },
   {
-    title: "Stella rooms",
+    title: "Annas rum - inspelning",
     videoUri: "/images/video/3.png",
+    activity: "Den 12-02-2024",
+  },
+  {
+    title: "Stella rooms",
+    videoUri: "/images/video/4.png",
     activity: "Den 24-02-2024",
   },
 ];
@@ -216,11 +221,15 @@ const DashboardPage = () => {
                       setVideoDialogOpen(true);
                     }}
                   >
-                    <div className="rounded-lg overflow-hidden h-24 max-w-[200px]">
-                      <img src={video.videoUri} alt="Room image" />
+                    <div className="relative rounded-lg overflow-hidden h-24 w-[200px] shrink-0">
+                      <img
+                        src={video.videoUri}
+                        alt="Room image"
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full z-0"
+                      />
                     </div>
                     <div className="flex flex-col gap-y-1">
-                      <p className="font-semibold text-xl leading-6">
+                      <p className="font-semibold text-xl leading-6 line-clamp-1">
                         {video.title}
                       </p>
                       {video.activity && (

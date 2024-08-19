@@ -20,7 +20,7 @@ function Pagination({ currentPage, totalPage, onPageChange }: PaginationProps) {
   return (
     <div className="py-2 px-9 flex items-center gap-x-2.5">
       <div
-        className="pl-4 flex items-center cursor-pointer"
+        className="pl-4 flex items-center cursor-pointer select-none"
         onClick={() => {
           if (currentPage > 1) onPageChange(currentPage - 1);
         }}
@@ -47,7 +47,7 @@ function Pagination({ currentPage, totalPage, onPageChange }: PaginationProps) {
         ))}
       </div>
       <div
-        className="pr-4 flex items-center cursor-pointer"
+        className="pr-4 flex items-center cursor-pointer select-none"
         onClick={() => {
           if (currentPage < totalPage) onPageChange(currentPage + 1);
         }}

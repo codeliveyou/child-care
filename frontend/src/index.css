@@ -26,3 +26,12 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #4441e7;
   }
+
+  .image-selector {
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }

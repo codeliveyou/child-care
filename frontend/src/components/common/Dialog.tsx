@@ -26,7 +26,7 @@ function Dialog({
   return (
     <div
       className={
-        "fixed top-0 left-0 flex items-center justify-center w-screen h-screen bg-black/20"
+        "fixed top-0 left-0 flex items-center justify-center w-screen h-screen bg-black/20 z-50"
       }
     >
       <div

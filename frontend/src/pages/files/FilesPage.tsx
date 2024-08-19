@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { MutableRefObject, useRef, useState } from "react";
+import { FaPlus } from "react-icons/fa6";
+import { useDraggable } from "react-use-draggable-scroll";
 import { motion } from "framer-motion";
 
 import Button from "../globalcomponents/Button";
@@ -13,7 +15,6 @@ import FolderList from "../../components/folder/FolderList";
 import ReportDialog from "../../components/dashboard/ReportDialog";
 import VideoDialog from "../../components/dashboard/VideoDialog";
 import FileListItem from "../../components/folder/FileListItem";
-import { FaPlus } from "react-icons/fa6";
 
 const latestFiles: IFileListItem[] = [
   {
@@ -99,6 +100,9 @@ const fileData: IFileTileItem[] = [
 ];
 
 const FilesPage = () => {
+  const filesRef = useRef<HTMLDivElement>(null);
+  const { events } = useDraggable(filesRef as MutableRefObject<HTMLElement>);
+
   const [reportDialogOpen, setReportDialogOpen] = useState<boolean>(false);
   const [videoDialogOpen, setVideoDialogOpen] = useState<boolean>(false);
 
@@ -111,14 +115,14 @@ const FilesPage = () => {
   return (
     <>
       <motion.div
-        className="grid grid-cols-3 gap-x-2.5 h-full"
+        className="flex gap-x-2.5 h-full"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
       >
         {/* Left panel with folders */}
-        <div className="bg-white rounded-xl p-4 flex flex-col gap-y-2.5 overflow-y-auto">
+        <div className="max-w-[400px] w-full bg-white rounded-xl p-4 flex flex-col gap-y-2.5 overflow-y-auto">
           <p className="text-xl font-semibold">Mapp</p>
           <div className="flex-1 flex flex-col">
             {/* Rendering FolderSelect component with folder names */}
@@ -144,11 +148,15 @@ const FilesPage = () => {
         </div>
 
         {/* Right panel with recent files */}
-        <div className="p-4 pr-1.5 flex flex-col bg-white col-span-2 rounded-xl overflow-y-auto">
+        <div className="p-4 pr-1.5 flex flex-col bg-white rounded-xl overflow-y-auto">
           <div className="grow pr-2 flex flex-col gap-y-2.5 overflow-x-auto">
             <div className="flex flex-col gap-y-2.5">
               <p className="text-xl font-semibold">Senaste filer</p>
-              <div className="pb-1.5 flex gap-2 overflow-x-auto scrollbar scrollbar-none">
+              <div
+                ref={filesRef}
+                {...events}
+                className="pb-1.5 flex gap-2 overflow-x-auto scrollbar scrollbar-none"
+              >
                 {/* Displaying recent FileItem1 components */}
                 {latestFiles.map((fileItem, index) => (
                   <FileListItem

@@ -13,13 +13,13 @@ interface FileListItemProps extends IFileListItem {
 const FileListItem = ({ name, size, type, onClick }: FileListItemProps) => {
   return (
     <div
-      className="p-4 flex items-center gap-2 rounded-lg border border-light-background cursor-pointer shrink-0"
+      className="shrink-0 p-4 flex items-center gap-2 rounded-lg border border-light-background cursor-pointer select-none"
       onClick={onClick}
     >
       <img
         src={`/images/report/${type}.svg`}
         alt="File icon"
-        className="w-10"
+        className="w-10 image-selector"
       />
       <div className="flex flex-col gap-y-1">
         <div className="font-semibold leading-5">{name}</div>
