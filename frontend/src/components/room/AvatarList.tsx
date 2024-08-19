@@ -14,11 +14,11 @@ function AvatarList() {
 
   return (
     <div className="flex items-center gap-x-2.5">
-      <div className="relative shrink-0">
-        <div className="relative w-36 h-60 rounded-lg overflow-hidden">
+      <div className="shrink-0 relative">
+        <div className="relative w-36 h-56 rounded-lg overflow-hidden">
           <img
             src={avatarUris[activeIndex]}
-            className="absolute aspect-square h-full"
+            className="absolute left-1/2 -translate-x-1/2 max-w-[200%] h-full w-auto"
           />
         </div>
         <img
@@ -27,20 +27,24 @@ function AvatarList() {
           className="absolute -top-1 -right-2 z-50"
         />
       </div>
-      <div className="relative grow pb-4 flex gap-x-2.5 overflow-x-auto">
+      <div className="grow pb-4 flex gap-x-2.5 overflow-x-auto">
         {avatarUris.map((avatarUri, index) => (
-          <img
+          <div
             key={index}
-            src={avatarUri}
-            alt="Avatar"
             className={twMerge(
-              "w-[100px] h-32 rounded-lg opacity-50 hover:opacity-70 active:opacity-80 cursor-pointer",
+              "shrink-0 relative w-[100px] h-32 rounded-lg opacity-50 hover:opacity-70 active:opacity-80 cursor-pointer overflow-hidden",
               index === activeIndex ? "hidden" : "block"
             )}
             onClick={() => {
               setActiveIndex(index);
             }}
-          />
+          >
+            <img
+              src={avatarUri}
+              alt="Avatar"
+              className="absolute left-1/2 -translate-x-1/2 h-full w-auto max-w-[200%]"
+            />
+          </div>
         ))}
       </div>
     </div>

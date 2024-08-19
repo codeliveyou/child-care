@@ -29,10 +29,13 @@ const RoomCreateOnboarding2 = () => {
             className="pl-6 flex flex-col gap-5"
           >
             <li>
-              Att skapa ett rum innebär enkla steg som att välja en avatars
-              namn, outfit och publik
+              Glöm inte att när du väljer en avatar ska utseendet och rösten
+              matcha varandra.
             </li>
-            <li>Alla valda inställningar kan ändras när som helst i rummet.</li>
+            <li>
+              Om du hoppar över att välja en röst i det här steget kommer din
+              avatar att tala med din ursprungliga röst.
+            </li>
           </ul>
         </div>
       </div>
@@ -40,7 +43,7 @@ const RoomCreateOnboarding2 = () => {
       {/* Right side with progress bar and remaining content */}
       <div className="flex-1 flex flex-col py-4 px-8">
         <div className="py-3.5">
-          <ProgressBar value={25} />
+          <ProgressBar value={50} />
         </div>
         <div className="flex-1 flex flex-col justify-center">
           <div className="py-4 flex flex-col gap-y-2">

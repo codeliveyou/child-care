@@ -33,7 +33,7 @@ const RoomCreateOnboardingMain = () => {
       <span className="absolute lute left-8 bottom-6 w-[72px] h-[72px] rounded-lg bg-white flex items-center justify-center">
         <Avatar uri="/images/avatar.png" />
       </span>
-      <div className="max-w-screen-md max-h-[600px] w-full h-full">
+      <div className="max-w-[960px] max-h-[550px] w-full h-full">
         {getOnboardElement()}
       </div>
     </div>

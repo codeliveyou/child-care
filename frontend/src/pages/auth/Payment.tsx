@@ -21,7 +21,7 @@ const Payment = () => {
               <Input
                 name="code"
                 placeholder="Företag kod"
-                className="border border-white/50 py-2.5 px-5 text-light-background bg-white/10"
+                className="border border-white/50 py-2.5 px-5 placeholder:text-light-background text-light-background bg-white/10"
               />
               <p className="text-[10px] leading-3 text-disabled-text">
                 Eftersom du inte har angett en specifik företagskod, fyll i

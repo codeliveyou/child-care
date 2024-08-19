@@ -20,7 +20,7 @@ function VoiceList() {
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   return (
-    <div className="py-4 flex items-center gap-x-2 overflow-x-auto overflow-y-visible">
+    <div className="pt-4 pb-2 flex items-center gap-x-2 overflow-x-auto">
       {voiceData.map((voiceItem, index) => (
         <div
           key={index}
