@@ -93,7 +93,7 @@ const MainLayout = () => {
           <TradeMark color={colors.blue} className="float-left" />
           {/* Notification and sign-out buttons */}
           <div className="flex items-center gap-2">
-            {isRoomPage ? (
+            {!isAIPage && isRoomPage ? (
               <div className="flex gap-x-2">
                 {userList.map((userItem, index) => (
                   <ActionButton
