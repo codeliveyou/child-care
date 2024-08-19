@@ -20,7 +20,7 @@ function Input({
       type={type}
       name={name}
       placeholder={placeholder}
-      value={value}
+      defaultValue={value}
       className={twMerge(
         "rounded-lg bg-light-background py-2 px-4 font-light text-sm leading-4 outline-none",
         className
