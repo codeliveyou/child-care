@@ -6,6 +6,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { twMerge } from "tailwind-merge";
 
 import TradeMark from "./account/components/TradeMark";
 import Avatar from "../components/common/Avatar";
@@ -18,7 +19,6 @@ import RoomSVG from "../assets/navbar/Room.svg?react";
 import CalendarSVG from "../assets/navbar/Calendar.svg?react";
 import FolderSVG from "../assets/navbar/Folder.svg?react";
 import SettingsSVG from "../assets/navbar/Settings.svg?react";
-import { twMerge } from "tailwind-merge";
 import ActionButton from "../components/common/ActionButton";
 
 const sidebarItems = [

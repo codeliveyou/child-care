@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 import GuestLogin from "../pages/auth/GuestLogin";
 import Payment from "../pages/auth/Payment";
@@ -19,24 +19,59 @@ import PatientLogin from "../pages/auth/PatientLogin";
 import PaymentDetail from "../pages/auth/PaymentDetail";
 import LoginWithBank from "../pages/auth/LoginWithBank";
 import RegisterWithBank from "../pages/auth/RegisterWithBank";
+import AdminLayout from "../pages/AdminLayout";
+import AdminLogin from "../pages/admin/Login";
+import AdminDashboard from "../pages/admin/Dashboard";
 
 // Array of route objects defining the application's navigation structure
 const routes = [
   {
-    path: "/room/create", // Route path for creating a room
-    element: <CreateRoomMain />, // Component to render for this route
+    path: "admin",
+    element: <Outlet />,
+    children: [
+      {
+        path: "sign-in",
+        element: <AdminLogin />,
+      },
+      {
+        path: "",
+        element: <AdminLayout />,
+        children: [
+          {
+            index: true,
+            element: <AdminDashboard />,
+          },
+        ],
+      },
+    ],
   },
   {
-    path: "/room/create/onboarding", // Route path for room creation onboarding
-    element: <RoomCreateOnboardingMain />, // Component to render for this route
+    path: "room",
+    element: <Outlet />,
+    children: [
+      {
+        path: "create",
+        element: <Outlet />,
+        children: [
+          {
+            index: true,
+            element: <CreateRoomMain />,
+          },
+          {
+            path: "onboarding",
+            element: <RoomCreateOnboardingMain />,
+          },
+          {
+            path: "ai-structure",
+            element: <MainLayout />,
+            children: [{ index: true, element: <AIStructureList /> }],
+          },
+        ],
+      },
+    ],
   },
   {
-    path: "/room/create/ai-structure",
-    element: <MainLayout />,
-    children: [{ index: true, element: <AIStructureList /> }],
-  },
-  {
-    path: "/auth",
+    path: "auth",
     element: <AuthLayout />,
     children: [
       { index: true, element: <Navigate to={"sign-in"} /> },
@@ -52,7 +87,7 @@ const routes = [
     ],
   },
   {
-    path: "/", // Root path
+    path: "", // Root path
     element: <MainLayout />, // Main layout component to render for this route
     children: [
       // Nested routes within MainLayout

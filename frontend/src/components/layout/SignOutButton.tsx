@@ -4,13 +4,17 @@ import { twMerge } from "tailwind-merge";
 
 type SignOutButtonProps = {
   className?: string;
+  redirectUri?: string;
 };
-const SignOutButton = ({ className }: SignOutButtonProps) => {
+const SignOutButton = ({
+  redirectUri = "/auth/sign-in",
+  className = "",
+}: SignOutButtonProps) => {
   const navigate = useNavigate();
   return (
     <Button
       className={twMerge("p-4", className)}
-      onClick={() => navigate("/auth/sign-in")}
+      onClick={() => navigate(redirectUri)}
     >
       <img src="/SignOut.svg" width={20} height={20} />
     </Button>

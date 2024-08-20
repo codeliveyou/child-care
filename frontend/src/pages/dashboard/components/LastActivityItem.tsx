@@ -12,7 +12,7 @@ const LastActivityItem = ({
   return (
     <div className="flex gap-2">
       {/* Display logo */}
-      <div className="rounded-xl overflow-hidden">
+      <div className="shrink-0 rounded-xl overflow-hidden">
         <img src={imageUri} className="w-[72px] h-[72px]" />
       </div>
 
