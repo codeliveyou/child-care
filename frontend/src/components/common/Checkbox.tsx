@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { FaCheck } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
 
 interface CheckboxProps {
@@ -22,7 +21,9 @@ function Checkbox({ label, labelClass = "", className = "" }: CheckboxProps) {
     >
       {/* <input type="checkbox" id="id-checkbox" className={inputClass} /> */}
       <span className="shrink-0 w-4 h-4 flex items-center justify-center border border-disabled-text rounded-[4px]">
-        {checked && <FaCheck className="text-primary-background" />}
+        {checked && (
+          <span className="shrink-0 w-2.5 h-2.5 rounded-[2px] bg-primary-background" />
+        )}
       </span>
       <label htmlFor="id-checkbox" className={labelClass}>
         {label}
