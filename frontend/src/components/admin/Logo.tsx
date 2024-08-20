@@ -12,7 +12,7 @@ function Logo({ className = "" }: LogoProps) {
         className
       )}
     >
-      Clearity
+      Childcare
     </div>
   );
 }
