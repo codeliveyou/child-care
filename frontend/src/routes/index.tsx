@@ -22,9 +22,19 @@ import RegisterWithBank from "../pages/auth/RegisterWithBank";
 import AdminLayout from "../pages/AdminLayout";
 import AdminLogin from "../pages/admin/Login";
 import AdminDashboard from "../pages/admin/Dashboard";
+import PatientDashboard from "../pages/patient/PatientDashboard";
+import GuestDashboard from "../pages/guest/GuestDashboard";
 
 // Array of route objects defining the application's navigation structure
 const routes = [
+  {
+    path: "patient",
+    element: <PatientDashboard />,
+  },
+  {
+    path: "guest",
+    element: <GuestDashboard />,
+  },
   {
     path: "admin",
     element: <Outlet />,

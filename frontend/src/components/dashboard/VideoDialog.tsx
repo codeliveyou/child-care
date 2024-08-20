@@ -100,7 +100,7 @@ const VideoDialog = ({ open, onClose }: VideoDialogProps) => {
         <div className="grow h-1.5 rounded-lg bg-primary-text relative">
           <div
             style={{ width: `${(currentTime / totalLength) * 100}%` }}
-            className="h-full absolute left-0 top-0 bg-light-background rounded-lg"
+            className="h-full absolute left-0 top-0 bg-light-background rounded-lg z-20"
           ></div>
         </div>
         <div className="flex py-0.5 px-2 gap-x-2.5">

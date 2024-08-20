@@ -1,27 +1,34 @@
+import { useNavigate } from "react-router-dom";
+
+import Avatar from "../../components/common/Avatar";
+import SignOutButton from "../../components/layout/SignOutButton";
 import TradeMark from "../account/components/TradeMark";
 import Button from "../globalcomponents/Button";
-import { colors } from "../../constants/colors";
-import { useNavigate } from "react-router-dom";
-import SignOutButton from "../../components/layout/SignOutButton";
+import { FaPlus } from "react-icons/fa6";
 
 const CreateRoomMain = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center relative gap-3 bg-[#E9E9F3]">
-      {/* Trademark component */}
-      <TradeMark color={colors.blue} />
-
-      {/* Button to create a room */}
-      <Button
-        className="flex items-center gap-3"
-        onClick={() => navigate("/room/create/onboarding#1")}
-      >
-        <span className="text-4xl">+</span> Skapa ett rum
-      </Button>
-
-      {/* Sign out button */}
-      <SignOutButton className="absolute top-10 right-10" />
+    <div className="relative w-full h-full flex items-center justify-center bg-light-background">
+      <SignOutButton className="absolute top-6 right-8" />
+      <span className="absolute lute left-8 bottom-6 w-[72px] h-[72px] rounded-lg bg-white flex items-center justify-center">
+        <Avatar uri="/images/avatar.png" />
+      </span>
+      <div className="flex flex-col gap-y-3.5 items-center">
+        <TradeMark className="text-[32px] font-extrabold leading-10 !text-primary-background" />
+        <Button
+          className="h-14 py-4 px-[30px] flex gap-x-2"
+          onClick={() => {
+            navigate("/room/create/onboarding");
+          }}
+        >
+          <span className="shrink-0 flex items-center justify-center">
+            <FaPlus />
+          </span>
+          <p className="text-lg leading-6">Skapa ett rum</p>
+        </Button>
+      </div>
     </div>
   );
 };

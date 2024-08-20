@@ -28,7 +28,7 @@ const GuestLogin = () => {
               <Button
                 className="mt-4 border border-primary-border/25"
                 onClick={() => {
-                  navigate("/");
+                  navigate("/guest");
                 }}
               >
                 Delta

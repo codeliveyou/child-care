@@ -25,7 +25,7 @@ const PatientLogin = () => {
               <Button
                 className="mt-5 border border-primary-border/25"
                 onClick={() => {
-                  navigate("/");
+                  navigate("/patient");
                 }}
               >
                 Delta

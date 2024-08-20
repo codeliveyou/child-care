@@ -174,7 +174,7 @@ const PaymentDetail = () => {
           <Button
             variant="contained"
             onClick={() => {
-              navigate("/");
+              navigate("/room/create");
             }}
           >
             Slutför
