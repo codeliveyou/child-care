@@ -4,6 +4,7 @@ import Dialog from "../common/Dialog";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
 import TextField from "../common/TextField";
+import Button from "../../pages/globalcomponents/Button";
 
 enum Staging {
   Confirm = "confirm",
@@ -123,7 +124,6 @@ function EventDialog({
               <Checkbox
                 label="Ange bara start tid"
                 className="text-xs leading-4 text-disabled-text"
-                inputClass="border border-disabled-text"
               />
             </div>
             <div className="space-y-1 mb-4">
@@ -135,12 +135,9 @@ function EventDialog({
               />
             </div>
             <div className="self-end">
-              <button
-                className="bg-primary-background text-white py-2 px-4 rounded-lg"
-                onClick={handleSaveClick}
-              >
+              <Button onClick={handleSaveClick}>
                 {action === Action.Create ? "Skapa" : "Spara"}
-              </button>
+              </Button>
             </div>
           </>
         )}

@@ -65,7 +65,7 @@ const RoomCreateOnboarding1 = () => {
         <div className="flex justify-end">
           {/* Button to proceed to next onboarding step */}
           <Button
-            size="small"
+            size="compress"
             onClick={() => navigate("/room/create/onboarding#2")}
           >
             Nästa

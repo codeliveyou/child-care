@@ -59,7 +59,7 @@ const RoomCreateOnboarding2 = () => {
             <VoiceList />
           </div>
         </div>
-        <div className="flex justify-end gap-x-2.5">
+        <div className="flex items-center justify-end gap-x-2.5">
           {/* Button to proceed to next onboarding step */}
           <Button
             size="small"
@@ -69,7 +69,7 @@ const RoomCreateOnboarding2 = () => {
             Tillbaka
           </Button>
           <Button
-            size="small"
+            size="compress"
             onClick={() => navigate("/room/create/onboarding#3")}
           >
             Nästa

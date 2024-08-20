@@ -122,7 +122,6 @@ const MainLayout = () => {
               </>
             )}
             <div className="p-0.5">
-              {/* Notification button */}
               <SignOutButton /> {/* Sign out button */}
             </div>
           </div>
@@ -132,8 +131,8 @@ const MainLayout = () => {
           {/* Sidebar section */}
           <aside
             className={twMerge(
-              "flex flex-col justify-between shrink-0",
-              isSidebarExpand ? "basis-60" : "",
+              "shrink-0 flex flex-col justify-between",
+              isSidebarExpand ? "basis-[224px]" : "",
               isAIPage ? "justify-end" : ""
             )}
           >
@@ -142,7 +141,7 @@ const MainLayout = () => {
               <div
                 className={twMerge(
                   "relative",
-                  isSidebarExpand ? "" : "self-start"
+                  isSidebarExpand ? "mr-4" : "self-start"
                 )}
               >
                 <ul className="bg-white rounded-xl flex flex-col py-8 shrink-0">
@@ -177,7 +176,13 @@ const MainLayout = () => {
               </div>
             )}
             {/* Avatar */}
-            <Avatar uri={"/images/avatar.png"} className="self-start" />
+            <Avatar
+              uri={"/images/avatar.png"}
+              name="Johan Anders"
+              label="Stream Name It"
+              isExpanded={isSidebarExpand}
+              className="self-start"
+            />
           </aside>
           {/* Main content area */}
           <main className="flex-1">

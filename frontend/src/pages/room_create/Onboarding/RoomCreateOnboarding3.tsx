@@ -105,9 +105,7 @@ const RoomCreateOnboarding3 = () => {
                 choose the right answer.
               </p>
               <div className="flex items-center justify-between">
-                <Button className="py-2 px-4 text-base leading-5">
-                  Lägg till mönster
-                </Button>
+                <Button size="small">Lägg till mönster</Button>
                 <span
                   className="text-primary-background underline text-sm leading-5 cursor-pointer"
                   onClick={() => {
@@ -120,16 +118,17 @@ const RoomCreateOnboarding3 = () => {
             </div>
           )}
         </div>
-        <div className="flex justify-end gap-x-2.5 pt-1">
+        <div className="pt-1 flex items-center justify-end gap-x-2.5">
           {/* Button to proceed to next onboarding step */}
           <Button
-            className="py-2 px-4 text-base leading-5 !text-primary-text !bg-white border border-primary-text"
+            size="small"
+            variant="outlined"
             onClick={() => navigate("/room/create/onboarding#2")}
           >
             Tillbaka
           </Button>
           <Button
-            className="py-2 px-4 text-base leading-5"
+            size="compress"
             onClick={() => navigate("/room/create/onboarding#4")}
           >
             Nästa

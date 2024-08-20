@@ -135,8 +135,8 @@ const DashboardPage = () => {
               ))}
             </div>
             {/* Button for more details */}
-            <div>
-              <Button className="float-right py-2">Läs mer</Button>
+            <div className="flex justify-end">
+              <Button size="compress">Läs mer</Button>
             </div>
           </div>
 
@@ -194,7 +194,7 @@ const DashboardPage = () => {
               {/* Button for adding rooms */}
               <div className="pt-7 self-end">
                 <Button
-                  className="py-2"
+                  size="compress"
                   onClick={() => {
                     navigate("/room/create/onboarding");
                   }}
@@ -244,7 +244,7 @@ const DashboardPage = () => {
               </div>
               {/* Button for adding rooms */}
               <div className="pt-7 self-end">
-                <Button className="py-2">Läs mer</Button>
+                <Button size="compress">Läs mer</Button>
               </div>
             </div>
           </div>
@@ -288,7 +288,7 @@ const DashboardPage = () => {
               </div>
               {/* Button for more details */}
               <div className="self-end pt-7">
-                <Button className="py-2">Läs mer</Button>
+                <Button size="compress">Läs mer</Button>
               </div>
             </div>
           </div>

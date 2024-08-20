@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaChevronDown, FaChevronUp, FaEnvelope } from "react-icons/fa6";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import { MdOutlineMail } from "react-icons/md";
 import { twMerge } from "tailwind-merge";
 
