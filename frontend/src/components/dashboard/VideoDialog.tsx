@@ -38,6 +38,7 @@ const VideoDialog = ({ open, onClose }: VideoDialogProps) => {
       setTotalLength(videoRef.current.duration);
       videoRef.current.addEventListener("play", () => {
         setIsPlaying(true);
+        setTotalLength(videoRef.current?.duration || 1);
       });
       videoRef.current.addEventListener("pause", () => {
         setIsPlaying(false);
@@ -100,7 +101,7 @@ const VideoDialog = ({ open, onClose }: VideoDialogProps) => {
         <div className="grow h-1.5 rounded-lg bg-primary-text relative">
           <div
             style={{ width: `${(currentTime / totalLength) * 100}%` }}
-            className="h-full absolute left-0 top-0 bg-light-background rounded-lg z-20"
+            className="h-full absolute left-0 top-0 bg-light-background rounded-lg z-50"
           ></div>
         </div>
         <div className="flex py-0.5 px-2 gap-x-2.5">
