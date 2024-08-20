@@ -18,15 +18,15 @@ const GuestLogin = () => {
               <Input
                 name="name"
                 placeholder="Gästnamn"
-                className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
+                className="border border-primary-border/25 text-primary-placeholder bg-white/30"
               />
               <Input
                 name="keyID"
                 placeholder="Nyckel ID"
-                className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
+                className="border border-primary-border/25 text-primary-placeholder bg-white/30"
               />
               <Button
-                className="mt-4 py-2.5 border border-primary-border/25 text-base"
+                className="mt-4 border border-primary-border/25"
                 onClick={() => {
                   navigate("/");
                 }}
@@ -40,7 +40,8 @@ const GuestLogin = () => {
       <div className="py-7 px-11 col-span-4 bg-primary-background">
         <div className="relative h-full">
           <Button
-            className="absolute bottom-0 right-0 py-2 px-4 text-sm leading-4 border border-white text-white"
+            size="small"
+            className="absolute bottom-0 right-0 border border-white text-white"
             onClick={() => {
               navigate("/auth/sign-in");
             }}

@@ -9,7 +9,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-full grid grid-cols-9 rounded-lg overflow-hidden">
+    <div className="w-full h-full grid grid-cols-9 text-primary-text rounded-lg overflow-hidden">
       <div className="py-4 px-8 col-span-5 bg-white">
         <div className="relative h-full">
           <TradeMark className="absolute top-2.5 left-0 font-extrabold text-xl leading-6 !text-primary-background" />
@@ -19,25 +19,25 @@ const Register = () => {
               <Input
                 name="email"
                 placeholder="E-post"
-                className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
+                className="border border-primary-border/25 text-primary-placeholder bg-white/30"
               />
               <Input
                 name="business"
                 placeholder="Vård / Företag"
-                className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
+                className="border border-primary-border/25 text-primary-placeholder bg-white/30"
               />
               <Input
                 name="username"
                 placeholder="Användarnamn"
-                className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
+                className="border border-primary-border/25 text-primary-placeholder bg-white/30"
               />
               <Input
                 name="password"
                 placeholder="Lösenord"
-                className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
+                className="border border-primary-border/25 text-primary-placeholder bg-white/30"
               />
               <Button
-                className="mt-4 py-2.5 border border-primary-border/25 text-base"
+                className="mt-4"
                 onClick={() => {
                   navigate("/auth/payment");
                 }}
@@ -48,7 +48,8 @@ const Register = () => {
                 Or use Bank ID
               </span>
               <Button
-                className="py-2.5 border border-primary-border/25 text-base !text-disabled-text !bg-white"
+                variant="outlined"
+                className="text-disabled-text"
                 onClick={() => {
                   navigate("/auth/signup-with-bank");
                 }}
@@ -70,7 +71,10 @@ const Register = () => {
       <div className="py-7 px-11 col-span-4 bg-primary-background">
         <div className="relative h-full">
           <Button
-            className="absolute bottom-0 right-0 py-2 px-4 text-sm leading-4 border border-white text-white"
+            size="small"
+            variant="outlined"
+            color="secondary"
+            className="absolute bottom-0 right-0"
             onClick={() => {
               navigate("/auth/sign-in");
             }}

@@ -62,13 +62,14 @@ const RoomCreateOnboarding2 = () => {
         <div className="flex justify-end gap-x-2.5">
           {/* Button to proceed to next onboarding step */}
           <Button
-            className="py-2 px-4 text-base leading-5 !text-primary-text !bg-white border border-primary-text"
+            size="small"
+            variant="outlined"
             onClick={() => navigate("/room/create/onboarding")}
           >
             Tillbaka
           </Button>
           <Button
-            className="py-2 px-4 text-base leading-5"
+            size="small"
             onClick={() => navigate("/room/create/onboarding#3")}
           >
             Nästa

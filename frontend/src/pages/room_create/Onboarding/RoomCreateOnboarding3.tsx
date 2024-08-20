@@ -74,7 +74,7 @@ const RoomCreateOnboarding3 = () => {
                 <Input
                   name="keyword"
                   placeholder="Nyckelord"
-                  className="py-2.5 px-5 border border-primary-border/25 bg-white"
+                  className="border border-primary-border/25 bg-white"
                 />
                 <div className="flex flex-wrap gap-1">
                   {keywords.map((keyword, index) => (
@@ -92,12 +92,12 @@ const RoomCreateOnboarding3 = () => {
                 <Input
                   name="answer"
                   placeholder="Skriv ett svar"
-                  className="py-2.5 px-5 border border-primary-border/25 bg-white"
+                  className="border border-primary-border/25 bg-white"
                 />
                 <Input
                   name="keyword"
                   placeholder="Skriv nyckelord"
-                  className="py-2.5 px-5 border border-primary-border/25 bg-white"
+                  className="border border-primary-border/25 bg-white"
                 />
               </div>
               <p className="px-2.5 text-xs leading-4 text-disabled-text">

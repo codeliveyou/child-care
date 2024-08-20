@@ -19,12 +19,12 @@ function Login() {
           <Input
             name="username"
             placeholder="Användare"
-            className="py-2.5 px-5 border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
+            className="border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
           />
           <Input
             name="password"
             placeholder="Lösenord"
-            className="py-2.5 px-5 border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
+            className="border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
           />
           <p className="py-[5px] text-xs leading-4 text-primary-background underline">
             Har du glömd lösenordet?

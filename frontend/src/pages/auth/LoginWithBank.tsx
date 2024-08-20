@@ -28,7 +28,8 @@ const LoginWithBank = () => {
           För att bekräfta din identitet, skanna vänligen den bifogade QR-koden.
         </p>
         <Button
-          className="absolute bottom-3 right-1 py-2 px-4 !text-sm !leading-4 !text-primary-text !bg-white border border-primary-border/25"
+          size="small"
+          className="absolute bottom-3 right-1 !text-primary-text !bg-white border border-primary-border/25"
           onClick={() => {
             navigate("/auth/sign-in");
           }}

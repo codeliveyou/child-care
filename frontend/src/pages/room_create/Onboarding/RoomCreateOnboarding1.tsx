@@ -44,28 +44,28 @@ const RoomCreateOnboarding1 = () => {
           <Input
             name="room"
             placeholder="Rum namn"
-            className="py-2.5 px-5 border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
+            className="border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
           />
           <Input
             name="patient"
             placeholder="Patient namn"
-            className="py-2.5 px-5 border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
+            className="border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
           />
           <Input
             name="patientID"
             placeholder="Patient personnumret"
-            className="py-2.5 px-5 border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
+            className="border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
           />
           <Input
             name="avatar"
             placeholder="Avatar namn"
-            className="py-2.5 px-5 border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
+            className="border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
           />
         </div>
         <div className="flex justify-end">
           {/* Button to proceed to next onboarding step */}
           <Button
-            className="py-2 px-4 text-base leading-5"
+            size="small"
             onClick={() => navigate("/room/create/onboarding#2")}
           >
             Nästa

@@ -8,7 +8,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-full grid grid-cols-2 rounded-lg overflow-hidden">
+    <div className="w-full h-full grid grid-cols-2 text-primary-text rounded-lg overflow-hidden">
       <div className="bg-primary-background">
         <div className="py-7 px-8 h-full flex flex-col justify-between">
           <TradeMark className="pb-6 font-extrabold text-xl leading-6" />
@@ -37,7 +37,10 @@ const Login = () => {
             </div>
           </div>
           <Button
-            className="self-start py-2 px-4 text-sm leading-4 border border-white text-white"
+            size="small"
+            variant="outlined"
+            color="secondary"
+            className="self-start"
             onClick={() => {
               navigate("/auth/sign-up");
             }}
@@ -54,12 +57,12 @@ const Login = () => {
               <Input
                 name="username"
                 placeholder="Användarnamn"
-                className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
+                className="border border-primary-border/25 text-primary-placeholder bg-white/30"
               />
               <Input
                 name="password"
                 placeholder="Lösenord"
-                className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
+                className="border border-primary-border/25 text-primary-placeholder bg-white/30"
               />
               <Link
                 to={""}
@@ -68,7 +71,6 @@ const Login = () => {
                 Har du glömd lösenordet?
               </Link>
               <Button
-                className="py-2.5 border border-primary-border/25 text-base"
                 onClick={() => {
                   navigate("/");
                 }}
@@ -79,7 +81,8 @@ const Login = () => {
                 Or use Bank ID
               </span>
               <Button
-                className="py-2.5 border border-primary-border/25 text-base !text-disabled-text !bg-white"
+                variant="outlined"
+                className="text-disabled-text"
                 onClick={() => {
                   navigate("/auth/signin-with-bank");
                 }}
@@ -97,7 +100,8 @@ const Login = () => {
             </div>
             <div className="absolute bottom-2 right-5 flex justify-end gap-x-2">
               <Button
-                className="py-2 px-4 !text-sm !leading-4 !text-primary-text !bg-white border border-primary-border/25"
+                size="small"
+                variant="outlined"
                 onClick={() => {
                   navigate("/auth/patient-signin");
                 }}
@@ -105,7 +109,8 @@ const Login = () => {
                 Patient
               </Button>
               <Button
-                className="py-2 px-4 !text-sm !leading-4 !text-primary-text !bg-white border border-primary-border/25"
+                size="small"
+                variant="outlined"
                 onClick={() => {
                   navigate("/auth/guest-signin");
                 }}

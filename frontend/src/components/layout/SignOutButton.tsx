@@ -13,10 +13,13 @@ const SignOutButton = ({
   const navigate = useNavigate();
   return (
     <Button
-      className={twMerge("p-4", className)}
+      className={twMerge(
+        "p-0 w-[50px] h-[50px] flex items-center justify-center",
+        className
+      )}
       onClick={() => navigate(redirectUri)}
     >
-      <img src="/SignOut.svg" width={20} height={20} />
+      <img src="/SignOut.svg" className="shrink-0 w-5 h-5" />
     </Button>
   );
 };

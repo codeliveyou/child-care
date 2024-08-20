@@ -29,7 +29,7 @@ const RoomCreateOnboarding4 = () => {
                 <Input
                   name="patientID"
                   placeholder="#123445456546"
-                  className="px-4 py-2.5 border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text"
+                  className="border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text"
                 />
                 <span className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer">
                   <img src="/icons/copy.svg" alt="Copy icon" />
@@ -42,9 +42,9 @@ const RoomCreateOnboarding4 = () => {
               </p>
               <div className="relative">
                 <Input
-                  name="patientID"
+                  name="guestID"
                   placeholder="#234234fdf2345"
-                  className="px-4 py-2.5 border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text"
+                  className="border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text"
                 />
                 <span className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer">
                   <img src="/icons/copy.svg" alt="Copy icon" />

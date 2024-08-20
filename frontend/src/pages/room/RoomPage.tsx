@@ -248,7 +248,7 @@ const RoomPage = () => {
           <div className="flex gap-2 m-2">
             <Input
               placeholder="Skriva ett meddelande"
-              className="text-base px-5 py-3 flex-1 bg-light-background border-none"
+              className="text-base px-5 !py-[12.5px] flex-1 bg-light-background border-none"
             />
             <ActionButton className="bg-primary-background">
               <SendSVG />

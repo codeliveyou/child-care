@@ -13,15 +13,17 @@ const PatientLogin = () => {
         <div className="relative h-full">
           <TradeMark className="absolute top-2.5 left-0 font-extrabold text-xl leading-6 !text-primary-background" />
           <div className="h-full flex items-center justify-center">
-            <div className="max-w-[250px] w-full flex flex-col gap-y-2">
-              <p className="font-extrabold text-2xl">Patient rum</p>
-              <Input
-                name="roomID"
-                placeholder="Rum-ID eller Perssonnumer"
-                className="border border-primary-border/25 py-2.5 px-5 text-primary-placeholder bg-white/30"
-              />
+            <div className="max-w-[250px] w-full flex flex-col">
+              <div className="flex flex-col gap-y-2">
+                <p className="font-extrabold text-2xl">Patient rum</p>
+                <Input
+                  name="roomID"
+                  placeholder="Rum-ID eller Perssonnumer"
+                  className="border border-primary-border/25 text-primary-placeholder bg-white/30"
+                />
+              </div>
               <Button
-                className="mt-4 py-2.5 border border-primary-border/25 text-base"
+                className="mt-5 border border-primary-border/25"
                 onClick={() => {
                   navigate("/");
                 }}
@@ -35,7 +37,10 @@ const PatientLogin = () => {
       <div className="py-7 px-11 col-span-4 bg-primary-background">
         <div className="relative h-full">
           <Button
-            className="absolute bottom-0 right-0 py-2 px-4 text-sm leading-4 border border-white text-white"
+            size="small"
+            variant="outlined"
+            color="secondary"
+            className="absolute bottom-0 right-0"
             onClick={() => {
               navigate("/auth/sign-in");
             }}

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { MutableRefObject, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { useDraggable } from "react-use-draggable-scroll";
 
 const avatarUris = [
   "/images/room/avatar/1.png",
@@ -10,6 +11,10 @@ const avatarUris = [
 ];
 
 function AvatarList() {
+  const avatarListRef = useRef<HTMLDivElement>(null);
+  const { events } = useDraggable(
+    avatarListRef as MutableRefObject<HTMLElement>
+  );
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   return (
@@ -27,7 +32,11 @@ function AvatarList() {
           className="absolute -top-1 -right-2 z-50"
         />
       </div>
-      <div className="grow pb-4 flex gap-x-2.5 overflow-x-auto">
+      <div
+        ref={avatarListRef}
+        className="grow pb-4 flex gap-x-2.5 overflow-x-auto"
+        {...events}
+      >
         {avatarUris.map((avatarUri, index) => (
           <div
             key={index}
@@ -42,7 +51,7 @@ function AvatarList() {
             <img
               src={avatarUri}
               alt="Avatar"
-              className="absolute left-1/2 -translate-x-1/2 h-full w-auto max-w-[200%]"
+              className="absolute left-1/2 -translate-x-1/2 h-full w-auto max-w-[200%] image-selector"
             />
           </div>
         ))}

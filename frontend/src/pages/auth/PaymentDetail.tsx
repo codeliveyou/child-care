@@ -15,11 +15,11 @@ const PaymentDetail = () => {
   const [option, setOption] = useState<string>("short-pay");
 
   return (
-    <div className="w-full h-full bg-white rounded-lg overflow-hidden">
+    <div className="w-full h-full text-primary-text bg-white rounded-lg overflow-hidden">
       <div className="py-4 px-6 h-full flex flex-col">
         <div className="flex justify-between pb-2">
           <TradeMark className="pt-2.5 pl-2.5 font-extrabold text-2xl leading-6 !text-primary-background" />
-          <div className="flex flex-col gap-y-2">
+          <div className="flex flex-col items-end gap-y-2">
             <p className="font-extrabold text-2xl leading-8">
               {method === "subscription" ? "Prenumeration" : "Timpriser"}
             </p>
@@ -132,7 +132,7 @@ const PaymentDetail = () => {
               <Input
                 name="ssn"
                 placeholder="853423-5432"
-                className="py-2.5 px-5 !bg-white/30 border !border-primary-border/25 rounded-none"
+                className="!bg-white/30 border !border-primary-border/25 rounded-none"
               />
               <Button className="!py-2.5 text-base leading-5 !bg-dark-background !text-light-background !rounded-none">
                 Koppla konto
@@ -161,9 +161,10 @@ const PaymentDetail = () => {
             )}
           </div>
         </div>
-        <div className="flex justify-end gap-x-4 pt-1.5">
+        <div className="flex items-center justify-end gap-x-4 pt-1.5">
           <Button
-            className="py-2 px-4 !text-sm !leading-4 !text-primary-text !bg-white border border-primary-border/25"
+            size="small"
+            variant="outlined"
             onClick={() => {
               navigate("/auth/payment");
             }}
@@ -171,7 +172,7 @@ const PaymentDetail = () => {
             Tillbaka
           </Button>
           <Button
-            className="py-2 px-4 !text-sm !leading-4 !text-light-background !bg-primary-background"
+            variant="contained"
             onClick={() => {
               navigate("/");
             }}
