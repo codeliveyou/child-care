@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import TradeMark from "../account/components/TradeMark";
+import TradeMark from "../../components/user/TradeMark";
 import ActionButton from "../../components/common/ActionButton";
 import Avatar from "../../components/common/Avatar";
 import Input from "../../components/common/Input";
 import ReportDialog from "../../components/dashboard/ReportDialog";
-import SignOutButton from "../../components/layout/SignOutButton";
-import Button from "../globalcomponents/Button";
+import SignOutButton from "../../components/layout/header/SignOutButton";
+import Button from "../../components/common/Button";
 import ChatItem from "../room/components/ChatItem";
 
 import SendSVG from "../../assets/send.svg?react";

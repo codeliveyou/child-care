@@ -1,4 +1,5 @@
 import { twMerge } from "tailwind-merge";
+import { motion } from "framer-motion";
 
 type AvatarProps = {
   uri: string;
@@ -25,14 +26,18 @@ const Avatar = ({
     >
       <img src={uri} className="w-[55px] h-[55px] rounded-lg" />
       {isExpanded && (
-        <div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
           <p className="font-extrabold text-lg leading-5 text-primary-background">
             {name}
           </p>
           <p className="font-light text-sm leading-4 text-primary-background">
             {label}
           </p>
-        </div>
+        </motion.div>
       )}
     </div>
   );

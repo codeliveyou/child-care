@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import TradeMark from "../../account/components/TradeMark";
+import TradeMark from "../../../components/user/TradeMark";
 import Input from "../../../components/common/Input";
-import Button from "../../globalcomponents/Button";
-import ProgressBar from "../../globalcomponents/ProgressBar";
-import Toggle from "../../globalcomponents/Toggle";
+import Button from "../../../components/common/Button";
+import ProgressBar from "../../../components/common/ProgressBar";
+import Toggle from "../../../components/common/Toggle";
 
 const keywords = [
   "Alkohol",

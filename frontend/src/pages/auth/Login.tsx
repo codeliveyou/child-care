@@ -1,14 +1,21 @@
-import TradeMark from "../account/components/TradeMark";
-import Input from "../../components/common/Input";
-import Button from "../globalcomponents/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+
+import TradeMark from "../../components/user/TradeMark";
+import Input from "../../components/common/Input";
+import Button from "../../components/common/Button";
 import Checkbox from "../../components/common/Checkbox";
 
 const Login = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-full grid grid-cols-2 text-primary-text rounded-lg overflow-hidden">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="w-full h-full grid grid-cols-2 text-primary-text rounded-lg overflow-hidden"
+    >
       <div className="bg-primary-background">
         <div className="py-7 px-8 h-full flex flex-col justify-between">
           <TradeMark className="pb-6 font-extrabold text-xl leading-6" />
@@ -121,7 +128,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

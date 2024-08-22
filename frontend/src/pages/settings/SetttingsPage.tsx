@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { FaChevronRight } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 
-import Button from "../globalcomponents/Button";
+import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 
 const statisData = [

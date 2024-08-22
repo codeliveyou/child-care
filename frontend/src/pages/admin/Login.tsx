@@ -2,8 +2,8 @@ import { useNavigate } from "react-router-dom";
 
 import Checkbox from "../../components/common/Checkbox";
 import Input from "../../components/common/Input";
-import TradeMark from "../account/components/TradeMark";
-import Button from "../globalcomponents/Button";
+import TradeMark from "../../components/user/TradeMark";
+import Button from "../../components/common/Button";
 
 function Login() {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import Dialog from "../common/Dialog";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
 import TextField from "../common/TextField";
-import Button from "../../pages/globalcomponents/Button";
+import Button from "../common/Button";
 
 enum Staging {
   Confirm = "confirm",

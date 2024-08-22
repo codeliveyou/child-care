@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
 import Input from "../../components/common/Input";
-import Button from "../globalcomponents/Button";
-import TradeMark from "../account/components/TradeMark";
+import Button from "../../components/common/Button";
+import TradeMark from "../../components/user/TradeMark";
 
 const GuestLogin = () => {
   const navigate = useNavigate();

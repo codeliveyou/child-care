@@ -1,4 +1,4 @@
-import Button from "../../pages/globalcomponents/Button";
+import Button from "../../common/Button";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 

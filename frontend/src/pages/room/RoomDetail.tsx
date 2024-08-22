@@ -4,12 +4,13 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
 
-import Input from "../globalcomponents/Input";
+import Input from "../../components/common/Input";
+import ChatItem from "./components/ChatItem";
+
 import SendSVG from "../../assets/send.svg?react";
 import RoomCall from "../../components/room/RoomCall";
 import ShareDialog from "../../components/room/ShareDialog";
 import ActionButton from "../../components/common/ActionButton";
-import ChatItem from "./components/ChatItem";
 
 interface ITabItem {
   title: string;
@@ -247,6 +248,7 @@ const RoomPage = () => {
           {/* Input for sending messages */}
           <div className="flex gap-2 m-2">
             <Input
+              name="message"
               placeholder="Skriva ett meddelande"
               className="text-base px-5 !py-[12.5px] flex-1 bg-light-background border-none"
             />

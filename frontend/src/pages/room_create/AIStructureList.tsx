@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 
-import Toggle from "../globalcomponents/Toggle";
+import Toggle from "../../components/common/Toggle";
 
 const aiData = [
   {

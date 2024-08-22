@@ -1,5 +1,5 @@
-import SignOutButton from "../../components/layout/SignOutButton";
-import TradeMark from "../account/components/TradeMark";
+import SignOutButton from "../../components/layout/header/SignOutButton";
+import TradeMark from "../../components/user/TradeMark";
 
 function PatientDashboard() {
   return (

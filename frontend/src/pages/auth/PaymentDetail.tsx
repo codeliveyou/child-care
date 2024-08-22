@@ -1,11 +1,11 @@
+import { useState } from "react";
+import { FaChevronDown } from "react-icons/fa6";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
-import TradeMark from "../account/components/TradeMark";
-import Button from "../globalcomponents/Button";
-import { useState } from "react";
+import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
-import { FaChevronDown } from "react-icons/fa6";
+import TradeMark from "../../components/user/TradeMark";
 
 const PaymentDetail = () => {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import Dialog from "../common/Dialog";
 import Input from "../common/Input";
-import Button from "../../pages/globalcomponents/Button";
+import Button from "../common/Button";
 
 type ShareDialogProps = {
   open: boolean;
@@ -8,8 +8,6 @@ type ShareDialogProps = {
 };
 
 const ShareDialog = ({ open, onClose }: ShareDialogProps) => {
-  if (!open) return;
-
   return (
     <Dialog
       open={open}

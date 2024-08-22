@@ -1,8 +1,14 @@
 import { Outlet } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function AuthLayout() {
   return (
-    <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="relative w-full h-full flex items-center justify-center overflow-hidden"
+    >
       <img
         src="/images/dashboard/background.png"
         alt="Background image"
@@ -15,7 +21,7 @@ function AuthLayout() {
       <p className="absolute bottom-12 left-1/2 -translate-x-1/2 text-base leading-5 text-white">
         2024 Copyright Clearity
       </p>
-    </div>
+    </motion.div>
   );
 }
 

@@ -1,4 +1,4 @@
-import Button from "../globalcomponents/Button";
+import Button from "../../components/common/Button";
 import Table from "../../components/common/Table";
 
 function Dashboard() {

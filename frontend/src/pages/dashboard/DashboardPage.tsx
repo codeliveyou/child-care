@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-import Button from "../globalcomponents/Button";
+import Button from "../../components/common/Button";
 import LastActivityItem from "./components/LastActivityItem";
 import Calendar from "../../components/dashboard/Calendar";
 import VideoDialog from "../../components/dashboard/VideoDialog";

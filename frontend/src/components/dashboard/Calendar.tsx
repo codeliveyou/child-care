@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { FaChevronDown, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
+import { AnimatePresence, motion } from "framer-motion";
+
 import EventDialog, { Action } from "./EventDialog";
 
 interface IWeekdayEvent {
@@ -119,11 +121,11 @@ function WeekdayItem({
 
   return (
     <>
-      <div
-        className={twMerge(
-          "py-4 flex grow min-w-[10%] overflow-y-auto",
-          isItemActive ? "grid grid-cols-3" : "shrink"
-        )}
+      <motion.div
+        initial={false}
+        animate={{ flex: isItemActive ? 3 : 1 }}
+        transition={{ duration: 0.3 }}
+        className={twMerge("py-4 flex", isItemActive ? "grid grid-cols-3" : "")}
       >
         <div className="flex flex-col items-center gap-y-0.5 w-full">
           <p className="text-sm leading-4">{weekdayTexts[weekday]}</p>
@@ -154,7 +156,12 @@ function WeekdayItem({
           </span>
         </div>
         {isItemActive && (
-          <div className="flex flex-col gap-y-1 text-primary-text px-2 col-span-2">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.25 }}
+            className="flex flex-col gap-y-1 text-primary-text px-2 col-span-2"
+          >
             <p className="text-xs leading-4">
               {events[eventIndex].start} - {events[eventIndex].end}
             </p>
@@ -170,9 +177,9 @@ function WeekdayItem({
             >
               Se allt
             </button>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
       <EventDialog
         open={eventDialogOpen}
         onClose={() => {
@@ -217,7 +224,7 @@ function Calendar({ className = "" }: CalendarProps) {
             <FaChevronRight />
           </span>
         </div>
-        <div className="py-2 flex gap-x-2.5">
+        <motion.div className="py-2 flex gap-x-2.5">
           {weekdayItems.map((weekdayItem, index) => (
             <WeekdayItem
               key={index}
@@ -229,7 +236,7 @@ function Calendar({ className = "" }: CalendarProps) {
               {...weekdayItem}
             />
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

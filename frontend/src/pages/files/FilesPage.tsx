@@ -3,7 +3,7 @@ import { FaPlus } from "react-icons/fa6";
 import { useDraggable } from "react-use-draggable-scroll";
 import { motion } from "framer-motion";
 
-import Button from "../globalcomponents/Button";
+import Button from "../../components/common/Button";
 import {
   FileFormat,
   IFileListItem,

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Dialog from "../../globalcomponents/Dialog";
 import { twMerge } from "tailwind-merge";
-import Button from "../../globalcomponents/Button";
+import Button from "../../../components/common/Button";
 
 type CustomInputProps = {
   className?: string;

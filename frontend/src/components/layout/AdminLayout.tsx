@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
 
-import SearchInput from "../components/layout/SearchInput";
-import SignOutButton from "../components/layout/SignOutButton";
-import Logo from "../components/admin/Logo";
+import SearchInput from "../layout/header/SearchInput";
+import SignOutButton from "../layout/header/SignOutButton";
+import Logo from "../admin/Logo";
 
 function AdminLayout() {
   return (

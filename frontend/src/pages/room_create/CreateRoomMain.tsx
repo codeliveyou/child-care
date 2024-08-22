@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 
 import Avatar from "../../components/common/Avatar";
-import SignOutButton from "../../components/layout/SignOutButton";
-import TradeMark from "../account/components/TradeMark";
-import Button from "../globalcomponents/Button";
+import SignOutButton from "../../components/layout/header/SignOutButton";
+import TradeMark from "../../components/user/TradeMark";
+import Button from "../../components/common/Button";
 import { FaPlus } from "react-icons/fa6";
 
 const CreateRoomMain = () => {

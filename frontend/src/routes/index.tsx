@@ -1,16 +1,18 @@
 import { Navigate, Outlet } from "react-router-dom";
 
+import AuthLayout from "../components/layout/AuthLayout";
+import MainLayout from "../components/layout/MainLayout";
+import AdminLayout from "../components/layout/AdminLayout";
+
 import GuestLogin from "../pages/auth/GuestLogin";
 import Payment from "../pages/auth/Payment";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
-import AuthLayout from "../pages/AuthLayout";
 import CalendarPage from "../pages/calendar/CalendarPage";
 import DashboardPage from "../pages/dashboard/DashboardPage";
 import FilesPage from "../pages/files/FilesPage";
-import MainLayout from "../pages/MainLayout";
-import RoomListPage from "../pages/room/RoomListPage";
-import RoomPage from "../pages/room/RoomPage";
+import RoomListPage from "../pages/room/RoomMain";
+import RoomPage from "../pages/room/RoomDetail";
 import AIStructureList from "../pages/room_create/AIStructureList";
 import CreateRoomMain from "../pages/room_create/CreateRoomMain";
 import RoomCreateOnboardingMain from "../pages/room_create/RoomCreateOnboardingMain";
@@ -19,13 +21,11 @@ import PatientLogin from "../pages/auth/PatientLogin";
 import PaymentDetail from "../pages/auth/PaymentDetail";
 import LoginWithBank from "../pages/auth/LoginWithBank";
 import RegisterWithBank from "../pages/auth/RegisterWithBank";
-import AdminLayout from "../pages/AdminLayout";
 import AdminLogin from "../pages/admin/Login";
 import AdminDashboard from "../pages/admin/Dashboard";
 import PatientDashboard from "../pages/patient/PatientDashboard";
 import GuestDashboard from "../pages/guest/GuestDashboard";
 
-// Array of route objects defining the application's navigation structure
 const routes = [
   {
     path: "patient",
@@ -93,20 +93,18 @@ const routes = [
       { path: "payment-detail", element: <PaymentDetail /> },
       { path: "signin-with-bank", element: <LoginWithBank /> },
       { path: "signup-with-bank", element: <RegisterWithBank /> },
-      // { path: 'bank-signin', element: <}
     ],
   },
   {
-    path: "", // Root path
-    element: <MainLayout />, // Main layout component to render for this route
+    path: "",
+    element: <MainLayout />,
     children: [
-      // Nested routes within MainLayout
-      { index: true, element: <DashboardPage /> }, // Default index route for Dashboard
-      { path: "rooms", element: <RoomListPage /> }, // Route for room list
-      { path: "calendar", element: <CalendarPage /> }, // Route for calendar
-      { path: "files", element: <FilesPage /> }, // Route for files
-      { path: "settings", element: <SettingsPage /> }, // Route for settings
-      { path: "room/:id", element: <RoomPage /> }, // Dynamic route for a specific room
+      { index: true, element: <DashboardPage /> },
+      { path: "rooms", element: <RoomListPage /> },
+      { path: "calendar", element: <CalendarPage /> },
+      { path: "files", element: <FilesPage /> },
+      { path: "settings", element: <SettingsPage /> },
+      { path: "room/:id", element: <RoomPage /> },
     ],
   },
 ];

@@ -2,9 +2,9 @@ import { useNavigate } from "react-router-dom";
 
 import AvatarList from "../../../components/room/AvatarList";
 import VoiceList from "../../../components/room/VoiceList";
-import Button from "../../globalcomponents/Button";
-import ProgressBar from "../../globalcomponents/ProgressBar";
-import TradeMark from "../../account/components/TradeMark";
+import Button from "../../../components/common/Button";
+import ProgressBar from "../../../components/common/ProgressBar";
+import TradeMark from "../../../components/user/TradeMark";
 
 const RoomCreateOnboarding2 = () => {
   const navigate = useNavigate();

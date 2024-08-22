@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import TradeMark from "../account/components/TradeMark";
-import Button from "../globalcomponents/Button";
+import TradeMark from "../../components/user/TradeMark";
+import Button from "../../components/common/Button";
 
 const RegisterWithBank = () => {
   const navigate = useNavigate();

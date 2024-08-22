@@ -7,19 +7,19 @@ import {
 } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
+import { AnimatePresence, motion } from "framer-motion";
 
-import TradeMark from "./account/components/TradeMark";
-import Avatar from "../components/common/Avatar";
-import SignOutButton from "../components/layout/SignOutButton";
-import SearchInput from "../components/layout/SearchInput";
-import { colors } from "../constants/colors";
+import TradeMark from "../user/TradeMark";
+import Avatar from "../common/Avatar";
+import ActionButton from "../common/ActionButton";
+import SignOutButton from "../layout/header/SignOutButton";
+import SearchInput from "../layout/header/SearchInput";
 
-import DashboardSVG from "../assets/navbar/Dashboard.svg?react";
-import RoomSVG from "../assets/navbar/Room.svg?react";
-import CalendarSVG from "../assets/navbar/Calendar.svg?react";
-import FolderSVG from "../assets/navbar/Folder.svg?react";
-import SettingsSVG from "../assets/navbar/Settings.svg?react";
-import ActionButton from "../components/common/ActionButton";
+import DashboardSVG from "../../assets/navbar/Dashboard.svg?react";
+import RoomSVG from "../../assets/navbar/Room.svg?react";
+import CalendarSVG from "../../assets/navbar/Calendar.svg?react";
+import FolderSVG from "../../assets/navbar/Folder.svg?react";
+import SettingsSVG from "../../assets/navbar/Settings.svg?react";
 
 const sidebarItems = [
   {
@@ -90,7 +90,7 @@ const MainLayout = () => {
         {/* Header section */}
         <header className="flex items-center px-4 justify-between">
           {/* Trademark component */}
-          <TradeMark color={colors.blue} className="float-left" />
+          <TradeMark className="float-left text-primary-background" />
           {/* Notification and sign-out buttons */}
           <div className="flex items-center gap-2">
             {!isAIPage && isRoomPage ? (
@@ -129,65 +129,81 @@ const MainLayout = () => {
         {/* Main content section */}
         <div className="flex flex-1 min-h-0 px-4 gap-4">
           {/* Sidebar section */}
-          <aside
-            className={twMerge(
-              "shrink-0 flex flex-col justify-between",
-              isSidebarExpand ? "basis-[224px]" : "",
-              isAIPage ? "justify-end" : ""
-            )}
-          >
-            {/* Sidebar navigation links */}
-            {!isAIPage && (
-              <div
-                className={twMerge(
-                  "relative",
-                  isSidebarExpand ? "mr-4" : "self-start"
-                )}
-              >
-                <ul className="bg-white rounded-xl flex flex-col py-8 shrink-0">
-                  {/* Dashboard link */}
-                  {sidebarItems.map((item, index) => (
-                    <li
-                      key={index}
-                      className={twMerge(
-                        "py-2 px-5 flex items-center gap-x-4 hover:text-primary-background cursor-pointer",
-                        pathname === item.path ||
-                          (item.subPath && pathname.startsWith(item.subPath))
-                          ? "text-primary-background"
-                          : "text-disabled-text"
-                      )}
-                      onClick={() => navigate(item.path)}
-                    >
-                      <span className="text-inherit">{item.icon}</span>
-                      {isSidebarExpand && (
-                        <p className="text-left text-inherit">{item.title}</p>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                <span
-                  className="w-8 h-8 bg-white rounded-lg text-primary-background absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-basic cursor-pointer"
-                  onClick={() => {
-                    setSidebarExpand(!isSidebarExpand);
-                  }}
+          <AnimatePresence mode="wait">
+            <motion.aside
+              initial={{ width: "71px" }}
+              animate={{ width: isSidebarExpand ? "224px" : "71px" }}
+              transition={{ duration: 0.5 }}
+              className={twMerge(
+                "shrink-0 flex flex-col justify-between",
+                isAIPage ? "justify-end" : ""
+              )}
+            >
+              {/* Sidebar navigation links */}
+              {!isAIPage && (
+                <div
+                  className={twMerge(
+                    "relative",
+                    isSidebarExpand ? "mr-4" : "self-start"
+                  )}
                 >
-                  {isSidebarExpand ? <FaChevronLeft /> : <FaChevronRight />}
-                </span>
-              </div>
-            )}
-            {/* Avatar */}
-            <Avatar
-              uri={"/images/avatar.png"}
-              name="Johan Anders"
-              label="Stream Name It"
-              isExpanded={isSidebarExpand}
-              className="self-start"
-            />
-          </aside>
+                  <ul className="bg-white rounded-xl flex flex-col py-8 shrink-0">
+                    {/* Dashboard link */}
+                    {sidebarItems.map((item, index) => (
+                      <li
+                        key={index}
+                        className={twMerge(
+                          "py-2 px-5 flex items-center gap-x-4 hover:text-primary-background cursor-pointer",
+                          pathname === item.path ||
+                            (item.subPath && pathname.startsWith(item.subPath))
+                            ? "text-primary-background"
+                            : "text-disabled-text"
+                        )}
+                        onClick={() => navigate(item.path)}
+                      >
+                        <span className="text-inherit">{item.icon}</span>
+                        {isSidebarExpand && (
+                          <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.25 }}
+                            className="text-left text-inherit"
+                          >
+                            {item.title}
+                          </motion.p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                  <span
+                    className="w-8 h-8 bg-white rounded-lg text-primary-background absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-basic cursor-pointer"
+                    onClick={() => {
+                      setSidebarExpand(!isSidebarExpand);
+                    }}
+                  >
+                    {isSidebarExpand ? <FaChevronLeft /> : <FaChevronRight />}
+                  </span>
+                </div>
+              )}
+              {/* Avatar */}
+              <Avatar
+                uri={"/images/avatar.png"}
+                name="Johan Anders"
+                label="Stream Name It"
+                isExpanded={isSidebarExpand}
+                className="self-start"
+              />
+            </motion.aside>
+          </AnimatePresence>
           {/* Main content area */}
-          <main className="flex-1">
+          <motion.main
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex-1"
+          >
             <Outlet /> {/* Renders nested routes */}
-          </main>
+          </motion.main>
         </div>
       </div>
     </>
