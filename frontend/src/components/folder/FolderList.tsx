@@ -7,7 +7,7 @@ interface FolderListProps {
 }
 
 function FolderList({ folders }: FolderListProps) {
-  const [activeIndex, setActiveIndex] = useState<number>(-1);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
 
   return (
     <div className="flex flex-col gap-y-2.5">
