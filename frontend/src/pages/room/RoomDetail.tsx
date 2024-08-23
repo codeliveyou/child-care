@@ -266,6 +266,7 @@ const RoomPage = () => {
 
       <ShareDialog
         open={shareDialogOpen}
+        animation={"to-left"}
         onClose={() => setShareDialogOpen(false)}
       />
     </>

@@ -1,17 +1,24 @@
 import Dialog from "../common/Dialog";
 import Input from "../common/Input";
 import Button from "../common/Button";
+import { type Animation } from "../common/Dialog";
 
 type ShareDialogProps = {
   open: boolean;
   onClose: () => void;
+  animation?: Animation;
 };
 
-const ShareDialog = ({ open, onClose }: ShareDialogProps) => {
+const ShareDialog = ({
+  open,
+  onClose,
+  animation = "to-bottom",
+}: ShareDialogProps) => {
   return (
     <Dialog
       open={open}
       onClose={onClose}
+      animation={animation}
       className="bg-primary-background rounded-lg !max-w-[525px]"
     >
       <div className="py-6 px-10 w-full h-full flex flex-col gap-y-3">

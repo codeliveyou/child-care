@@ -4,18 +4,21 @@ import { useOnClickOutside } from "usehooks-ts";
 import { AnimatePresence, motion } from "framer-motion";
 
 type MaxWidth = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "screen";
+type Animation = "to-bottom" | "to-left";
 
 interface DialogProps extends PropsWithChildren {
   open: boolean;
   onClose: () => void;
   className?: string;
   maxWidth?: MaxWidth;
+  animation?: Animation;
 }
 
 function Dialog({
   open,
   className = "",
   maxWidth = "sm",
+  animation = "to-bottom",
   children,
   onClose = () => {},
 }: DialogProps) {
@@ -36,9 +39,27 @@ function Dialog({
         >
           <motion.div
             ref={dialogRef}
-            initial={{ y: "-100vh" }}
-            animate={{ y: 0 }}
-            exit={{ y: "-100vh" }}
+            initial={
+              animation === "to-bottom"
+                ? { y: "-100vh" }
+                : animation === "to-left"
+                ? { x: "100vw" }
+                : {}
+            }
+            animate={
+              animation === "to-bottom"
+                ? { y: 0 }
+                : animation === "to-left"
+                ? { x: 0 }
+                : {}
+            }
+            exit={
+              animation === "to-bottom"
+                ? { y: "-100vh" }
+                : animation === "to-left"
+                ? { x: "100vw" }
+                : {}
+            }
             transition={{
               type: "spring",
               bounceDamping: 8,
@@ -72,3 +93,4 @@ function Dialog({
 }
 
 export default Dialog;
+export type { Animation };

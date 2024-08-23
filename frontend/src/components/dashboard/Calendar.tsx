@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
 
 import EventDialog, { Action } from "./EventDialog";
+import Button from "../common/Button";
 
 interface IWeekdayEvent {
   start: string;
@@ -134,7 +135,7 @@ function WeekdayItem({
             <span
               key={index}
               className={twMerge(
-                "w-full py-2 rounded-lg text-center text-xs leading-4 text-white cursor-pointer",
+                "w-full py-2 rounded-lg text-center text-xs leading-4 text-white cursor-pointer hover:opacity-90 active:opacity-80",
                 event.isEmpty
                   ? "text-primary-text"
                   : isActive && index === eventIndex
@@ -169,14 +170,15 @@ function WeekdayItem({
             <p className="text-sm leading-4 line-clamp-4">
               {events[eventIndex].description}
             </p>
-            <button
-              className="rounded-lg py-2 px-4 bg-primary-background self-end text-white leading-5 mt-2.5"
+            <Button
+              size="compress"
+              className="self-end"
               onClick={() => {
                 setEventDialogOpen(true);
               }}
             >
               Se allt
-            </button>
+            </Button>
           </motion.div>
         )}
       </motion.div>
