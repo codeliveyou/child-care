@@ -12,7 +12,7 @@ const ShareDialog = ({ open, onClose }: ShareDialogProps) => {
     <Dialog
       open={open}
       onClose={onClose}
-      className="bg-primary-background rounded-lg !max-w-[500px]"
+      className="bg-primary-background rounded-lg !max-w-[525px]"
     >
       <div className="py-6 px-10 w-full h-full flex flex-col gap-y-3">
         <p className="font-extrabold text-[32px] leading-10 text-center text-white">

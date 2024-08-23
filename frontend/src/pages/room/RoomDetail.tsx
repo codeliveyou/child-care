@@ -143,7 +143,12 @@ const RoomPage = () => {
         <div className="grow pt-2 h-full flex flex-col gap-y-4">
           <div className="py-2 flex justify-between items-center">
             {/* Back button */}
-            <div className="flex gap-2 items-center">
+            <div
+              className="flex gap-2 items-center cursor-pointer"
+              onClick={() => {
+                navigate("/rooms");
+              }}
+            >
               <span className="w-6 h-6 flex items-center justify-center">
                 <FaChevronLeft />
               </span>
@@ -250,7 +255,7 @@ const RoomPage = () => {
             <Input
               name="message"
               placeholder="Skriva ett meddelande"
-              className="text-base px-5 !py-[12.5px] flex-1 bg-light-background border-none"
+              className="flex-1 h-12 px-5 !py-[12.5px] bg-light-background border-none text-base"
             />
             <ActionButton className="bg-primary-background">
               <SendSVG />

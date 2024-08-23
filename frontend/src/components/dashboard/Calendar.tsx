@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { FaChevronDown, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import EventDialog, { Action } from "./EventDialog";
 

@@ -162,7 +162,9 @@ const SettingsPage = () => {
             className="rounded-xl aspect-square object-cover"
             alt="Profile"
           />
-          <Button className="py-1 text-sm">Byt profil bild</Button>
+          <Button size="compress" className="font-bold">
+            Byt profil bild
+          </Button>
           <div className="pt-4">
             <div className="text-center text-lg font-bold text-primary-background">
               Johan Anders
@@ -250,9 +252,9 @@ const SettingsPage = () => {
             List, separated by commas, all the words for which you can choose
             the right answer.
           </p>
-          <Button className="py-2 px-4 self-start text-base leading-5">
-            Lägg till mönster
-          </Button>
+          <div className="flex">
+            <Button size="compress">Lägg till mönster</Button>
+          </div>
         </div>
         <div className="grow p-4 pr-1.5 flex flex-col gap-y-2.5 bg-white rounded-xl overflow-y-auto">
           <div className="grow pr-2 flex flex-col gap-y-2.5 overflow-y-auto">
@@ -294,9 +296,7 @@ const SettingsPage = () => {
             </div>
           </div>
           <div className="flex justify-end pt-4 pr-4">
-            <Button className="py-2 px-4 bg-primary-background text-base leading-5">
-              Ändra lösenord
-            </Button>
+            <Button size="compress">Ändra lösenord</Button>
           </div>
         </div>
       </div>
