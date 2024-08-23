@@ -62,9 +62,9 @@ function Dialog({
             }
             transition={{
               type: "spring",
-              bounceDamping: 8,
-              bounce: 0.3,
-              duration: 0.5,
+              bounceDamping: 0.8,
+              bounce: 0.2,
+              duration: 0.9,
             }}
             className={twMerge(
               "w-full rounded-lg",

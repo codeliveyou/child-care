@@ -14,9 +14,14 @@ const Login = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-full grid grid-cols-2 text-primary-text rounded-lg overflow-hidden"
+      className="w-full h-full grid grid-cols-2 text-primary-text bg-white rounded-lg overflow-hidden"
     >
-      <div className="bg-primary-background">
+      <motion.div
+        initial={{ x: 550 }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.6 }}
+        className="bg-primary-background"
+      >
         <div className="py-7 px-8 h-full flex flex-col justify-between">
           <TradeMark className="pb-6 font-extrabold text-xl leading-6" />
           <div className="flex flex-col gap-y-8">
@@ -55,8 +60,13 @@ const Login = () => {
             Skapa ett konto
           </Button>
         </div>
-      </div>
-      <div className="bg-white">
+      </motion.div>
+      <motion.div
+        initial={{ x: -480 }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.6 }}
+        className="bg-white"
+      >
         <div className="py-4 px-8 h-full">
           <div className="relative h-full flex items-center justify-center">
             <div className="max-w-[250px] w-full flex flex-col gap-y-2">
@@ -127,7 +137,7 @@ const Login = () => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
