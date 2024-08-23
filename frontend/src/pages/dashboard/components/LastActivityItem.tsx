@@ -10,7 +10,7 @@ const LastActivityItem = ({
   activity,
 }: LastActivityItemProps) => {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 cursor-pointer rounded-lg">
       {/* Display logo */}
       <div className="shrink-0 rounded-xl overflow-hidden">
         <img src={imageUri} className="w-[72px] h-[72px]" />

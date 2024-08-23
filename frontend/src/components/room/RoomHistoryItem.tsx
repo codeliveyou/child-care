@@ -16,7 +16,7 @@ interface RoomHistoryItemProps {
 
 function RoomHistoryItem({ history }: RoomHistoryItemProps) {
   return (
-    <div className="p-2 flex rounded-lg cursor-pointer hover:bg-light-background">
+    <div className="p-2 flex hover:bg-light-background transition duration-300 cursor-pointer rounded-lg">
       <div className="w-[100px] px-1.5 border-r-2 border-r-disabled-text flex flex-col shrink-0">
         <div className="flex flex-col gap-y-1 items-center self-start">
           <p className="font-bold text-xl leading-7">{history.date}</p>

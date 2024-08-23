@@ -13,7 +13,7 @@ interface FileListItemProps extends IFileListItem {
 const FileListItem = ({ name, size, type, onClick }: FileListItemProps) => {
   return (
     <div
-      className="shrink-0 p-4 flex items-center gap-2 rounded-lg border border-light-background cursor-pointer select-none"
+      className="shrink-0 p-4 flex items-center gap-2 rounded-lg border border-light-background hover:bg-light-background transition duration-300 cursor-pointer select-none"
       onClick={onClick}
     >
       <img

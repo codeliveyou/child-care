@@ -12,7 +12,7 @@ interface FileTileItemProps extends IFileTileItem {
 const FileTileItem = ({ name, type, onClick }: FileTileItemProps) => {
   return (
     <div
-      className="py-4 px-1 max-w-36 w-full h-fit flex flex-col items-center gap-4 rounded-lg cursor-pointer"
+      className="py-4 px-1 max-w-36 w-full h-fit flex flex-col items-center gap-4 hover:bg-light-background transition duration-300 rounded-lg cursor-pointer"
       onClick={onClick}
     >
       <img

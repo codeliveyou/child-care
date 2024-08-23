@@ -119,11 +119,11 @@ const DashboardPage = () => {
       >
         <div className="grid grid-cols-4 gap-4 max-h-[300px]">
           {/* Section for displaying last activities */}
-          <div className="rounded-xl bg-white p-4 pr-2 flex flex-col h-full overflow-y-auto ">
+          <div className="rounded-xl bg-white p-4 pr-1.5 flex flex-col h-full overflow-y-auto ">
             <div className="text-lg font-bold text-[#374151]">
               Sista aktiviteten
             </div>
-            <div className="flex-1 my-5 flex flex-col gap-2 overflow-y-auto">
+            <div className="flex-1 my-5 flex flex-col gap-y-2 overflow-y-auto">
               {/* Last activity items */}
               {activityData.map((activity, index) => (
                 <LastActivityItem
@@ -260,7 +260,7 @@ const DashboardPage = () => {
                 {reportData.map((reportItem, index) => (
                   <div
                     key={index}
-                    className="flex items-center cursor-pointer"
+                    className="flex items-center hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
                     onClick={() => {
                       setReportDialogOpen(true);
                     }}
