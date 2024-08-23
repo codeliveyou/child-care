@@ -14,7 +14,9 @@ const GuestLogin = () => {
           <TradeMark className="absolute top-2.5 left-0 font-extrabold text-xl leading-6 !text-primary-background" />
           <div className="h-full flex items-center justify-center">
             <div className="max-w-[250px] w-full flex flex-col gap-y-2">
-              <p className="font-extrabold text-2xl">Gäst konto</p>
+              <p className="font-extrabold text-2xl text-primary-text">
+                Gäst konto
+              </p>
               <Input
                 name="name"
                 placeholder="Gästnamn"

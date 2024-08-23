@@ -13,7 +13,7 @@ function Login() {
       <div className="max-w-[250px] w-full flex flex-col gap-y-14">
         <TradeMark className="text-center text-[32px] leading-10 !text-primary-background" />
         <div className="w-full flex flex-col gap-y-2">
-          <p className="font-extrabold text-center text-2xl leading-8">
+          <p className="font-extrabold text-center text-2xl leading-8 text-primary-text">
             Logga in
           </p>
           <Input

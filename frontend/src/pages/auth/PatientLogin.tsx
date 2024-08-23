@@ -15,7 +15,9 @@ const PatientLogin = () => {
           <div className="h-full flex items-center justify-center">
             <div className="max-w-[250px] w-full flex flex-col">
               <div className="flex flex-col gap-y-2">
-                <p className="font-extrabold text-2xl">Patient rum</p>
+                <p className="font-extrabold text-2xl text-primary-text">
+                  Patient rum
+                </p>
                 <Input
                   name="roomID"
                   placeholder="Rum-ID eller Perssonnumer"

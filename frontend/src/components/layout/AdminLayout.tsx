@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { motion } from "framer-motion";
 
 import SearchInput from "../layout/header/SearchInput";
 import SignOutButton from "../layout/header/SignOutButton";
@@ -6,7 +7,12 @@ import Logo from "../admin/Logo";
 
 function AdminLayout() {
   return (
-    <div className="p-4 w-full h-full flex flex-col gap-y-4 bg-light-background">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="p-4 w-full h-full flex flex-col gap-y-4 bg-light-background"
+    >
       <div className="w-full flex items-center justify-between">
         <Logo className="my-[7px]" />
         <div className="flex items-center gap-2">
@@ -24,7 +30,7 @@ function AdminLayout() {
         </div>
       </div>
       <Outlet />
-    </div>
+    </motion.div>
   );
 }
 
