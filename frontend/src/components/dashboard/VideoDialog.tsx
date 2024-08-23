@@ -8,8 +8,6 @@ type VideoDialogProps = {
   onClose: () => void;
 };
 const VideoDialog = ({ open, onClose }: VideoDialogProps) => {
-  if (!open) return;
-
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [totalLength, setTotalLength] = useState<number>(1);
