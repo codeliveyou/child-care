@@ -26,34 +26,59 @@ interface EventDialogProps {
   description: string;
 }
 
+const getDay = (datetime: string) => {
+  const factors = datetime.split(" ");
+  const date = factors[0] || "";
+  return new Date(date).toLocaleDateString("sv-se", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  });
+};
+
+const getTime = (datetime: string) => {
+  const factors = datetime.split(" ");
+  return factors[1] || "";
+};
+
 function EventDialog({
   open,
   onClose,
-  action = Action.Update,
   day,
   time,
-  title,
-  description,
+  title: initialTitle,
+  description: initialDesc,
+  action: initialAction = Action.Update,
 }: EventDialogProps) {
-  const [staging, setStaging] = useState<Staging>(Staging.Confirm);
-
-  useEffect(() => {
-    if (action === Action.Create) {
-      setStaging(Staging.Editing);
-    }
-  }, [action]);
+  const [action, setAction] = useState<Action>(initialAction);
+  const [staging, setStaging] = useState<Staging>(
+    initialAction === Action.Create ? Staging.Editing : Staging.Confirm
+  );
+  const [startTime, setStartTime] = useState<string>("");
+  const [endTime, setEndTime] = useState<string>("");
+  const [room, setRoom] = useState<string>("");
+  const [title, setTitle] = useState<string>(initialTitle);
+  const [description, setDescription] = useState<string>(initialDesc);
 
   const handleSaveClick = () => {
     if (action === Action.Create) {
-      onClose();
+      setAction(Action.Update);
+      setStaging(Staging.Confirm);
     } else {
-      if (staging === Staging.Confirm) {
-        setStaging(Staging.Editing);
-      } else {
-        onClose();
-      }
+      setStaging(Staging.Confirm);
     }
   };
+
+  useEffect(() => {
+    const times = time.replace(/ /g, "").split("-");
+    setStartTime(times.length === 2 ? `${day} ${times[0] || ""}` : "");
+    setEndTime(times.length === 2 ? `${day} ${times[1] || ""}` : "");
+  }, [day, time]);
+
+  useEffect(() => {
+    setTitle(initialTitle);
+    setDescription(initialDesc);
+  }, [initialTitle, initialDesc]);
 
   return (
     <Dialog
@@ -65,22 +90,24 @@ function EventDialog({
       <div className="px-2 flex flex-col gap-y-1 text-primary-text">
         {staging === "confirm" ? (
           <>
-            <p className="text-xl leading-6 font-bold">{day}</p>
-            <p className="text-xs">{time}</p>
+            <p className="text-xl leading-6 font-bold">{getDay(startTime)}</p>
+            <p className="text-xs">
+              {getTime(startTime)} - {getTime(endTime)}
+            </p>
             <p className="font-bold leading-5">{title}</p>
             <p className="font-light leading-4 text-sm">{description}</p>
-            <div className="self-end">
-              <button className="text-[#FF3E4C] py-2 px-4 bg-transparent">
+            <div className="flex justify-end">
+              <Button size="small" variant="text" className="text-[#FF3E4C]">
                 Ta bort
-              </button>
-              <button
-                className="text-white py-2 px-4 bg-primary-background rounded-lg"
+              </Button>
+              <Button
+                size="small"
                 onClick={() => {
                   setStaging(Staging.Editing);
                 }}
               >
                 Redigera
-              </button>
+              </Button>
             </div>
           </>
         ) : (
@@ -94,11 +121,19 @@ function EventDialog({
                 name="name"
                 placeholder="Noah och Elsa"
                 className="w-full"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
               />
             </div>
             <div className="space-y-1 mb-4">
               <p className="pl-2 text-xs">Patient / Rum namn</p>
-              <Input name="room" placeholder="Noah" className="w-full" />
+              <Input
+                name="room"
+                placeholder="Noah"
+                className="w-full"
+                value={room}
+                onChange={(e) => setRoom(e.target.value)}
+              />
             </div>
             <div className="space-y-1 mb-4">
               <p className="pl-2 text-xs">Tid</p>
@@ -108,6 +143,8 @@ function EventDialog({
                     name="start"
                     placeholder="12/03/2024 11:00"
                     className="text-center w-full"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
                   />
                   <p className="pl-2 text-disabled-text text-xs">Start tid</p>
                 </div>
@@ -117,6 +154,8 @@ function EventDialog({
                     name="end"
                     placeholder="12/03/2024 13:00"
                     className="text-center w-full"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
                   />
                   <p className="pl-2 text-disabled-text text-xs">Slut tid</p>
                 </div>
@@ -132,6 +171,8 @@ function EventDialog({
                 name="description"
                 placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                 className="w-full leading-5"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </div>
             <div className="self-end">

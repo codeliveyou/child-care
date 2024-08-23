@@ -186,7 +186,7 @@ function WeekdayItem({
           setEventDialogOpen(false);
         }}
         action={Action.Update}
-        day={`${day} Mars`}
+        day="08/23/2024"
         time={`${weekdayEvents[eventIndex]?.start} - ${weekdayEvents[eventIndex]?.end}`}
         title={weekdayEvents[eventIndex]?.title}
         description={weekdayEvents[eventIndex]?.description}

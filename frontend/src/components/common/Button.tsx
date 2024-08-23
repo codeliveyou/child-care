@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
-type ButtonSize = "compress" | "medium" | "small";
+type ButtonSize = "large" | "compress" | "small";
 type ButtonVariant = "contained" | "outlined" | "text";
 type ButtonColor = "primary" | "secondary";
 
@@ -16,7 +16,7 @@ type ButtonProps = {
 };
 
 const Button = ({
-  size = "medium",
+  size = "large",
   variant = "contained",
   color = "primary",
   className = "",
@@ -25,7 +25,7 @@ const Button = ({
   ...props
 }: ButtonProps) => {
   const sizeClass =
-    size === "medium"
+    size === "large"
       ? "h-[42px] py-[11px] px-5 text-base leading-5"
       : size === "small"
       ? "h-[34px] py-2 px-4 text-sm leading-[17px]"

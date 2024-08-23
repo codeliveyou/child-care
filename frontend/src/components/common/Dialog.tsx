@@ -39,7 +39,12 @@ function Dialog({
             initial={{ y: "-100vh" }}
             animate={{ y: 0 }}
             exit={{ y: "-100vh" }}
-            transition={{ ease: "easeInOut", duration: 0.3 }}
+            transition={{
+              type: "spring",
+              bounceDamping: 8,
+              bounce: 0.3,
+              duration: 0.5,
+            }}
             className={twMerge(
               "w-full rounded-lg",
               maxWidth === "xs"

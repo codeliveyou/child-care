@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
-import { MdOutlineMail } from "react-icons/md";
 import { twMerge } from "tailwind-merge";
 
 interface IRow extends Record<string, any> {
@@ -24,161 +23,10 @@ interface TableRowProps {
   row: IRow;
 }
 
-interface TableBodyProps {
+interface TableProps {
   columns: IColumn[];
   rows: IRow[];
 }
-
-const columns: IColumn[] = [
-  {
-    name: "name",
-    title: "Företag namn",
-    width: 350,
-  },
-  {
-    name: "description",
-    title: "Beskrivning",
-    width: 285,
-    render: (row: IRow) => (
-      <p className="text-xs leading-4 line-clamp-2">{row.description}</p>
-    ),
-  },
-  {
-    name: "email",
-    title: "E-post",
-    align: "center",
-    width: 235,
-    render: (row: IRow) => (
-      <div className="py-1.5 flex items-center gap-x-2.5">
-        <p className="font-semibold text-sm leading-4">{row.email}</p>
-        {row.email !== "-" && (
-          <span className="shrink-0 w-6 h-6 flex items-center justify-center">
-            <MdOutlineMail size={20} />
-          </span>
-        )}
-      </div>
-    ),
-  },
-  {
-    name: "date",
-    title: "Datum",
-    align: "center",
-    width: 135,
-    render: (row: IRow) => (
-      <p className="py-1.5 font-light text-sm leading-4 text-center">
-        {row.date}
-      </p>
-    ),
-  },
-  {
-    name: "use_time",
-    title: "Tid användning",
-    align: "center",
-    width: 235,
-    render: (row: IRow) => (
-      <p className="py-1.5 font-semibold text-sm leading-4 text-center">
-        {row.use_time}
-      </p>
-    ),
-  },
-  {
-    name: "status",
-    title: "Status",
-    align: "center",
-    width: 135,
-    render: (row: IRow) => (
-      <p className="py-1.5 font-semibold text-sm leading-4 text-center">
-        {row.status}
-      </p>
-    ),
-  },
-];
-
-const rows: IRow[] = [
-  {
-    name: "Karlstad sjukhuset",
-    description:
-      "Karlstad Sjukhus är en välrenommerad vårdinrättning belägen i Karlstad, Sverige. Det är en del av Region Värmland och erbjuder ett brett spektrum av medicinska tjänster och specialiserad vård inom olika medicinska områden. Sjukhuset är känt för sin höga standard inom patientvård, medicinsk forskning och utbildning av vårdpersonal. Det erbjuder moderna faciliteter och avancerad medicinsk teknik för att säkerställa högkvalitativ vård och behandling för sina patienter.",
-    email: "info@karlstadsjukhuset.se",
-    date: "23-12-2024",
-    use_time: "40h",
-    status: "Active",
-    children: [
-      {
-        name: "Johan Carlsson",
-        description: "Math teacher",
-        email: "-",
-        date: "23-12-2024",
-        use_time: "10h",
-        status: "Active",
-      },
-      {
-        name: "Elin Nilsson",
-        description: "English teacher",
-        email: "Elin@karlstadsjukhuset.se",
-        date: "23-08-2024",
-        use_time: "10h",
-        status: "Active",
-      },
-      {
-        name: "Stefan Larsson",
-        description: "Sweden teacher",
-        email: "S.larsson@karlstadsjukhuset.se",
-        date: "23-06-2024",
-        use_time: "10h",
-        status: "Active",
-      },
-      {
-        name: "Stefan Berg",
-        description: "Sweden teacher",
-        email: "S.berg@karlstadsjukhuset.se",
-        date: "23-06-2024",
-        use_time: "10h",
-        status: "Active",
-      },
-    ],
-  },
-  {
-    name: "Karlstad School",
-    description:
-      "Karlstad Sjukhus är en välrenommerad vårdinrättning belägen i Karlstad, Sverige. Det är en del av Region Värmland och erbjuder ett brett spektrum av medicinska tjänster och specialiserad vård inom olika medicinska områden. Sjukhuset är känt för sin höga standard inom patientvård, medicinsk forskning och utbildning av vårdpersonal. Det erbjuder moderna faciliteter och avancerad medicinsk teknik för att säkerställa högkvalitativ vård och behandling för sina patienter.",
-    email: "info@karlstadsjukhuset.se",
-    date: "23-12-2024",
-    use_time: "40h",
-    status: "Active",
-    children: [],
-  },
-  {
-    name: "Karlstad School",
-    description:
-      "Karlstad Sjukhus är en välrenommerad vårdinrättning belägen i Karlstad, Sverige. Det är en del av Region Värmland och erbjuder ett brett spektrum av medicinska tjänster och specialiserad vård inom olika medicinska områden. Sjukhuset är känt för sin höga standard inom patientvård, medicinsk forskning och utbildning av vårdpersonal. Det erbjuder moderna faciliteter och avancerad medicinsk teknik för att säkerställa högkvalitativ vård och behandling för sina patienter.",
-    email: "info@karlstadsjukhuset.se",
-    date: "23-12-2024",
-    use_time: "40h",
-    status: "Active",
-    children: [],
-  },
-  {
-    name: "Karlstad School",
-    description:
-      "Karlstad Sjukhus är en välrenommerad vårdinrättning belägen i Karlstad, Sverige. Det är en del av Region Värmland och erbjuder ett brett spektrum av medicinska tjänster och specialiserad vård inom olika medicinska områden. Sjukhuset är känt för sin höga standard inom patientvård, medicinsk forskning och utbildning av vårdpersonal. Det erbjuder moderna faciliteter och avancerad medicinsk teknik för att säkerställa högkvalitativ vård och behandling för sina patienter.",
-    email: "info@karlstadsjukhuset.se",
-    date: "23-12-2024",
-    use_time: "40h",
-    status: "Active",
-    children: [],
-  },
-  {
-    name: "Karlstad School",
-    description:
-      "Karlstad Sjukhus är en välrenommerad vårdinrättning belägen i Karlstad, Sverige. Det är en del av Region Värmland och erbjuder ett brett spektrum av medicinska tjänster och specialiserad vård inom olika medicinska områden. Sjukhuset är känt för sin höga standard inom patientvård, medicinsk forskning och utbildning av vårdpersonal. Det erbjuder moderna faciliteter och avancerad medicinsk teknik för att säkerställa högkvalitativ vård och behandling för sina patienter.",
-    email: "info@karlstadsjukhuset.se",
-    date: "23-12-2024",
-    use_time: "40h",
-    status: "Active",
-    children: [],
-  },
-];
 
 function TableHead({ columns }: TableHeadProps) {
   return (
@@ -282,7 +130,7 @@ function TableRow({ columns, row }: TableRowProps) {
   );
 }
 
-function TableBody({ columns, rows }: TableBodyProps) {
+function TableBody({ rows, columns }: TableProps) {
   return (
     <div className="grow flex flex-col overflow-y-auto">
       {rows.map((row: IRow, index: number) => (
@@ -292,7 +140,7 @@ function TableBody({ columns, rows }: TableBodyProps) {
   );
 }
 
-function Table() {
+function Table({ rows, columns }: TableProps) {
   return (
     <div className="grow flex flex-col overflow-y-auto">
       <TableHead columns={columns} />
@@ -302,3 +150,4 @@ function Table() {
 }
 
 export default Table;
+export { type IColumn, type IRow };
