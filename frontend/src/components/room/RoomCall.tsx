@@ -3,28 +3,32 @@ import { twMerge } from "tailwind-merge";
 
 import ActionButton from "../common/ActionButton";
 
+// Define props for the RoomCall component
 interface RoomCallProps {
-  className?: string;
-  onShare: () => void;
+  className?: string;  // Optional className for additional styling
+  onShare: () => void; // Callback function for the share action
 }
 
 function RoomCall({ className = "", onShare }: RoomCallProps) {
   return (
     <div
       className={twMerge(
-        "relative w-full rounded-lg overflow-hidden",
-        className
+        "relative w-full rounded-lg overflow-hidden", // Container with relative positioning and full width
+        className // Apply additional styles from props
       )}
     >
+      {/* Background image for the call room */}
       <img
         src="/images/room/call/background.png"
         alt="Background image"
         className="absolute top-1/2 -translate-y-1/2 w-full h-auto"
       />
       <div className="absolute top-0 p-2.5 w-full flex justify-between">
+        {/* Share button */}
         <ActionButton className="bg-primary-background" onClick={onShare}>
           <img src="/icons/call/share.svg" className="w-6 h-6" />
         </ActionButton>
+        {/* User's image */}
         <img
           src="/images/room/call/mine.png"
           alt="Mine image"
@@ -33,26 +37,33 @@ function RoomCall({ className = "", onShare }: RoomCallProps) {
       </div>
       <div className="absolute bottom-0 p-2.5 w-full">
         <div className="py-2 px-4 flex items-center justify-between">
+          {/* End call button */}
           <ActionButton className="rounded-full bg-red-500">
             <img src="/icons/call/stop.svg" className="w-4 h-4" />
           </ActionButton>
           <div className="flex items-center gap-x-4">
+            {/* Mute button */}
             <ActionButton className="rounded-full bg-white">
               <img src="/icons/call/mute.svg" className="w-6 h-6" />
             </ActionButton>
+            {/* Photo button */}
             <ActionButton className="rounded-full bg-white">
               <img src="/icons/call/photo.svg" className="w-6 h-6" />
             </ActionButton>
+            {/* Phone button */}
             <ActionButton className="rounded-2xl bg-green-500 w-16 h-16">
               <img src="/icons/call/phone.svg" className="w-9 h-9" />
             </ActionButton>
+            {/* Microphone button */}
             <ActionButton className="rounded-full bg-white">
               <img src="/icons/call/microphone.svg" className="w-6 h-6" />
             </ActionButton>
+            {/* Video button */}
             <ActionButton className="rounded-full bg-white">
               <img src="/icons/call/video.svg" className="w-5 h-4" />
             </ActionButton>
           </div>
+          {/* More options button */}
           <ActionButton className="justify-end text-white">
             <TbDotsVertical size={24} />
           </ActionButton>

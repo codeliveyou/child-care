@@ -7,13 +7,30 @@ type MaxWidth = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "screen";
 type Animation = "to-bottom" | "to-left";
 
 interface DialogProps extends PropsWithChildren {
+  // Controls whether the dialog is open or closed
   open: boolean;
+  // Function to call when the dialog should be closed
   onClose: () => void;
+  // Optional additional CSS classes for the outer container
   className?: string;
+  // Optional maximum width of the dialog
   maxWidth?: MaxWidth;
+  // Optional animation type for dialog entrance and exit
   animation?: Animation;
 }
 
+/**
+ * Dialog component is a modal that displays content with optional animations and width settings.
+ *
+ * @param {DialogProps} props - Component properties including visibility, styling, and animations.
+ * @param {boolean} props.open - Determines if the dialog is currently visible.
+ * @param {() => void} props.onClose - Function to be called when the dialog should be closed.
+ * @param {string} [props.className=""] - Optional additional CSS classes to apply to the dialog.
+ * @param {MaxWidth} [props.maxWidth="sm"] - Defines the maximum width of the dialog.
+ * @param {Animation} [props.animation="to-bottom"] - Defines the animation style for the dialog.
+ * @param {React.ReactNode} props.children - The content to display inside the dialog.
+ * @returns {JSX.Element} The rendered Dialog component.
+ */
 function Dialog({
   open,
   className = "",
@@ -22,8 +39,10 @@ function Dialog({
   children,
   onClose = () => {},
 }: DialogProps) {
+  // Ref to manage the dialog element and handle outside clicks
   const dialogRef = useRef<HTMLDivElement>(null);
 
+  // Hook to detect clicks outside the dialog and trigger the onClose function
   useOnClickOutside(dialogRef, onClose);
 
   return (

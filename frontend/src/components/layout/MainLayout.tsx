@@ -21,6 +21,7 @@ import CalendarSVG from "../../assets/navbar/Calendar.svg?react";
 import FolderSVG from "../../assets/navbar/Folder.svg?react";
 import SettingsSVG from "../../assets/navbar/Settings.svg?react";
 
+// Sidebar items with their corresponding icons and paths
 const sidebarItems = [
   {
     title: "Dashboard",
@@ -50,28 +51,30 @@ const sidebarItems = [
   },
 ];
 
+// Lists of users based on their types
 const guestList = ["Anna", "Lukas", "Sara"];
-
 const patientList = ["Elsa"];
 
 // MainLayout component definition
 const MainLayout = () => {
   const navigate = useNavigate(); // React Router hook for navigation
   const { pathname } = useLocation(); // React Router hook for current pathname
-  const searchParams = useSearchParams();
-  const isAIPage = pathname === "/room/create/ai-structure";
-  const isRoomPage = pathname.startsWith("/room/");
+  const searchParams = useSearchParams(); // Hook to access URL search parameters
+  const isAIPage = pathname === "/room/create/ai-structure"; // Check if the current page is the AI creation page
+  const isRoomPage = pathname.startsWith("/room/"); // Check if the current page is a room page
 
-  const [isSidebarExpand, setSidebarExpand] = useState<boolean>(false);
-  const [activeUser, setActiveUser] = useState<string>("");
-  const [userType, setUserType] = useState<string>("guest");
-  const [userList, setUserList] = useState<string[]>([]);
+  const [isSidebarExpand, setSidebarExpand] = useState<boolean>(false); // State to control sidebar expansion
+  const [activeUser, setActiveUser] = useState<string>(""); // State to store the active user
+  const [userType, setUserType] = useState<string>("guest"); // State to store the current user type
+  const [userList, setUserList] = useState<string[]>([]); // State to store the list of users based on the user type
 
+  // Function to handle user click and update the URL with the selected user
   const handleUserClick = (user: string) => () => {
     setActiveUser(user);
     navigate(`${pathname}?${new URLSearchParams({ message: userType, user })}`);
   };
 
+  // Effect to update user type and user list based on URL search parameters
   useEffect(() => {
     const userType = (searchParams[0].get("message") as string) || "guest";
     const userList = userType === "patient" ? patientList : guestList;
@@ -112,7 +115,7 @@ const MainLayout = () => {
               </div>
             ) : (
               <>
-                <SearchInput />
+                <SearchInput /> {/* Search input component */}
                 <div className="p-4 flex items-center justify-center">
                   {/* Zoom button */}
                   <button>
@@ -122,7 +125,8 @@ const MainLayout = () => {
               </>
             )}
             <div className="p-0.5">
-              <SignOutButton /> {/* Sign out button */}
+              {/* Sign out button */}
+              <SignOutButton /> 
             </div>
           </div>
         </header>
@@ -131,9 +135,9 @@ const MainLayout = () => {
           {/* Sidebar section */}
           <AnimatePresence mode="wait">
             <motion.aside
-              initial={{ width: "71px" }}
-              animate={{ width: isSidebarExpand ? "224px" : "71px" }}
-              transition={{ duration: 0.5 }}
+              initial={{ width: "71px" }} // Initial width for the sidebar
+              animate={{ width: isSidebarExpand ? "224px" : "71px" }} // Animated width based on sidebar expansion
+              transition={{ duration: 0.5 }} // Transition duration for the animation
               className={twMerge(
                 "shrink-0 flex flex-col justify-between",
                 isAIPage ? "justify-end" : ""
@@ -148,7 +152,7 @@ const MainLayout = () => {
                   )}
                 >
                   <ul className="bg-white rounded-xl flex flex-col py-8 shrink-0">
-                    {/* Dashboard link */}
+                    {/* Render sidebar items */}
                     {sidebarItems.map((item, index) => (
                       <li
                         key={index}
@@ -164,9 +168,9 @@ const MainLayout = () => {
                         <span className="text-inherit">{item.icon}</span>
                         {isSidebarExpand && (
                           <motion.p
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.25 }}
+                            initial={{ opacity: 0 }} // Initial opacity for the item title
+                            animate={{ opacity: 1 }} // Final opacity for the item title
+                            transition={{ delay: 0.25 }} // Delay before the title fades in
                             className="text-left text-inherit"
                           >
                             {item.title}
@@ -175,17 +179,18 @@ const MainLayout = () => {
                       </li>
                     ))}
                   </ul>
+                  {/* Sidebar toggle button */}
                   <span
                     className="w-8 h-8 bg-white rounded-lg text-primary-background absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-basic cursor-pointer"
                     onClick={() => {
-                      setSidebarExpand(!isSidebarExpand);
+                      setSidebarExpand(!isSidebarExpand); // Toggle sidebar expansion
                     }}
                   >
                     {isSidebarExpand ? <FaChevronLeft /> : <FaChevronRight />}
                   </span>
                 </div>
               )}
-              {/* Avatar */}
+              {/* Avatar component */}
               <Avatar
                 uri={"/images/avatar.png"}
                 name="Johan Anders"
@@ -197,9 +202,9 @@ const MainLayout = () => {
           </AnimatePresence>
           {/* Main content area */}
           <motion.main
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }} // Initial opacity for fade-in effect
+            animate={{ opacity: 1 }} // Final opacity for fade-in effect
+            exit={{ opacity: 0 }} // Fade-out effect when component unmounts
             className="flex-1"
           >
             <Outlet /> {/* Renders nested routes */}
