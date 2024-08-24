@@ -12,12 +12,14 @@ const RoomCreateOnboarding1 = () => {
     <div className="w-full h-full grid grid-cols-2 rounded-xl border border-disabled-text bg-white overflow-hidden">
       {/* Left side with branding and welcome message */}
       <div className="py-6 px-8 flex-1 flex flex-col gap-y-3 bg-primary-background">
+        {/* TradeMark component for branding */}
         <TradeMark className="text-xl leading-6 pb-6" />
         <div className="pb-10 text-[32px] leading-10 text-white font-extrabold">
           <p>Välkommen!</p>
           <p>Jag är glad att du vill skapa ett rum.</p>
         </div>
         <div className="grow">
+          {/* Instructions list for room creation process */}
           <ul
             style={{ listStyleType: "square" }}
             className="pl-6 flex flex-col gap-5 text-focused-background text-lg leading-6"
@@ -34,6 +36,7 @@ const RoomCreateOnboarding1 = () => {
       {/* Right side with progress bar and form inputs */}
       <div className="flex-1 flex flex-col py-4 px-8">
         <div className="py-3.5">
+          {/* Progress bar indicating current onboarding step */}
           <ProgressBar value={25} />
         </div>
         <div className="flex-1 flex flex-col justify-center gap-2">
@@ -41,6 +44,7 @@ const RoomCreateOnboarding1 = () => {
             Skapa ett Namn
           </p>
 
+          {/* Input fields for room creation */}
           <Input
             name="room"
             placeholder="Rum namn"
@@ -63,7 +67,7 @@ const RoomCreateOnboarding1 = () => {
           />
         </div>
         <div className="flex justify-end">
-          {/* Button to proceed to next onboarding step */}
+          {/* Button to proceed to the next step in the onboarding process */}
           <Button
             size="compress"
             onClick={() => navigate("/room/create/onboarding#2")}

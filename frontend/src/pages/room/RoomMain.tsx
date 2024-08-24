@@ -13,6 +13,7 @@ import RoomHistoryItem, {
 
 import classes from "./RoomMain.module.scss";
 
+// Dummy data representing a list of rooms
 const dummyRoomData: IRoomListItem[] = [
   {
     name: "Elsa rum",
@@ -21,6 +22,7 @@ const dummyRoomData: IRoomListItem[] = [
     badge: 5,
     lastDate: "11:21",
   },
+  // More room items...
   {
     name: "Noah rum",
     imageUri: "/images/room/2.png",
@@ -73,6 +75,7 @@ const dummyRoomData: IRoomListItem[] = [
   },
 ];
 
+// Dummy data representing room history
 const dummyHistoryData: IRoomHistoryItem[] = [
   {
     date: "14 Juni",
@@ -86,6 +89,7 @@ const dummyHistoryData: IRoomHistoryItem[] = [
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   },
+  // More history items...
   {
     date: "12 Juni",
     time: {
@@ -148,12 +152,16 @@ const dummyHistoryData: IRoomHistoryItem[] = [
   },
 ];
 
+// Main component for displaying the list of rooms and their history
 const RoomListPage = () => {
   const navigate = useNavigate();
 
+  // State to manage the current page of the pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
+  // Total number of pages for pagination (static value)
   const [totalPage] = useState<number>(5);
 
+  // Handler function to navigate to the room creation page
   const handleAddRoomClick = () => {
     navigate("/room/create/onboarding");
   };
@@ -166,28 +174,34 @@ const RoomListPage = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Panel displaying the list of rooms */}
       <div className={classes.roomListPanel}>
         <p>Rums list</p>
+        {/* Button to add a new room */}
         <Button size="compress" onClick={handleAddRoomClick}>
           Lägg till rum
         </Button>
         <div className={classes.roomList}>
+          {/* Mapping over dummyRoomData to render each RoomListItem */}
           {dummyRoomData.map((room, index) => (
             <RoomListItem key={index} index={index} room={room} />
           ))}
         </div>
       </div>
 
+      {/* Panel displaying the room history */}
       <div className={classes.historyPanel}>
         <p>Rums historik lista</p>
         <div className={classes.historyList}>
           <div className="grow flex flex-col gap-y-2.5 overflow-y-auto">
+            {/* Mapping over dummyHistoryData to render each RoomHistoryItem */}
             {dummyHistoryData.map((history, index) => (
               <RoomHistoryItem key={index} history={history} />
             ))}
           </div>
         </div>
         <div className={classes.pagination}>
+          {/* Pagination component to handle page changes */}
           <Pagination
             currentPage={currentPage}
             totalPage={totalPage}

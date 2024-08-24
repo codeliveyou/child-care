@@ -5,6 +5,7 @@ import { MdClose } from "react-icons/md";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 
+// Static data for different categories with their progress and capacity
 const statisData = [
   {
     name: "Dokumentet",
@@ -28,6 +29,7 @@ const statisData = [
   },
 ];
 
+// Static data for counts of different entities
 const statisCountData = [
   {
     name: "Patienter",
@@ -39,6 +41,7 @@ const statisCountData = [
   },
 ];
 
+// Data for AI-related items including title, description, and keywords
 const aiData = [
   {
     title: "Fråga om huvudverk",
@@ -53,6 +56,7 @@ const aiData = [
       "Voltage",
     ],
   },
+  // More items with similar structure...
   {
     title: "Fråga om huvudverk",
     description: "Jag kan kontakta läkare och han kan hjälpa dig",
@@ -150,17 +154,18 @@ const SettingsPage = () => {
   return (
     <motion.div
       className="flex pt-0 gap-4 w-full h-full text-primary-text"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+      initial={{ opacity: 0 }} // Initial opacity for fade-in animation
+      animate={{ opacity: 1 }} // Animate to full opacity
+      exit={{ opacity: 0 }} // Fade out on exit
+      transition={{ duration: 0.5 }} // Transition duration
     >
       <div className="flex flex-col gap-2.5 basis-64 overflow-y-auto">
+        {/* User profile section */}
         <div className="bg-white rounded-xl flex-1 flex flex-col gap-2.5 p-4 pb-9">
           <img
             src="/images/avatar.png"
             className="rounded-xl aspect-square object-cover"
-            alt="Profile"
+            alt="Profile" // Alt text for the profile image
           />
           <Button size="compress" className="font-bold">
             Byt profil bild
@@ -177,6 +182,7 @@ const SettingsPage = () => {
             </div>
           </div>
         </div>
+        {/* Profile statistics section */}
         <div className="grow bg-white rounded-xl p-4 pr-1.5 flex flex-col gap-1 overflow-y-auto">
           <p className="text-xl font-bold">Profil statistik</p>
           <p className="text-xs text-disabled-text pt-2 pb-4">
@@ -184,6 +190,7 @@ const SettingsPage = () => {
             rätt svar.
           </p>
           <div className="grow pr-2 flex flex-col gap-y-1 overflow-y-auto">
+            {/* Statistics data */}
             <div className="flex flex-col gap-y-1">
               {statisData.map((statisItem, index) => (
                 <div key={index} className="flex flex-col gap-y-1">
@@ -199,7 +206,7 @@ const SettingsPage = () => {
                     <div className="grow bg-light-background relative rounded-[50px] overflow-hidden h-0.5">
                       <div
                         className="bg-primary-background absolute h-full"
-                        style={{ width: `${statisItem.percent}%` }}
+                        style={{ width: `${statisItem.percent}%` }} // Dynamic width based on percent
                       ></div>
                     </div>
                     <p className="text-disabled-text font-bold text-xs leading-4">
@@ -209,6 +216,7 @@ const SettingsPage = () => {
                 </div>
               ))}
             </div>
+            {/* Statistics count data */}
             <div className="flex flex-col gap-y-1">
               {statisCountData.map((statisItem, index) => (
                 <div
@@ -233,6 +241,7 @@ const SettingsPage = () => {
         </div>
       </div>
       <div className="flex flex-col gap-2.5 flex-1">
+        {/* AI settings section */}
         <div className="p-4 flex flex-col gap-6 bg-white rounded-xl">
           <p className="font-bold leading-4">AI inställningar</p>
           <div className="flex flex-col gap-2 pt-4">
@@ -256,6 +265,7 @@ const SettingsPage = () => {
             <Button size="compress">Lägg till mönster</Button>
           </div>
         </div>
+        {/* Profile settings section */}
         <div className="grow p-4 pr-1.5 flex flex-col gap-y-2.5 bg-white rounded-xl overflow-y-auto">
           <div className="grow pr-2 flex flex-col gap-y-2.5 overflow-y-auto">
             <div className="flex flex-col gap-2.5">
@@ -303,6 +313,7 @@ const SettingsPage = () => {
       <div className="flex flex-col gap-2 flex-[3] bg-white rounded-xl p-4 pr-1.5">
         <p className="font-bold text-base leading-5 pb-4">AI struktur list</p>
         <div className="grid grid-cols-2 gap-4 overflow-y-auto pr-2 w-full">
+          {/* Display AI-related items in a grid */}
           {aiData.map((dataItem, index) => (
             <div
               key={index}

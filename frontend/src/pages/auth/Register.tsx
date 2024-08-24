@@ -7,14 +7,14 @@ import Button from "../../components/common/Button";
 import TradeMark from "../../components/user/TradeMark";
 
 const Register = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook to programmatically navigate between routes
 
   return (
     <div className="w-full h-full grid grid-cols-9 text-primary-text bg-white rounded-lg overflow-hidden">
       <motion.div
-        initial={{ x: 480 }}
-        animate={{ x: 0 }}
-        transition={{ duration: 0.6 }}
+        initial={{ x: 480 }} // Initial horizontal position for animation
+        animate={{ x: 0 }} // Final horizontal position for animation
+        transition={{ duration: 0.6 }} // Duration of the animation
         className="py-4 px-8 col-span-5 bg-white"
       >
         <div className="relative h-full">
@@ -45,7 +45,7 @@ const Register = () => {
               <Button
                 className="mt-4"
                 onClick={() => {
-                  navigate("/auth/payment");
+                  navigate("/auth/payment"); // Navigate to payment page on button click
                 }}
               >
                 Skapa
@@ -57,7 +57,7 @@ const Register = () => {
                 variant="outlined"
                 className="text-disabled-text"
                 onClick={() => {
-                  navigate("/auth/signup-with-bank");
+                  navigate("/auth/signup-with-bank"); // Navigate to signup with Bank ID page
                 }}
               >
                 Bank ID
@@ -75,9 +75,9 @@ const Register = () => {
         </div>
       </motion.div>
       <motion.div
-        initial={{ x: -550 }}
-        animate={{ x: 0 }}
-        transition={{ duration: 0.6 }}
+        initial={{ x: -550 }} // Initial horizontal position for animation
+        animate={{ x: 0 }} // Final horizontal position for animation
+        transition={{ duration: 0.6 }} // Duration of the animation
         className="py-7 px-11 col-span-4 bg-primary-background"
       >
         <div className="relative h-full">
@@ -87,7 +87,7 @@ const Register = () => {
             color="secondary"
             className="absolute bottom-0 right-0"
             onClick={() => {
-              navigate("/auth/sign-in");
+              navigate("/auth/sign-in"); // Navigate to sign-in page on button click
             }}
           >
             Tillbaka

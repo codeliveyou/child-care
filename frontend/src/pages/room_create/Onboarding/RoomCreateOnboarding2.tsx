@@ -11,8 +11,9 @@ const RoomCreateOnboarding2 = () => {
 
   return (
     <div className="w-full h-full grid grid-cols-2 rounded-xl border border-disabled-text bg-white overflow-hidden">
-      {/* Left side with branding and instructions */}
+      {/* Left side with branding and step instructions */}
       <div className="py-6 px-8 flex-1 flex flex-col gap-y-3 bg-primary-background">
+        {/* TradeMark component for branding */}
         <TradeMark className="text-xl leading-6 pb-6" />
 
         <div className="pb-10 text-[32px] leading-10 text-white font-extrabold">
@@ -24,6 +25,7 @@ const RoomCreateOnboarding2 = () => {
             I det här steget kommer du att kunna välja en av de medföljande
             avatarerna och rösterna.
           </p>
+          {/* Instructions and tips for choosing avatar and voice */}
           <ul
             style={{ listStyleType: "square" }}
             className="pl-6 flex flex-col gap-5"
@@ -40,9 +42,10 @@ const RoomCreateOnboarding2 = () => {
         </div>
       </div>
 
-      {/* Right side with progress bar and remaining content */}
+      {/* Right side with progress bar and selection options */}
       <div className="flex-1 flex flex-col py-4 px-8">
         <div className="py-3.5">
+          {/* Progress bar indicating completion of onboarding step */}
           <ProgressBar value={50} />
         </div>
         <div className="flex-1 flex flex-col justify-center">
@@ -50,17 +53,19 @@ const RoomCreateOnboarding2 = () => {
             <p className="text-base leading-5 text-primary-text font-bold">
               Välj en avatar
             </p>
+            {/* Component to select avatar */}
             <AvatarList />
           </div>
           <div className="py-1 flex flex-col gap-y-2">
             <p className="text-base leading-5 text-primary-text font-bold">
               Välj en röst
             </p>
+            {/* Component to select voice */}
             <VoiceList />
           </div>
         </div>
         <div className="flex items-center justify-end gap-x-2.5">
-          {/* Button to proceed to next onboarding step */}
+          {/* Button to go back to previous step in onboarding */}
           <Button
             size="small"
             variant="outlined"
@@ -68,6 +73,7 @@ const RoomCreateOnboarding2 = () => {
           >
             Tillbaka
           </Button>
+          {/* Button to proceed to the next step in onboarding */}
           <Button
             size="compress"
             onClick={() => navigate("/room/create/onboarding#3")}

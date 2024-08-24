@@ -14,9 +14,9 @@ import SendSVG from "../../assets/send.svg?react";
 import DocIcon from "/images/report/doc.svg";
 import PdfIcon from "/images/report/pdf.svg";
 
-const patientList = ["Sara"];
+const patientList = ["Sara"]; // List of patients
 
-const chatList = ["Lukas", "Anna", "Sara"];
+const chatList = ["Lukas", "Anna", "Sara"]; // List of chat participants
 
 const guestMessages = [
   {
@@ -75,12 +75,12 @@ const guestMessages = [
 const reportData = [
   {
     type: "doc",
-    title: "Elsas  möte rapport",
+    title: "Elsas möte rapport",
     lastDate: "Igår 11:11",
   },
   {
     type: "pdf",
-    title: "Elsas  laddad information",
+    title: "Elsas laddad information",
     lastDate: "Den 23-03-2024",
   },
   {
@@ -96,9 +96,9 @@ const reportData = [
 ];
 
 function GuestDashboard() {
-  const [isFilePanelActive, setFilePanelActive] = useState<boolean>(false);
-  const [isChatPanelActive, setChatPanelActive] = useState<boolean>(false);
-  const [isReportDialogOpen, setReportDialogOpen] = useState<boolean>(false);
+  const [isFilePanelActive, setFilePanelActive] = useState<boolean>(false); // State to manage file panel visibility
+  const [isChatPanelActive, setChatPanelActive] = useState<boolean>(false); // State to manage chat panel visibility
+  const [isReportDialogOpen, setReportDialogOpen] = useState<boolean>(false); // State to manage report dialog visibility
 
   return (
     <>
@@ -113,19 +113,19 @@ function GuestDashboard() {
                   key={index}
                   className="w-9 h-9 text-white bg-primary-text"
                 >
-                  {userItem.charAt(0).toUpperCase()}
+                  {userItem.charAt(0).toUpperCase()} {/* Display first letter of patient name */}
                 </ActionButton>
               ))}
             </div>
             <div className="p-0.5">
               <SignOutButton redirectUri="/auth/guest-signin" />{" "}
-              {/* Sign out button */}
+              {/* Button to sign out */}
             </div>
           </div>
         </div>
         <div className="grow flex gap-x-6">
           <div className="flex flex-col justify-end">
-            <Avatar uri="/images/guest/avatar.png" />
+            <Avatar uri="/images/guest/avatar.png" /> {/* Display guest avatar */}
           </div>
           <div className="grow flex gap-x-2.5">
             <div className="grow flex flex-col gap-y-2">
@@ -158,7 +158,7 @@ function GuestDashboard() {
                       <Button
                         size="compress"
                         onClick={() => {
-                          setChatPanelActive(true);
+                          setChatPanelActive(true); // Show chat panel
                         }}
                       >
                         Skicka en förfrågan
@@ -181,7 +181,7 @@ function GuestDashboard() {
                             key={index}
                             className="w-9 h-9 bg-primary-text text-light-background"
                           >
-                            {chatItem.charAt(0).toUpperCase()}
+                            {chatItem.charAt(0).toUpperCase()} {/* Display first letter of chat participant */}
                           </ActionButton>
                         ))}
                       </div>
@@ -197,7 +197,7 @@ function GuestDashboard() {
                       <Button
                         size="compress"
                         onClick={() => {
-                          setFilePanelActive(true);
+                          setFilePanelActive(true); // Show file panel
                         }}
                       >
                         Skicka en förfrågan
@@ -222,7 +222,7 @@ function GuestDashboard() {
                             key={index}
                             className="w-9 h-9 bg-primary-text text-light-background"
                           >
-                            {patient.charAt(0).toUpperCase()}
+                            {patient.charAt(0).toUpperCase()} {/* Display first letter of patient */}
                           </ActionButton>
                         ))}
                       </div>
@@ -241,7 +241,7 @@ function GuestDashboard() {
                           key={index}
                           className="flex items-center cursor-pointer"
                           onClick={() => {
-                            setReportDialogOpen(true);
+                            setReportDialogOpen(true); // Open report dialog
                           }}
                         >
                           <div className="p-4">
@@ -312,7 +312,7 @@ function GuestDashboard() {
       <ReportDialog
         open={isReportDialogOpen}
         onClose={() => {
-          setReportDialogOpen(false);
+          setReportDialogOpen(false); // Close report dialog
         }}
         title="Sofia Rapport"
         lastDate="2 Mars, 2024"

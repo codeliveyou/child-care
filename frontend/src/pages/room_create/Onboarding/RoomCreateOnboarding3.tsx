@@ -7,6 +7,7 @@ import Button from "../../../components/common/Button";
 import ProgressBar from "../../../components/common/ProgressBar";
 import Toggle from "../../../components/common/Toggle";
 
+// List of keywords for AI limitations
 const keywords = [
   "Alkohol",
   "Skrik",
@@ -25,12 +26,14 @@ const keywords = [
 const RoomCreateOnboarding3 = () => {
   const navigate = useNavigate();
 
+  // State to control whether AI is being used
   const [isUsingAI, setIsUsingAI] = useState<boolean>(false);
 
   return (
     <div className="w-full h-full grid grid-cols-2 rounded-xl border border-disabled-text bg-white overflow-hidden">
-      {/* Left side with branding and welcome message */}
+      {/* Left side with branding and onboarding instructions */}
       <div className="py-6 px-8 flex-1 flex flex-col gap-y-3 bg-primary-background">
+        {/* TradeMark component for branding */}
         <TradeMark className="text-xl leading-6 pb-6" />
         <div className="pb-10 text-[32px] leading-10 text-white font-extrabold">
           <p>2 STEG</p>
@@ -41,6 +44,7 @@ const RoomCreateOnboarding3 = () => {
             Detta registreringssteg är avsett att konfigurera eller begränsa
             användningen av AI i interaktion med din publik.
           </p>
+          {/* Instructions for configuring AI settings */}
           <ul
             style={{ listStyleType: "square" }}
             className="pl-6 flex flex-col gap-5"
@@ -57,18 +61,21 @@ const RoomCreateOnboarding3 = () => {
         </div>
       </div>
 
-      {/* Right side with progress bar and form inputs */}
+      {/* Right side with progress bar and AI configuration form */}
       <div className="flex-1 flex flex-col py-4 px-8">
         <div className="py-3.5">
+          {/* Progress bar indicating completion of onboarding step */}
           <ProgressBar value={75} />
         </div>
         <div className="pt-4 flex-1 flex flex-col gap-2">
+          {/* Toggle switch to enable or disable AI */}
           <div className="flex items-center justify-between">
             <p className="font-bold leading-5">Använd AI</p>
             <Toggle isToggled={isUsingAI} handleToggle={setIsUsingAI} />
           </div>
           {isUsingAI && (
             <div className="grow flex flex-col justify-center gap-y-2">
+              {/* AI limitations settings */}
               <div className="pt-2 flex flex-col gap-y-2">
                 <p className="font-bold leading-5">AI-begränsningar</p>
                 <Input
@@ -76,6 +83,7 @@ const RoomCreateOnboarding3 = () => {
                   placeholder="Nyckelord"
                   className="border border-primary-border/25 bg-white"
                 />
+                {/* Display list of keywords */}
                 <div className="flex flex-wrap gap-1">
                   {keywords.map((keyword, index) => (
                     <span
@@ -87,6 +95,7 @@ const RoomCreateOnboarding3 = () => {
                   ))}
                 </div>
               </div>
+              {/* AI response patterns settings */}
               <div className="pt-2 flex flex-col gap-y-2">
                 <p className="font-bold leading-5">AI-svars mönster</p>
                 <Input
@@ -105,7 +114,9 @@ const RoomCreateOnboarding3 = () => {
                 choose the right answer.
               </p>
               <div className="flex items-center justify-between">
+                {/* Button to add response patterns */}
                 <Button size="small">Lägg till mönster</Button>
+                {/* Link to view all AI response patterns */}
                 <span
                   className="text-primary-background underline text-sm leading-5 cursor-pointer"
                   onClick={() => {
@@ -119,7 +130,7 @@ const RoomCreateOnboarding3 = () => {
           )}
         </div>
         <div className="pt-1 flex items-center justify-end gap-x-2.5">
-          {/* Button to proceed to next onboarding step */}
+          {/* Button to go back to the previous onboarding step */}
           <Button
             size="small"
             variant="outlined"
@@ -127,6 +138,7 @@ const RoomCreateOnboarding3 = () => {
           >
             Tillbaka
           </Button>
+          {/* Button to proceed to the next onboarding step */}
           <Button
             size="compress"
             onClick={() => navigate("/room/create/onboarding#4")}

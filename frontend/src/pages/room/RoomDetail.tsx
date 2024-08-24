@@ -13,10 +13,11 @@ import ShareDialog from "../../components/room/ShareDialog";
 import ActionButton from "../../components/common/ActionButton";
 
 interface ITabItem {
-  title: string;
-  key: string;
+  title: string;  // Title of the tab
+  key: string;  // Unique key for the tab
 }
 
+// Tab items for switching between patient and guest views
 const tabItems: ITabItem[] = [
   {
     title: "Patient",
@@ -28,6 +29,7 @@ const tabItems: ITabItem[] = [
   },
 ];
 
+// Example messages for patients and guests
 const patientMessages = [
   {
     name: "Elsa",
@@ -111,11 +113,13 @@ const RoomPage = () => {
   const [messageList, setMessageList] = useState<any[]>([]);
   const [shareDialogOpen, setShareDialogOpen] = useState<boolean>(false);
 
+  // Handle tab click to update URL and state
   const handleTabItemClick = (tabItem: ITabItem) => () => {
     navigate(`${pathname}?${new URLSearchParams({ message: tabItem.key })}`);
   };
 
   useEffect(() => {
+    // Determine active role and user from search params
     const role = (searchParams[0].get("message") as string) || "guest";
     const userList =
       role === "guest"
@@ -142,7 +146,7 @@ const RoomPage = () => {
         {/* Left panel containing call controls and chat */}
         <div className="grow pt-2 h-full flex flex-col gap-y-4">
           <div className="py-2 flex justify-between items-center">
-            {/* Back button */}
+            {/* Back button to navigate to rooms */}
             <div
               className="flex gap-2 items-center cursor-pointer"
               onClick={() => {
@@ -164,12 +168,12 @@ const RoomPage = () => {
             </div>
           </div>
 
-          {/* Video call and controls */}
+          {/* Video call component with share functionality */}
           <RoomCall className="grow" onShare={() => setShareDialogOpen(true)} />
 
-          {/* Chat section */}
+          {/* Chat and files sections */}
           <div className="grid grid-cols-2 gap-4">
-            {/* Patient chat */}
+            {/* Chat section with patient */}
             <div className="bg-white rounded-lg p-4 flex flex-col gap-2">
               <div className="pb-2 border-b-2 border-b-light-background">
                 <p className="text-xl leading-6 font-bold">Chatt med patient</p>
@@ -179,6 +183,7 @@ const RoomPage = () => {
                 <li>Förmåga att skriva AI-prompt</li>
               </ul>
               <div className="flex gap-2 justify-end">
+                {/* Buttons for chat actions */}
                 <button className="rounded-lg bg-[#374151] text-[#E9E9F3] w-8 h-8">
                   L
                 </button>
@@ -194,7 +199,7 @@ const RoomPage = () => {
               </div>
             </div>
 
-            {/* Patient files section */}
+            {/* Files section related to patient */}
             <div className="bg-white rounded-lg p-5 flex flex-col gap-2">
               <div className="pb-2 border-b-2 border-b-light-background">
                 <p className="text-xl leading-6 font-bold">Filer av patient</p>
@@ -204,6 +209,7 @@ const RoomPage = () => {
                 <li>Gäst kan lägga till filer och se patientinformation</li>
               </ul>
               <div className="flex gap-2 justify-end">
+                {/* Buttons for file actions */}
                 <button className="rounded-lg bg-[#374151] text-[#E9E9F3] w-8 h-8">
                   L
                 </button>
@@ -215,8 +221,9 @@ const RoomPage = () => {
           </div>
         </div>
 
-        {/* Right panel for participant controls */}
+        {/* Right panel for tab controls and chat messages */}
         <div className="p-2 flex flex-col gap-2.5 bg-white rounded-2xl w-80">
+          {/* Tab controls for switching between patient and guest views */}
           <div className="p-2 grid grid-cols-2 gap-x-2 bg-[#E9E9F3] rounded-xl font-bold text-lg">
             {tabItems.map((tabItem, index) => (
               <button
@@ -238,7 +245,7 @@ const RoomPage = () => {
             ))}
           </div>
 
-          {/* Chat items */}
+          {/* Display chat messages */}
           <div className="flex-1 flex flex-col gap-2.5">
             {messageList.map((message, index) => (
               <ChatItem
@@ -250,7 +257,7 @@ const RoomPage = () => {
             ))}
           </div>
 
-          {/* Input for sending messages */}
+          {/* Input field for sending messages */}
           <div className="flex gap-2 m-2">
             <Input
               name="message"
@@ -264,6 +271,7 @@ const RoomPage = () => {
         </div>
       </motion.div>
 
+      {/* Dialog for sharing options */}
       <ShareDialog
         open={shareDialogOpen}
         animation={"to-left"}

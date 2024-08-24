@@ -8,20 +8,31 @@ import TextField from "../../components/common/TextField";
 
 import { ICompany } from "./Dashboard";
 
+// Define possible pay options for companies
 type PayOption = "short-pay" | "invoice-pay";
 
 interface CompanyCreateDialogProps {
-  open: boolean;
-  onClose: () => void;
-  onCreate: (company: ICompany) => void;
+  open: boolean; // Controls whether the dialog is open or closed
+  onClose: () => void; // Callback function to close the dialog
+  onCreate: (company: ICompany) => void; // Callback function to handle creating a new company
 }
 
+/**
+ * Component to create a new company. It allows users to input company details
+ * and choose a payment method, then triggers an action to create the company.
+ * 
+ * @param {CompanyCreateDialogProps} props - The properties for the dialog, including 
+ * whether it's open, and callbacks for closing and creating a company.
+ */
 function CompanyCreateDialog({
   open,
   onCreate,
   onClose,
 }: CompanyCreateDialogProps) {
+  // State for managing selected payment option, defaults to "short-pay"
   const [payOption, setPayOption] = useState<PayOption>("short-pay");
+  
+  // State for managing company details input by the user
   const [company, setCompany] = useState<ICompany>({
     name: "",
     email: "",
@@ -32,24 +43,36 @@ function CompanyCreateDialog({
     date: "23-12-2024",
   });
 
+  /**
+   * Handles changes to company input fields and updates the state.
+   * Uses dynamic key based on the input field's name.
+   *
+   * @param {ChangeEvent} e - The event triggered when input fields are changed.
+   */
   const handleCompanyChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setCompany({ ...company, [e.target.name]: e.target.value });
   };
 
+  /**
+   * Handles the action of creating a company.
+   * Calls the onCreate callback with the company data and closes the dialog.
+   */
   const handleCreateClick = () => {
-    onCreate({ ...company, children: [] });
-    onClose();
+    onCreate({ ...company, children: [] }); // Add children property to company
+    onClose(); // Close the dialog after creation
   };
 
   return (
     <Dialog open={open} onClose={onClose} className="!max-w-[950px] h-[650px]">
       <div className="p-8 grid grid-cols-2 gap-x-4 bg-white rounded-lg">
+        {/* Left section of the dialog: input fields for company details */}
         <div className="px-2 flex flex-col gap-y-1">
           <p className="pb-4 font-bold text-xl leading-6">Skapa ett företag</p>
           <div className="grow flex flex-col justify-between">
             <div className="flex flex-col gap-y-1">
+              {/* Input for company name */}
               <div className="space-y-1 mb-4">
                 <p className="pl-2 text-xs">Företag namn</p>
                 <Input
@@ -61,6 +84,7 @@ function CompanyCreateDialog({
                   onChange={handleCompanyChange}
                 />
               </div>
+              {/* Input for company email */}
               <div className="space-y-1 mb-4">
                 <p className="pl-2 text-xs">Företag e-post</p>
                 <Input
@@ -72,6 +96,7 @@ function CompanyCreateDialog({
                   onChange={handleCompanyChange}
                 />
               </div>
+              {/* Input for company phone number */}
               <div className="space-y-1 mb-4">
                 <p className="pl-2 text-xs">Telefon</p>
                 <Input
@@ -83,6 +108,7 @@ function CompanyCreateDialog({
                   onChange={handleCompanyChange}
                 />
               </div>
+              {/* Input for company description */}
               <div className="space-y-1 mb-4">
                 <p className="pl-2 text-xs">Beskrivning</p>
                 <TextField
@@ -94,6 +120,7 @@ function CompanyCreateDialog({
                 />
               </div>
             </div>
+            {/* Button to trigger the creation of a company */}
             <div className="flex justify-end">
               <Button size="compress" onClick={handleCreateClick}>
                 Skapa
@@ -101,11 +128,14 @@ function CompanyCreateDialog({
             </div>
           </div>
         </div>
+
+        {/* Right section of the dialog: payment options */}
         <div className="px-8 flex flex-col justify-between">
           <div className="flex flex-col gap-y-2">
             <p className="pb-2.5 font-semibold text-base leading-5 text-primary-text border-b border-light-background">
               Betalningsmetod
             </p>
+            {/* Input for social security number and account linking */}
             <div className="flex flex-col gap-y-1">
               <p className="text-sm leading-4 text-disabled-text">
                 Personnummer
@@ -125,12 +155,15 @@ function CompanyCreateDialog({
               </div>
             </div>
           </div>
+
+          {/* Options for selecting payment method */}
           <div className="flex flex-col">
+            {/* Short payment option */}
             <div className="p-2 flex items-center justify-between border-t border-t-white/30">
               <div
                 className="flex items-center gap-x-2 cursor-pointer"
                 onClick={() => {
-                  setPayOption("short-pay");
+                  setPayOption("short-pay"); // Set payment method to short-pay
                 }}
               >
                 <span
@@ -147,6 +180,8 @@ function CompanyCreateDialog({
               </div>
               <img src="/images/auth/klarna.png" alt="Pay icon" />
             </div>
+
+            {/* Display selected payment method details */}
             <div className="py-3 px-5 border border-light-border rounded-[4px]">
               <p className="text-xs leading-4">
                 <span className="font-bold">Kort </span>
@@ -159,6 +194,8 @@ function CompanyCreateDialog({
                 123922
               </p>
             </div>
+
+            {/* Additional payment method info and terms */}
             <div className="pt-2">
               <ul
                 style={{
@@ -171,16 +208,20 @@ function CompanyCreateDialog({
                 <li>Klarna betalnings säkerhet</li>
               </ul>
             </div>
+
+            {/* Link for more information about payment methods */}
             <div className="pt-2 pb-4">
               <span className="underline text-primary-background text-xs leading-4">
                 Läs mer
               </span>
             </div>
+
+            {/* Invoice payment option */}
             <div className="p-2 flex items-center justify-between border-t border-t-light-background/30">
               <div
                 className="flex items-center gap-x-2 cursor-pointer"
                 onClick={() => {
-                  setPayOption("invoice-pay");
+                  setPayOption("invoice-pay"); // Set payment method to invoice-pay
                 }}
               >
                 <span

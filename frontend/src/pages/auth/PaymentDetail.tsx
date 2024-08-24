@@ -8,10 +8,12 @@ import Input from "../../components/common/Input";
 import TradeMark from "../../components/user/TradeMark";
 
 const PaymentDetail = () => {
+  // Initialize navigation and search parameters
   const navigate = useNavigate();
   const searchParams = useSearchParams();
-  const method = searchParams[0].get("method") || "subscription";
+  const method = searchParams[0].get("method") || "subscription"; // Default to "subscription" if method is not provided
 
+  // State to manage selected payment option
   const [option, setOption] = useState<string>("short-pay");
 
   return (
@@ -42,7 +44,7 @@ const PaymentDetail = () => {
               <div
                 className="flex items-center gap-x-2 cursor-pointer"
                 onClick={() => {
-                  setOption("short-pay");
+                  setOption("short-pay"); // Set payment option to short-pay
                 }}
               >
                 <span
@@ -90,7 +92,7 @@ const PaymentDetail = () => {
               <div
                 className="flex items-center gap-x-2 cursor-pointer"
                 onClick={() => {
-                  setOption("invoice-pay");
+                  setOption("invoice-pay"); // Set payment option to invoice-pay
                 }}
               >
                 <span
@@ -166,7 +168,7 @@ const PaymentDetail = () => {
             size="small"
             variant="outlined"
             onClick={() => {
-              navigate("/auth/payment");
+              navigate("/auth/payment"); // Navigate back to the payment page
             }}
           >
             Tillbaka
@@ -174,7 +176,7 @@ const PaymentDetail = () => {
           <Button
             variant="contained"
             onClick={() => {
-              navigate("/room/create");
+              navigate("/room/create"); // Navigate to the room creation page
             }}
           >
             Slutför

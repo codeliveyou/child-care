@@ -27,84 +27,90 @@ import PatientDashboard from "../pages/patient/PatientDashboard";
 import GuestDashboard from "../pages/guest/GuestDashboard";
 
 const routes = [
+  // Routes for patient-specific pages
   {
     path: "patient",
-    element: <PatientDashboard />,
+    element: <PatientDashboard />, // Patient dashboard layout
   },
+  // Routes for guest-specific pages
   {
     path: "guest",
-    element: <GuestDashboard />,
+    element: <GuestDashboard />, // Guest dashboard layout
   },
+  // Routes for admin-related pages
   {
     path: "admin",
-    element: <Outlet />,
+    element: <Outlet />, // Admin-specific layout with nested routes
     children: [
       {
         path: "sign-in",
-        element: <AdminLogin />,
+        element: <AdminLogin />, // Admin login page
       },
       {
         path: "",
-        element: <AdminLayout />,
+        element: <AdminLayout />, // Layout for admin dashboard and other pages
         children: [
           {
             index: true,
-            element: <AdminDashboard />,
+            element: <AdminDashboard />, // Default route for admin dashboard
           },
         ],
       },
     ],
   },
+  // Routes for room creation and management
   {
     path: "room",
-    element: <Outlet />,
+    element: <Outlet />, // Room-related layout with nested routes
     children: [
       {
         path: "create",
-        element: <Outlet />,
+        element: <Outlet />, // Room creation layout with nested routes
         children: [
           {
             index: true,
-            element: <CreateRoomMain />,
+            element: <CreateRoomMain />, // Default route for room creation main page
           },
           {
             path: "onboarding",
-            element: <RoomCreateOnboardingMain />,
+            element: <RoomCreateOnboardingMain />, // Onboarding page for room creation
           },
           {
             path: "ai-structure",
-            element: <MainLayout />,
-            children: [{ index: true, element: <AIStructureList /> }],
+            element: <MainLayout />, // Main layout for AI structure management
+            children: [{ index: true, element: <AIStructureList /> }], // AI structure list page
           },
         ],
       },
     ],
   },
+  // Routes for authentication pages
   {
     path: "auth",
-    element: <AuthLayout />,
+    element: <AuthLayout />, // Layout for authentication-related pages
     children: [
-      { index: true, element: <Navigate to={"sign-in"} /> },
-      { path: "sign-in", element: <Login /> },
-      { path: "sign-up", element: <Register /> },
-      { path: "guest-signin", element: <GuestLogin /> },
-      { path: "patient-signin", element: <PatientLogin /> },
-      { path: "payment", element: <Payment /> },
-      { path: "payment-detail", element: <PaymentDetail /> },
-      { path: "signin-with-bank", element: <LoginWithBank /> },
-      { path: "signup-with-bank", element: <RegisterWithBank /> },
+      { index: true, element: <Navigate to={"sign-in"} /> }, // Redirect to sign-in by default
+      { path: "sign-in", element: <Login /> }, // Login page
+      { path: "sign-up", element: <Register /> }, // Registration page
+      { path: "guest-signin", element: <GuestLogin /> }, // Guest login page
+      { path: "patient-signin", element: <PatientLogin /> }, // Patient login page
+      { path: "payment", element: <Payment /> }, // Payment page
+      { path: "payment-detail", element: <PaymentDetail /> }, // Payment detail page
+      { path: "signin-with-bank", element: <LoginWithBank /> }, // Login with bank page
+      { path: "signup-with-bank", element: <RegisterWithBank /> }, // Register with bank page
     ],
   },
+  // Routes for main application pages
   {
     path: "",
-    element: <MainLayout />,
+    element: <MainLayout />, // Main layout for general application pages
     children: [
-      { index: true, element: <DashboardPage /> },
-      { path: "rooms", element: <RoomListPage /> },
-      { path: "calendar", element: <CalendarPage /> },
-      { path: "files", element: <FilesPage /> },
-      { path: "settings", element: <SettingsPage /> },
-      { path: "room/:id", element: <RoomPage /> },
+      { index: true, element: <DashboardPage /> }, // Default route for dashboard
+      { path: "rooms", element: <RoomListPage /> }, // Rooms list page
+      { path: "calendar", element: <CalendarPage /> }, // Calendar page
+      { path: "files", element: <FilesPage /> }, // Files page
+      { path: "settings", element: <SettingsPage /> }, // Settings page
+      { path: "room/:id", element: <RoomPage /> }, // Room details page, with dynamic ID
     ],
   },
 ];
