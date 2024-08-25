@@ -5,19 +5,23 @@ import { HiOutlineArrowDownTray } from "react-icons/hi2";
 
 import Dialog from "../common/Dialog";
 
+// Props for the ReportDialog component
 interface ReportDialogProps {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  lastDate: string;
+  open: boolean; // Flag to control dialog visibility
+  onClose: () => void; // Callback to close the dialog
+  title: string; // Title of the report
+  lastDate: string; // Date of the last report update
 }
 
+// Props for the ToolbarIcon component
 interface IToolbarIcon {
-  name: string;
+  name: string; // Name of the icon to be displayed
 }
 
+// Array of font sizes for the toolbar
 const fontSizes = [8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 48, 56, 72, 80, 96];
 
+// Component to render toolbar icons
 const ToolbarIcon = ({ name }: IToolbarIcon) => {
   return (
     <span className="w-6 h-6 flex items-center justify-center cursor-pointer">
@@ -26,34 +30,37 @@ const ToolbarIcon = ({ name }: IToolbarIcon) => {
   );
 };
 
+// Main ReportDialog component
 function ReportDialog({ open, onClose, title, lastDate }: ReportDialogProps) {
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false); // State to toggle between edit and view mode
 
   return (
     <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
+      open={open} // Control dialog visibility
+      onClose={onClose} // Callback to close the dialog
+      maxWidth="md" // Maximum width of the dialog
       className="max-h-[80%] bg-white flex flex-col"
     >
       <div className="grow pb-8 flex flex-col gap-y-2.5 w-full overflow-y-auto">
         <div className="py-2 px-4 flex items-center gap-x-6">
+          {/* Back button or close button depending on editing mode */}
           <span
             className="w-6 h-6 flex items-center justify-center cursor-pointer"
             onClick={() => {
-              if (isEditing) setIsEditing(false);
-              else onClose();
+              if (isEditing) setIsEditing(false); // Exit edit mode
+              else onClose(); // Close the dialog
             }}
           >
             {isEditing ? <MdClose size={20} /> : <FaChevronLeft />}
           </span>
           <div className="space-y-1">
             <p className="font-semibold text-lg leading-5 text-primary-background">
-              {title}
+              {title} {/* Display report title */}
             </p>
-            <p className="text-sm leading-4 text-primary-text">{lastDate}</p>
+            <p className="text-sm leading-4 text-primary-text">{lastDate}</p> {/* Display last updated date */}
           </div>
           <div className="grow flex justify-end">
+            {/* Download button, only visible when not in editing mode */}
             {!isEditing && (
               <div className="flex items-center gap-x-1 text-disabled-text">
                 <p className="text-sm leading-4">Ladda ner</p>
@@ -64,6 +71,7 @@ function ReportDialog({ open, onClose, title, lastDate }: ReportDialogProps) {
             )}
           </div>
 
+          {/* Button to toggle between editing and view mode */}
           <button
             className="py-2 px-4 rounded-lg text-white text-sm leading-4 bg-primary-background outline-none"
             onClick={() => {
@@ -73,6 +81,7 @@ function ReportDialog({ open, onClose, title, lastDate }: ReportDialogProps) {
             {isEditing ? "Spara" : "Edit"}
           </button>
         </div>
+        {/* Toolbar visible only in editing mode */}
         {isEditing && (
           <div className="bg-light-background py-3 px-8 flex gap-x-4 items-center">
             <select className="outline-none bg-light-background">
@@ -97,21 +106,20 @@ function ReportDialog({ open, onClose, title, lastDate }: ReportDialogProps) {
               <ToolbarIcon name="text-align-center" />
               <ToolbarIcon name="text-align-right" />
             </div>
-
             <div className="flex gap-x-2">
               <ToolbarIcon name="ordered-list" />
               <ToolbarIcon name="unordered-list" />
             </div>
-
             <div className="flex gap-x-2">
               <ToolbarIcon name="photo" />
               <ToolbarIcon name="link" />
             </div>
           </div>
         )}
+        {/* Content area with editable text when in editing mode */}
         <div className="grow pt-2 px-8 pr-1 flex flex-col overflow-y-auto">
           <div
-            contentEditable={isEditing}
+            contentEditable={isEditing} // Content becomes editable when in editing mode
             className="pr-6 flex flex-col gap-y-8 outline-none overflow-y-auto scrollbar"
           >
             <h1 className="text-5xl font-semibold">Medicinsk Rapport</h1>
@@ -166,4 +174,4 @@ function ReportDialog({ open, onClose, title, lastDate }: ReportDialogProps) {
   );
 }
 
-export default ReportDialog;
+export default ReportDialog; // Export the ReportDialog component for use in other parts of the application

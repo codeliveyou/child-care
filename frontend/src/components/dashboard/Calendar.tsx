@@ -6,30 +6,35 @@ import { motion } from "framer-motion";
 import EventDialog, { Action } from "./EventDialog";
 import Button from "../common/Button";
 
+// Define the structure of a weekday event
 interface IWeekdayEvent {
-  start: string;
-  end: string;
-  title: string;
-  description: string;
-  isEmpty?: boolean;
+  start: string; // Start time of the event
+  end: string; // End time of the event
+  title: string; // Title of the event
+  description: string; // Description of the event
+  isEmpty?: boolean; // Optional flag to indicate an empty slot
 }
 
+// Define the structure of a weekday item
 interface IWeekdayItem {
-  day: number;
-  events: IWeekdayEvent[];
-  sleepTime: string;
+  day: number; // Day of the month
+  events: IWeekdayEvent[]; // List of events for the day
+  sleepTime: string; // Sleep time for the day
 }
 
+// Props for the Calendar component
 interface CalendarProps {
-  className?: string;
+  className?: string; // Optional custom class names for additional styling
 }
 
+// Props for the WeekdayItem component
 interface WeekdayItemProps extends IWeekdayItem {
-  weekday: number;
-  isActive?: boolean;
-  onWeekdayChange?: (weekday: number) => void;
+  weekday: number; // Index of the weekday
+  isActive?: boolean; // Flag to indicate if the item is active
+  onWeekdayChange?: (weekday: number) => void; // Callback function when weekday changes
 }
 
+// Array of weekday names in abbreviated format
 const weekdayTexts: string[] = [
   "Mon",
   "Tis",
@@ -39,6 +44,8 @@ const weekdayTexts: string[] = [
   "Lör",
   "Sön",
 ];
+
+// Sample data for the weekdays
 const weekdayItems: IWeekdayItem[] = [
   {
     day: 12,
@@ -73,6 +80,8 @@ const weekdayItems: IWeekdayItem[] = [
     ],
     sleepTime: "23:00",
   },
+  // Additional weekday items with no events
+  // ...
   {
     day: 14,
     events: [],
@@ -100,6 +109,7 @@ const weekdayItems: IWeekdayItem[] = [
   },
 ];
 
+// WeekdayItem component displays details for a single weekday
 function WeekdayItem({
   weekday,
   day,
@@ -108,13 +118,15 @@ function WeekdayItem({
   isActive = false,
   onWeekdayChange = () => {},
 }: WeekdayItemProps) {
-  const [eventIndex, setEventIndex] = useState<number>(-1);
-  const [eventDialogOpen, setEventDialogOpen] = useState<boolean>(false);
+  const [eventIndex, setEventIndex] = useState<number>(-1); // Index of the currently selected event
+  const [eventDialogOpen, setEventDialogOpen] = useState<boolean>(false); // State to control the event dialog visibility
 
+  // Memoized array of events with a maximum of 2 slots
   const weekdayEvents = useMemo(() => {
     return [...events, ...Array(2).fill({ isEmpty: true })].slice(0, 2);
   }, [events]);
 
+  // Determine if the item is active and has an event selected
   const isItemActive = useMemo(
     () => isActive && eventIndex !== -1,
     [isActive, eventIndex]
@@ -124,9 +136,12 @@ function WeekdayItem({
     <>
       <motion.div
         initial={false}
-        animate={{ flex: isItemActive ? 3 : 1 }}
-        transition={{ duration: 0.3 }}
-        className={twMerge("py-4 flex", isItemActive ? "grid grid-cols-3" : "")}
+        animate={{ flex: isItemActive ? 3 : 1 }} // Adjust size based on active state
+        transition={{ duration: 0.3 }} // Smooth transition duration
+        className={twMerge(
+          "py-4 flex",
+          isItemActive ? "grid grid-cols-3" : "" // Grid layout when active
+        )}
       >
         <div className="flex flex-col items-center gap-y-0.5 w-full">
           <p className="text-sm leading-4">{weekdayTexts[weekday]}</p>
@@ -160,7 +175,7 @@ function WeekdayItem({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.25 }}
+            transition={{ delay: 0.25 }} // Delay for the fade-in effect
             className="flex flex-col gap-y-1 text-primary-text px-2 col-span-2"
           >
             <p className="text-xs leading-4">
@@ -197,14 +212,15 @@ function WeekdayItem({
   );
 }
 
+// Calendar component displays a calendar view with weekday items
 function Calendar({ className = "" }: CalendarProps) {
-  const [activeWeekday, setActiveWeekday] = useState<number>(-1);
+  const [activeWeekday, setActiveWeekday] = useState<number>(-1); // Index of the currently active weekday
 
   return (
     <div
       className={twMerge("rounded-xl bg-white py-2 px-4", className)}
       onMouseLeave={() => {
-        setActiveWeekday(-1);
+        setActiveWeekday(-1); // Reset active weekday when mouse leaves the calendar
       }}
     >
       <div className="flex flex-col gap-y-1">
@@ -244,4 +260,4 @@ function Calendar({ className = "" }: CalendarProps) {
   );
 }
 
-export default Calendar;
+export default Calendar; // Export the Calendar component for use in other parts of the application
