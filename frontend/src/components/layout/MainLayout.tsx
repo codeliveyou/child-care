@@ -129,28 +129,27 @@ const MainLayout = () => {
         {/* Main content section */}
         <div className="flex flex-1 min-h-0 px-4 gap-4">
           {/* Sidebar section */}
-          <AnimatePresence mode="wait">
-            <motion.aside
-              initial={{ width: isRoomPage ? "224px" : "60px" }}
-              animate={
-                isRoomPage
-                  ? {}
-                  : {
-                      width: isSidebarExpand ? "224px" : "60px",
-                    }
-              }
-              transition={{ duration: 0.5 }}
-              onAnimationComplete={() => {
-                console.log("Transition end");
-              }}
-              className={twMerge(
-                "shrink-0 flex flex-col justify-between",
-                isAIPage ? "justify-end" : ""
-              )}
-            >
-              {/* Sidebar navigation links */}
-              {!isAIPage && (
-                <div className={twMerge("relative w-full")}>
+          <aside
+            className={twMerge(
+              "shrink-0 flex flex-col justify-between",
+              isAIPage ? "justify-end" : ""
+            )}
+          >
+            {/* Sidebar navigation links */}
+            {!isAIPage && (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  initial={{ width: isRoomPage ? "224px" : "60px" }}
+                  animate={
+                    isRoomPage
+                      ? {}
+                      : {
+                          width: isSidebarExpand ? "224px" : "60px",
+                        }
+                  }
+                  transition={{ duration: 0.5 }}
+                  className={twMerge("relative w-full")}
+                >
                   <ul className="grow bg-white rounded-xl flex flex-col py-8 shrink-0">
                     {/* Dashboard link */}
                     {sidebarItems.map((item, index) => (
@@ -187,18 +186,18 @@ const MainLayout = () => {
                   >
                     {isSidebarExpand ? <FaChevronLeft /> : <FaChevronRight />}
                   </span>
-                </div>
-              )}
-              {/* Avatar */}
-              <Avatar
-                uri={"/images/avatar.png"}
-                name="Johan Anders"
-                label="Stream Name It"
-                isExpanded={isSidebarExpand}
-                className="self-start"
-              />
-            </motion.aside>
-          </AnimatePresence>
+                </motion.div>
+              </AnimatePresence>
+            )}
+            {/* Avatar */}
+            <Avatar
+              uri={"/images/avatar.png"}
+              name="Johan Anders"
+              label="Stream Name It"
+              isExpanded={isSidebarExpand}
+              className="self-start"
+            />
+          </aside>
           {/* Main content area */}
           <motion.main
             initial={{ opacity: 0 }}
