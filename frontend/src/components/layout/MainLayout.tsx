@@ -126,7 +126,7 @@ const MainLayout = () => {
             )}
             <div className="p-0.5">
               {/* Sign out button */}
-              <SignOutButton /> 
+              <SignOutButton />
             </div>
           </div>
         </header>
@@ -143,16 +143,13 @@ const MainLayout = () => {
             {!isAIPage && (
               <AnimatePresence mode="wait">
                 <motion.div
-                  initial={{ width: isRoomPage ? "224px" : "60px" }}
-                  animate={
-                    isRoomPage
-                      ? {}
-                      : {
-                          width: isSidebarExpand ? "224px" : "60px",
-                        }
-                  }
+                  initial={{ width: isSidebarExpand ? "224px" : "60px" }}
+                  animate={{ width: isSidebarExpand ? "224px" : "60px" }}
                   transition={{ duration: 0.5 }}
-                  className={twMerge("relative w-full")}
+                  className={twMerge(
+                    "relative w-full",
+                    isSidebarExpand ? "mr-[7px]" : ""
+                  )}
                 >
                   <ul className="grow bg-white rounded-xl flex flex-col py-8 shrink-0">
                     {/* Dashboard link */}
@@ -171,12 +168,7 @@ const MainLayout = () => {
                         <span className="text-inherit shrink-0">
                           {item.icon}
                         </span>
-                        <motion.p
-                          // initial={{ opacity: 0 }}
-                          // animate={{ opacity: 1 }}
-                          // transition={{ delay: 0.25 }}
-                          className="grow text-left text-inherit"
-                        >
+                        <motion.p className="grow text-left text-inherit">
                           {item.title}
                         </motion.p>
                       </li>

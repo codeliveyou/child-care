@@ -1,7 +1,5 @@
 import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
 
 type AvatarProps = {
   // URI of the image to display
@@ -34,8 +32,6 @@ const Avatar = ({
   isExpanded = false,
   className = "",
 }: AvatarProps) => {
-  const location = useLocation();
-  const pathname = location.pathname;
   const isNameShown = false;
 
   return (
