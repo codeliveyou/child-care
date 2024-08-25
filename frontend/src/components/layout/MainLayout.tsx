@@ -133,31 +133,34 @@ const MainLayout = () => {
         {/* Main content section */}
         <div className="flex flex-1 min-h-0 px-4 gap-4">
           {/* Sidebar section */}
-          <AnimatePresence mode="wait">
-            <motion.aside
-              initial={{ width: "71px" }} // Initial width for the sidebar
-              animate={{ width: isSidebarExpand ? "224px" : "71px" }} // Animated width based on sidebar expansion
-              transition={{ duration: 0.5 }} // Transition duration for the animation
-              className={twMerge(
-                "shrink-0 flex flex-col justify-between",
-                isAIPage ? "justify-end" : ""
-              )}
-            >
-              {/* Sidebar navigation links */}
-              {!isAIPage && (
-                <div
-                  className={twMerge(
-                    "relative",
-                    isSidebarExpand ? "mr-4" : "self-start"
-                  )}
+          <aside
+            className={twMerge(
+              "shrink-0 flex flex-col justify-between",
+              isAIPage ? "justify-end" : ""
+            )}
+          >
+            {/* Sidebar navigation links */}
+            {!isAIPage && (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  initial={{ width: isRoomPage ? "224px" : "60px" }}
+                  animate={
+                    isRoomPage
+                      ? {}
+                      : {
+                          width: isSidebarExpand ? "224px" : "60px",
+                        }
+                  }
+                  transition={{ duration: 0.5 }}
+                  className={twMerge("relative w-full")}
                 >
-                  <ul className="bg-white rounded-xl flex flex-col py-8 shrink-0">
-                    {/* Render sidebar items */}
+                  <ul className="grow bg-white rounded-xl flex flex-col py-8 shrink-0">
+                    {/* Dashboard link */}
                     {sidebarItems.map((item, index) => (
                       <li
                         key={index}
                         className={twMerge(
-                          "py-2 px-5 flex items-center gap-x-4 hover:text-primary-background cursor-pointer",
+                          "py-2 px-5 flex items-center gap-x-4 hover:text-primary-background cursor-pointer overflow-hidden",
                           pathname === item.path ||
                             (item.subPath && pathname.startsWith(item.subPath))
                             ? "text-primary-background"
@@ -165,17 +168,17 @@ const MainLayout = () => {
                         )}
                         onClick={() => navigate(item.path)}
                       >
-                        <span className="text-inherit">{item.icon}</span>
-                        {isSidebarExpand && (
-                          <motion.p
-                            initial={{ opacity: 0 }} // Initial opacity for the item title
-                            animate={{ opacity: 1 }} // Final opacity for the item title
-                            transition={{ delay: 0.25 }} // Delay before the title fades in
-                            className="text-left text-inherit"
-                          >
-                            {item.title}
-                          </motion.p>
-                        )}
+                        <span className="text-inherit shrink-0">
+                          {item.icon}
+                        </span>
+                        <motion.p
+                          // initial={{ opacity: 0 }}
+                          // animate={{ opacity: 1 }}
+                          // transition={{ delay: 0.25 }}
+                          className="grow text-left text-inherit"
+                        >
+                          {item.title}
+                        </motion.p>
                       </li>
                     ))}
                   </ul>
@@ -188,18 +191,18 @@ const MainLayout = () => {
                   >
                     {isSidebarExpand ? <FaChevronLeft /> : <FaChevronRight />}
                   </span>
-                </div>
-              )}
-              {/* Avatar component */}
-              <Avatar
-                uri={"/images/avatar.png"}
-                name="Johan Anders"
-                label="Stream Name It"
-                isExpanded={isSidebarExpand}
-                className="self-start"
-              />
-            </motion.aside>
-          </AnimatePresence>
+                </motion.div>
+              </AnimatePresence>
+            )}
+            {/* Avatar */}
+            <Avatar
+              uri={"/images/avatar.png"}
+              name="Johan Anders"
+              label="Stream Name It"
+              isExpanded={isSidebarExpand}
+              className="self-start"
+            />
+          </aside>
           {/* Main content area */}
           <motion.main
             initial={{ opacity: 0 }} // Initial opacity for fade-in effect
