@@ -131,9 +131,18 @@ const MainLayout = () => {
           {/* Sidebar section */}
           <AnimatePresence mode="wait">
             <motion.aside
-              initial={{ width: "71px" }}
-              animate={{ width: isSidebarExpand ? "224px" : "71px" }}
+              initial={{ width: isRoomPage ? "224px" : "60px" }}
+              animate={
+                isRoomPage
+                  ? {}
+                  : {
+                      width: isSidebarExpand ? "224px" : "60px",
+                    }
+              }
               transition={{ duration: 0.5 }}
+              onAnimationComplete={() => {
+                console.log("Transition end");
+              }}
               className={twMerge(
                 "shrink-0 flex flex-col justify-between",
                 isAIPage ? "justify-end" : ""
@@ -141,19 +150,14 @@ const MainLayout = () => {
             >
               {/* Sidebar navigation links */}
               {!isAIPage && (
-                <div
-                  className={twMerge(
-                    "relative",
-                    isSidebarExpand ? "mr-4" : "self-start"
-                  )}
-                >
-                  <ul className="bg-white rounded-xl flex flex-col py-8 shrink-0">
+                <div className={twMerge("relative w-full")}>
+                  <ul className="grow bg-white rounded-xl flex flex-col py-8 shrink-0">
                     {/* Dashboard link */}
                     {sidebarItems.map((item, index) => (
                       <li
                         key={index}
                         className={twMerge(
-                          "py-2 px-5 flex items-center gap-x-4 hover:text-primary-background cursor-pointer",
+                          "py-2 px-5 flex items-center gap-x-4 hover:text-primary-background cursor-pointer overflow-hidden",
                           pathname === item.path ||
                             (item.subPath && pathname.startsWith(item.subPath))
                             ? "text-primary-background"
@@ -161,17 +165,17 @@ const MainLayout = () => {
                         )}
                         onClick={() => navigate(item.path)}
                       >
-                        <span className="text-inherit">{item.icon}</span>
-                        {isSidebarExpand && (
-                          <motion.p
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.25 }}
-                            className="text-left text-inherit"
-                          >
-                            {item.title}
-                          </motion.p>
-                        )}
+                        <span className="text-inherit shrink-0">
+                          {item.icon}
+                        </span>
+                        <motion.p
+                          // initial={{ opacity: 0 }}
+                          // animate={{ opacity: 1 }}
+                          // transition={{ delay: 0.25 }}
+                          className="grow text-left text-inherit"
+                        >
+                          {item.title}
+                        </motion.p>
                       </li>
                     ))}
                   </ul>

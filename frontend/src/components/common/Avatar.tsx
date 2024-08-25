@@ -1,5 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
 
 type AvatarProps = {
   uri: string;
@@ -16,16 +18,20 @@ const Avatar = ({
   isExpanded = false,
   className = "",
 }: AvatarProps) => {
+  const location = useLocation();
+  const pathname = location.pathname;
+  const isNameShown = false;
+
   return (
     <div
       className={twMerge(
         "w-[71px] h-[71px] rounded-2xl bg-white flex items-center justify-center",
-        isExpanded ? "px-2 w-full justify-between" : "",
+        isNameShown && isExpanded ? "px-2 w-full justify-between" : "",
         className
       )}
     >
       <img src={uri} className="w-[55px] h-[55px] rounded-lg" />
-      {isExpanded && (
+      {isNameShown && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
