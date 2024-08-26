@@ -87,53 +87,56 @@ const MainLayout = () => {
   }, [searchParams]);
 
   return (
-    <>
-      {/* Main layout structure */}
-      <div className="bg-[#E9E9F3] flex flex-col w-full h-full py-4 gap-y-4">
-        {/* Header section */}
-        <header className="flex items-center px-4 justify-between">
-          {/* Trademark component */}
-          <TradeMark className="float-left text-primary-background" />
-          {/* Notification and sign-out buttons */}
-          <div className="flex items-center gap-2">
-            {!isAIPage && isRoomPage ? (
-              <div className="flex gap-x-2">
-                {userList.map((userItem, index) => (
-                  <ActionButton
-                    key={index}
-                    className={twMerge(
-                      "w-9 h-9 text-white",
-                      userItem === activeUser
-                        ? "bg-primary-background"
-                        : "bg-primary-text"
-                    )}
-                    onClick={handleUserClick(userItem)}
-                  >
-                    {userItem.charAt(0).toUpperCase()}
-                  </ActionButton>
-                ))}
-              </div>
-            ) : (
-              <>
-                <SearchInput /> {/* Search input component */}
-                <div className="p-4 flex items-center justify-center">
-                  {/* Zoom button */}
-                  <button>
-                    <img src="/Notification.svg" />
-                  </button>
-                </div>
-              </>
-            )}
-            <div className="p-0.5">
-              {/* Sign out button */}
-              <SignOutButton />
+    <div className="bg-light-background flex flex-col w-full h-full py-4 gap-y-4">
+      {/* Header section */}
+      <header className="flex items-center px-4 justify-between">
+        {/* Trademark component */}
+        <TradeMark className="float-left text-primary-background" />
+        {/* Notification and sign-out buttons */}
+        <div className="flex items-center gap-2">
+          {!isAIPage && isRoomPage ? (
+            <div className="flex gap-x-2">
+              {userList.map((userItem, index) => (
+                <ActionButton
+                  key={index}
+                  className={twMerge(
+                    "w-9 h-9 text-white",
+                    userItem === activeUser
+                      ? "bg-primary-background"
+                      : "bg-primary-text"
+                  )}
+                  onClick={handleUserClick(userItem)}
+                >
+                  {userItem.charAt(0).toUpperCase()}
+                </ActionButton>
+              ))}
             </div>
+          ) : (
+            <>
+              <SearchInput /> {/* Search input component */}
+              <div className="p-4 flex items-center justify-center">
+                {/* Zoom button */}
+                <button>
+                  <img src="/Notification.svg" />
+                </button>
+              </div>
+            </>
+          )}
+          <div className="p-0.5">
+            {/* Sign out button */}
+            <SignOutButton />
           </div>
-        </header>
-        {/* Main content section */}
-        <div className="flex flex-1 min-h-0 px-4 gap-4">
-          {/* Sidebar section */}
-          <aside
+        </div>
+      </header>
+      {/* Main content section */}
+      <div className="flex flex-1 min-h-0 px-4 gap-x-6">
+        {/* Sidebar section */}
+
+        <AnimatePresence mode="wait">
+          <motion.aside
+            initial={{ width: isSidebarExpand ? "240px" : "71px" }}
+            animate={{ width: isSidebarExpand ? "240px" : "71px" }}
+            transition={{ duration: 0.5 }}
             className={twMerge(
               "shrink-0 flex flex-col justify-between",
               isAIPage ? "justify-end" : ""
@@ -141,23 +144,20 @@ const MainLayout = () => {
           >
             {/* Sidebar navigation links */}
             {!isAIPage && (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  initial={{ width: isSidebarExpand ? "224px" : "60px" }}
-                  animate={{ width: isSidebarExpand ? "224px" : "60px" }}
-                  transition={{ duration: 0.5 }}
-                  className={twMerge(
-                    "relative w-full",
-                    isSidebarExpand ? "mr-[7px]" : ""
-                  )}
-                >
+              <motion.div
+                className={twMerge(
+                  "w-full",
+                  isSidebarExpand ? "pr-4" : "pr-[7px]"
+                )}
+              >
+                <div className="relative w-full">
                   <ul className="grow bg-white rounded-xl flex flex-col py-8 shrink-0">
                     {/* Dashboard link */}
                     {sidebarItems.map((item, index) => (
                       <li
                         key={index}
                         className={twMerge(
-                          "py-2 px-5 flex items-center gap-x-4 hover:text-primary-background cursor-pointer overflow-hidden",
+                          "py-2 px-5 flex items-center gap-x-5 hover:text-primary-background cursor-pointer overflow-hidden",
                           pathname === item.path ||
                             (item.subPath && pathname.startsWith(item.subPath))
                             ? "text-primary-background"
@@ -183,8 +183,8 @@ const MainLayout = () => {
                   >
                     {isSidebarExpand ? <FaChevronLeft /> : <FaChevronRight />}
                   </span>
-                </motion.div>
-              </AnimatePresence>
+                </div>
+              </motion.div>
             )}
             {/* Avatar */}
             <Avatar
@@ -194,19 +194,14 @@ const MainLayout = () => {
               isExpanded={isSidebarExpand}
               className="self-start"
             />
-          </aside>
-          {/* Main content area */}
-          <motion.main
-            initial={{ opacity: 0 }} // Initial opacity for fade-in effect
-            animate={{ opacity: 1 }} // Final opacity for fade-in effect
-            exit={{ opacity: 0 }} // Fade-out effect when component unmounts
-            className="flex-1"
-          >
-            <Outlet /> {/* Renders nested routes */}
-          </motion.main>
-        </div>
+          </motion.aside>
+        </AnimatePresence>
+        {/* Main content area */}
+        <main className="grow">
+          <Outlet /> {/* Renders nested routes */}
+        </main>
       </div>
-    </>
+    </div>
   );
 };
 

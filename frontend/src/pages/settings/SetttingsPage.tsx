@@ -312,14 +312,14 @@ const SettingsPage = () => {
       </div>
       <div className="flex flex-col gap-2 flex-[3] bg-white rounded-xl p-4 pr-1.5">
         <p className="font-bold text-base leading-5 pb-4">AI struktur list</p>
-        <div className="grid grid-cols-2 gap-4 overflow-y-auto pr-2 w-full">
+        <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 overflow-y-auto pr-2 w-full">
           {/* Display AI-related items in a grid */}
           {aiData.map((dataItem, index) => (
             <div
               key={index}
               className="relative py-4 px-6 flex flex-col gap-y-4 rounded-lg border border-disabled-text bg-light-background"
             >
-              <span className="w-6 h-6 flex items-center justify-center absolute top-2.5 right-2.5 text-primary-background text-xl">
+              <span className="w-6 h-6 flex items-center justify-center absolute top-2.5 right-2.5 text-focused-background hover:text-primary-background text-xl cursor-pointer">
                 <MdClose />
               </span>
               <p className="font-bold leading-5">{dataItem.title}</p>

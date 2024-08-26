@@ -110,11 +110,9 @@ const DashboardPage = () => {
   return (
     <>
       <motion.div
-        className="w-full h-full flex flex-col gap-y-4 text-[#374151]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
+        className="w-full h-full flex flex-col gap-y-4 text-primary-text"
       >
         {/* Container for the grid layout */}
         <div className="grid grid-cols-4 gap-4 max-h-[300px]">
@@ -123,7 +121,7 @@ const DashboardPage = () => {
             <div className="text-lg font-bold text-[#374151]">
               Sista aktiviteten
             </div>
-            <div className="flex-1 my-5 flex flex-col gap-y-2 overflow-y-auto">
+            <div className="flex-1 pr-2 my-5 flex flex-col gap-y-2 overflow-y-auto">
               {/* Render each activity item */}
               {activityData.map((activity, index) => (
                 <LastActivityItem
@@ -156,7 +154,7 @@ const DashboardPage = () => {
                 {roomData.map((room, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-x-4 cursor-pointer"
+                    className="flex items-center gap-x-4 hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
                     onClick={() => {
                       navigate(`/room/${index}`); // Navigate to room detail page
                     }}
@@ -216,7 +214,7 @@ const DashboardPage = () => {
                 {videoData.map((video, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-x-4 cursor-pointer"
+                    className="flex items-center gap-x-4 hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
                     onClick={() => {
                       setVideoDialogOpen(true); // Open video dialog
                     }}

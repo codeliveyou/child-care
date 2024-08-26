@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+#root {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
 /* Customize the appearance of the scrollbar */
 
 /* General scrollbar styles */

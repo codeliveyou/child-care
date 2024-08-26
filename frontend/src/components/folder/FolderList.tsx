@@ -22,7 +22,7 @@ function FolderList({ folders }: FolderListProps) {
             // Apply active styles if the folder is the currently selected one
             index === activeIndex
               ? "text-primary-background bg-light-background py-3"
-              : "text-primary-text"
+              : "text-primary-text hover:text-primary-background"
           )}
           onClick={() => {
             setActiveIndex(index); // Set the clicked folder as active

@@ -1,34 +1,11 @@
-import { useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import Avatar from "../../components/common/Avatar";
 import SignOutButton from "../../components/layout/header/SignOutButton";
-import RoomCreateOnboarding1 from "./Onboarding/RoomCreateOnboarding1";
-import RoomCreateOnboarding2 from "./Onboarding/RoomCreateOnboarding2";
-import RoomCreateOnboarding3 from "./Onboarding/RoomCreateOnboarding3";
-import RoomCreateOnboarding4 from "./Onboarding/RoomCreateOnboarding4";
 
 const RoomCreateOnboardingMain = () => {
-  const location = useLocation();
-  const hash = location.hash;
-
-  // Switch statement to render different onboarding steps based on hash
-  const getOnboardElement = () => {
-    switch (hash) {
-      case "#1":
-        return <RoomCreateOnboarding1 />;
-      case "#2":
-        return <RoomCreateOnboarding2 />;
-      case "#3":
-        return <RoomCreateOnboarding3 />;
-      case "#4":
-        return <RoomCreateOnboarding4 />;
-      default:
-        return <RoomCreateOnboarding1 />; // Default to the first onboarding step if hash is not matched
-    }
-  };
-
   return (
-    <div className="relative w-full h-full flex items-center justify-center bg-light-background">
+    <div className="relative w-screen h-screen flex items-center justify-center bg-light-background scrollbar-none">
       {/* Sign out button positioned in the top-right corner */}
       <SignOutButton className="absolute top-6 right-8" />
       {/* Avatar positioned at the bottom-left corner */}
@@ -36,7 +13,7 @@ const RoomCreateOnboardingMain = () => {
         <Avatar uri="/images/avatar.png" />
       </span>
       <div className="max-w-[960px] max-h-[550px] w-full h-full">
-        {getOnboardElement()}
+        <Outlet />
       </div>
     </div>
   );

@@ -22,7 +22,8 @@ function AdminLayout() {
           <div className="p-4 flex items-center justify-center">
             {/* Notification button */}
             <button>
-              <img src="/Notification.svg" alt="Notification icon" /> {/* Alternative text for the notification icon */}
+              <img src="/Notification.svg" alt="Notification icon" />{" "}
+              {/* Alternative text for the notification icon */}
             </button>
           </div>
           <div className="p-0.5">

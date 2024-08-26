@@ -1,17 +1,12 @@
-import { BrowserRouter as Router, useRoutes } from "react-router-dom";
-import routes from "./routes";
+import { BrowserRouter as Router } from "react-router-dom";
 
-function AppRoutes() {
-  // Use the routes configuration to generate the routes for the application
-  const appRoutes = useRoutes(routes);
-  return appRoutes; // Render the configured routes
-}
+import AnimatedRoutes from "./components/layout/AnimatedRoutes";
 
 function App() {
   return (
     <Router>
       {/* The Router component wraps the application to enable routing */}
-      <AppRoutes />
+      <AnimatedRoutes />
     </Router>
   );
 }

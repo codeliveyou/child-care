@@ -10,10 +10,11 @@ const LastActivityItem = ({
   activity,
 }: LastActivityItemProps) => {
   return (
-    <div className="flex gap-2 cursor-pointer rounded-lg">
+    <div className="flex gap-2 hover:bg-light-background transition duration-300 cursor-pointer rounded-lg">
       {/* Display the image/logo associated with the activity */}
       <div className="shrink-0 rounded-xl overflow-hidden">
-        <img src={imageUri} className="w-[72px] h-[72px]" alt="Activity Logo" /> {/* Provide alt text for accessibility */}
+        <img src={imageUri} className="w-[72px] h-[72px]" alt="Activity Logo" />{" "}
+        {/* Provide alt text for accessibility */}
       </div>
 
       <div className="flex flex-col">

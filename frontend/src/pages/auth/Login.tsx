@@ -13,7 +13,7 @@ const Login = () => {
     <motion.div
       initial={{ opacity: 0 }} // Initial animation state for opacity
       animate={{ opacity: 1 }} // Final animation state for opacity
-      exit={{ opacity: 0 }} // Animation state when the component unmounts
+      // exit={{ opacity: 0 }} // Animation state when the component unmounts
       className="w-full h-full grid grid-cols-2 text-primary-text bg-white rounded-lg overflow-hidden"
     >
       <motion.div
@@ -23,14 +23,16 @@ const Login = () => {
         className="bg-primary-background"
       >
         <div className="py-7 px-8 h-full flex flex-col justify-between">
-          <TradeMark className="pb-6 font-extrabold text-xl leading-6" /> {/* Branding component for the application */}
+          <TradeMark className="pb-6 font-extrabold text-xl leading-6" />{" "}
+          {/* Branding component for the application */}
           <div className="flex flex-col gap-y-8">
             <p className="font-extrabold text-[32px] leading-10 text-white">
               Välkommen!
             </p>
             <div className="py-4 flex flex-col gap-y-5 text-base leading-5">
               <p className="text-focused-background">
-                Denna sida innehåller tre sätt att logga in på. {/* Describes the login options */}
+                Denna sida innehåller tre sätt att logga in på.{" "}
+                {/* Describes the login options */}
               </p>
               <ul
                 style={{ listStyleType: "square" }}
@@ -44,7 +46,10 @@ const Login = () => {
                   Deltar i rummet som ett gäst, observera och kommunicera med
                   användaren {/* Option for guest login */}
                 </li>
-                <li>Delta som patient eller deltagare. {/* Option for patient or participant login */}</li>
+                <li>
+                  Delta som patient eller deltagare.{" "}
+                  {/* Option for patient or participant login */}
+                </li>
               </ul>
             </div>
           </div>
@@ -70,7 +75,8 @@ const Login = () => {
         <div className="py-4 px-8 h-full">
           <div className="relative h-full flex items-center justify-center">
             <div className="max-w-[250px] w-full flex flex-col gap-y-2">
-              <p className="font-extrabold text-2xl">Logga in</p> {/* Login title */}
+              <p className="font-extrabold text-2xl">Logga in</p>{" "}
+              {/* Login title */}
               <Input
                 name="username"
                 placeholder="Användarnamn"
@@ -108,7 +114,8 @@ const Login = () => {
               </Button>
               <span className="text-[10px] text-disabled-text">
                 Genom att logga in samtycker jag till Childcare
-                Integritetspolicy och tjänstevillkor. {/* User agreement statement */}
+                Integritetspolicy och tjänstevillkor.{" "}
+                {/* User agreement statement */}
               </span>
               <Checkbox
                 label="Fortsätt att vara inloggad"

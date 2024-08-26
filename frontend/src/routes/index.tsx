@@ -25,6 +25,10 @@ import AdminLogin from "../pages/admin/Login";
 import AdminDashboard from "../pages/admin/Dashboard";
 import PatientDashboard from "../pages/patient/PatientDashboard";
 import GuestDashboard from "../pages/guest/GuestDashboard";
+import RoomCreateOnboarding1 from "../pages/room_create/Onboarding/RoomCreateOnboarding1";
+import RoomCreateOnboarding2 from "../pages/room_create/Onboarding/RoomCreateOnboarding2";
+import RoomCreateOnboarding3 from "../pages/room_create/Onboarding/RoomCreateOnboarding3";
+import RoomCreateOnboarding4 from "../pages/room_create/Onboarding/RoomCreateOnboarding4";
 
 const routes = [
   // Routes for patient-specific pages
@@ -74,6 +78,28 @@ const routes = [
           {
             path: "onboarding",
             element: <RoomCreateOnboardingMain />, // Onboarding page for room creation
+            children: [
+              {
+                index: true,
+                element: <Navigate to={"step1"} />,
+              },
+              {
+                path: "step1",
+                element: <RoomCreateOnboarding1 />,
+              },
+              {
+                path: "step2",
+                element: <RoomCreateOnboarding2 />,
+              },
+              {
+                path: "step3",
+                element: <RoomCreateOnboarding3 />,
+              },
+              {
+                path: "step4",
+                element: <RoomCreateOnboarding4 />,
+              },
+            ],
           },
           {
             path: "ai-structure",
