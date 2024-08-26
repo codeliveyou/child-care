@@ -121,7 +121,7 @@ const DashboardPage = () => {
             <div className="text-lg font-bold text-[#374151]">
               Sista aktiviteten
             </div>
-            <div className="flex-1 pr-2 my-5 flex flex-col gap-y-2 overflow-y-auto">
+            <div className="flex-1 pr-2 my-5 flex flex-col overflow-y-auto">
               {/* Render each activity item */}
               {activityData.map((activity, index) => (
                 <LastActivityItem
@@ -149,12 +149,12 @@ const DashboardPage = () => {
               <div className="text-lg font-bold text-primary-text">
                 Rum lista
               </div>
-              <div className="grow flex flex-col gap-4 overflow-y-auto pt-4 pr-2">
+              <div className="grow flex flex-col overflow-y-auto pt-4 pr-2">
                 {/* Render each room item */}
                 {roomData.map((room, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-x-4 hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
+                    className="p-2 flex items-center gap-x-4 hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
                     onClick={() => {
                       navigate(`/room/${index}`); // Navigate to room detail page
                     }}
@@ -209,12 +209,12 @@ const DashboardPage = () => {
               <div className="text-lg font-bold text-primary-text">
                 Video rapport
               </div>
-              <div className="grow flex flex-col gap-4 overflow-y-auto pt-4 pr-2">
+              <div className="grow flex flex-col overflow-y-auto pt-4 pr-2">
                 {/* Render each video item */}
                 {videoData.map((video, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-x-4 hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
+                    className="p-2 flex items-center gap-x-4 hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
                     onClick={() => {
                       setVideoDialogOpen(true); // Open video dialog
                     }}

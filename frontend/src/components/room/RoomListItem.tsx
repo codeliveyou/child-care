@@ -1,24 +1,24 @@
 import { useNavigate } from "react-router-dom";
 
 export interface IRoomListItem {
-  name: string;  // Name of the room
-  imageUri: string;  // URI for the room image
-  activity: string;  // Description of the last activity in the room
-  lastDate: string;  // Date of the last activity
-  badge?: number;  // Optional badge number for the room
+  name: string; // Name of the room
+  imageUri: string; // URI for the room image
+  activity: string; // Description of the last activity in the room
+  lastDate: string; // Date of the last activity
+  badge?: number; // Optional badge number for the room
 }
 
 interface RoomListItemProps {
-  index: number;  // Index of the room in the list
-  room: IRoomListItem;  // Room data to display
+  index: number; // Index of the room in the list
+  room: IRoomListItem; // Room data to display
 }
 
 export default function RoomListItem({ index, room }: RoomListItemProps) {
-  const navigate = useNavigate();  // Hook to programmatically navigate
+  const navigate = useNavigate(); // Hook to programmatically navigate
 
   return (
     <div
-      className="flex items-center gap-x-4 cursor-pointer"
+      className="p-2 flex items-center gap-x-4 hover:bg-light-background cursor-pointer rounded-lg"
       onClick={() => {
         // Navigate to the room detail page when the item is clicked
         navigate(`/room/${index}`);

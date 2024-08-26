@@ -13,7 +13,7 @@
         }
 
         .roomList {
-            @apply grow py-4 pr-2 flex-col flex gap-4 overflow-y-auto;
+            @apply grow py-4 pr-2 flex-col flex overflow-y-auto;
         }
     }
 
