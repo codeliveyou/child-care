@@ -1,17 +1,86 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa6";
 
-import DateCell from "../../pages/calendar/components/DateCell";
 import EventDialog from "../dashboard/EventDialog";
 import { Action } from "../dashboard/EventDialog";
+import { findFirstMondayOfMonth, findLastSundayOfMonth } from "../../libs/date";
+import { twMerge } from "tailwind-merge";
+
+const today = new Date();
+const swedishWeeks = ["Mon", "Tis", "Ons", "Tor", "Fre", "Lör", "Sön"];
+const swedishMonths = [
+  "Janu",
+  "Febr",
+  "Mars",
+  "Apra",
+  "Majs",
+  "Juni",
+  "Juli",
+  "Augu",
+  "Sept",
+  "Októ",
+  "Nove",
+  "Dece",
+];
+const dayToTime = 1000 * 60 * 60 * 24;
+const firstDayOfMonth = (month: Date) => {
+  return new Date(month.getFullYear(), month.getMonth(), 1);
+};
+const lastDayOfMonth = (month: Date) => {
+  return new Date(month.getFullYear(), month.getMonth() + 1, 0);
+};
+const isEqual = (date1: Date, date2: Date) =>
+  date1.getFullYear() === date2.getFullYear() &&
+  date1.getMonth() === date2.getMonth() &&
+  date1.getDate() === date2.getDate();
 
 function MonthCalendar() {
   // State to control the visibility of the EventDialog
   const [eventDialogOpen, setEventDialogOpen] = useState<boolean>(false);
+  const [monthDays, setMonthDays] = useState<Date[]>([]);
+  const [currentMonth, setCurrentMonth] = useState<Date>(
+    new Date(today.getFullYear(), today.getMonth(), 1)
+  );
+  const [currentDay, setCurrentDay] = useState<Date>(new Date());
+
+  const handlePrevClick = () => {
+    const newMonth = new Date(currentMonth);
+    newMonth.setMonth(newMonth.getMonth() - 1);
+    setCurrentMonth(newMonth);
+  };
+
+  const handleNextClick = () => {
+    const newMonth = new Date(currentMonth);
+    newMonth.setMonth(newMonth.getMonth() + 1);
+    setCurrentMonth(newMonth);
+  };
+
+  useEffect(() => {
+    const firstMonday = findFirstMondayOfMonth(currentMonth);
+    const lastDayOfMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + 1,
+      0
+    );
+    const lastSunday = findLastSundayOfMonth(
+      currentMonth,
+      lastDayOfMonth.getDate()
+    );
+    const dayCount =
+      Math.floor((lastSunday.getTime() - firstMonday.getTime()) / dayToTime) +
+      1;
+    setMonthDays(
+      [...Array(dayCount).keys()].map((diff) => {
+        const day = new Date(firstMonday);
+        day.setDate(day.getDate() + diff);
+        return day;
+      })
+    );
+  }, [currentMonth]);
 
   return (
     <>
-      <div className="relative p-4 flex flex-col gap-y-6 bg-white rounded-xl">
+      <div className="relative p-4 w-full flex flex-col gap-y-6 bg-white rounded-xl">
         {/* Button to open the EventDialog */}
         <button
           className="absolute top-2 right-2 py-2 px-4 bg-primary-background text-white rounded-lg"
@@ -25,63 +94,69 @@ function MonthCalendar() {
         </button>
         {/* Calendar title */}
         <p className="font-semibold text-lg leading-6">Kalender</p>
-        <div className="flex flex-col gap-2.5">
+        <div className="w-full flex flex-col gap-2.5">
           {/* Calendar navigation */}
           <div className="flex items-center justify-between">
             <p className="font-semibold text-xl leading-6">
-              Juni <span className="font-normal">2024</span>
+              {swedishMonths[currentMonth.getMonth()]}{" "}
+              <span className="font-normal">{currentMonth.getFullYear()}</span>
             </p>
             <div className="flex gap-x-2.5">
               {/* Button to navigate to the previous month */}
-              <span className="w-9 h-9 flex items-center justify-center rounded-lg border-2 border-disabled-text cursor-pointer hover:bg-primary-background hover:border-primary-background hover:text-white">
+              <span
+                className="w-9 h-9 flex items-center justify-center rounded-lg border-2 border-disabled-text cursor-pointer hover:bg-primary-background hover:border-primary-background hover:text-white"
+                onClick={handlePrevClick}
+              >
                 <FaChevronLeft />
               </span>
               {/* Button to navigate to the next month */}
-              <span className="w-9 h-9 flex items-center justify-center rounded-lg border-2 border-disabled-text cursor-pointer hover:bg-primary-background hover:border-primary-background hover:text-white">
+              <span
+                className="w-9 h-9 flex items-center justify-center rounded-lg border-2 border-disabled-text cursor-pointer hover:bg-primary-background hover:border-primary-background hover:text-white"
+                onClick={handleNextClick}
+              >
                 <FaChevronRight />
               </span>
             </div>
           </div>
-          {/* Calendar grid showing days of the week and dates */}
-          <div className="grid grid-cols-7 text-center">
-            {/* Weekday headers */}
-            <div>Mon</div>
-            <div>Tis</div>
-            <div>Ons</div>
-            <div>Tor</div>
-            <div>Fre</div>
-            <div>Lör</div>
-            <div>Sön</div>
-            {/* Date cells for the calendar */}
-            <DateCell value="27" status="outofmonth" />
-            <DateCell value="28" status="outofmonth" />
-            <DateCell value="29" status="outofmonth" />
-            <DateCell value="30" status="outofmonth" />
-            <DateCell value="1" />
-            <DateCell value="2" status="selected" />
-            <DateCell value="3" />
-            <DateCell value="4" eventNum={2} />
-            <DateCell value="5" />
-            <DateCell value="6" />
-            <DateCell value="7" />
-            <DateCell value="8" />
-            <DateCell value="9" />
-            <DateCell value="10" eventNum={1} />
-            <DateCell value="11" />
-            <DateCell value="12" />
-            <DateCell value="13" eventNum={1} />
-            <DateCell value="14" />
-            <DateCell value="15" />
-            <DateCell value="16" />
-            <DateCell value="17" />
-            <DateCell value="18" eventNum={3} />
-            <DateCell value="19" />
-            <DateCell value="20" />
-            <DateCell value="21" />
-            <DateCell value="22" eventNum={1} />
-            <DateCell value="23" />
-            <DateCell value="24" />
+          <div className="py-2 flex gap-x-1">
+            {swedishWeeks.map((week, index) => (
+              <div
+                key={index}
+                className="shrink-0 h-5 w-[54px] flex items-end justify-center"
+              >
+                {week}
+              </div>
+            ))}
           </div>
+          <div className="flex flex-wrap gap-x-1 gap-y-2.5">
+            {monthDays.map((day, index) => (
+              <div
+                key={index}
+                className={twMerge(
+                  "shrink-0 h-[54px] w-[54px] flex items-center justify-center cursor-pointer",
+                  day.getTime() < firstDayOfMonth(currentMonth).getTime() ||
+                    day.getTime() > lastDayOfMonth(currentMonth).getTime()
+                    ? "text-light-background"
+                    : ""
+                )}
+                onClick={() => {
+                  setCurrentDay(day);
+                }}
+              >
+                <span
+                  className={twMerge(
+                    "h-[42px] w-[42px] flex items-center justify-center rounded-full",
+                    isEqual(day, currentDay)
+                      ? "bg-primary-background text-white"
+                      : ""
+                  )}
+                >
+                  {day.getDate()}
+                </span>
+              </div>
+            ))}
+          </div>
+          {/* Calendar grid showing days of the week and dates */}
         </div>
       </div>
       {/* Event dialog component */}

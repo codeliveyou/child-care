@@ -124,7 +124,7 @@ const CalendarPage = () => {
         transition={{ duration: 0.5 }}
       >
         {/* Left section containing the calendar and today's events */}
-        <div className="max-w-[400px] w-full flex flex-col gap-2.5 shrink-0 overflow-y-auto">
+        <div className="max-w-[434px] flex flex-col gap-2.5 shrink-0 overflow-y-auto">
           {/* Calendar component displaying the current month */}
           <MonthCalendar />
           <div className="grow p-4 pr-1.5 flex flex-col gap-2.5 bg-white rounded-xl overflow-y-auto">
