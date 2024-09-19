@@ -1,13 +1,50 @@
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { ChangeEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-import Input from "../../components/common/Input";
-import Checkbox from "../../components/common/Checkbox";
-import Button from "../../components/common/Button";
-import TradeMark from "../../components/user/TradeMark";
+import Input from '../../components/common/Input';
+import Checkbox from '../../components/common/Checkbox';
+import Button from '../../components/common/Button';
+import TradeMark from '../../components/user/TradeMark';
+import apiClient from '../../libs/api';
+
+interface ICreateUser {
+  email: string;
+  business: string;
+  username: string;
+  password: string;
+}
+
+const defaultUserValues: ICreateUser = {
+  email: '',
+  business: '',
+  username: '',
+  password: ''
+};
 
 const Register = () => {
   const navigate = useNavigate(); // Hook to programmatically navigate between routes
+  const [createUser, setCreateUser] = useState<ICreateUser>(defaultUserValues);
+
+  const handleUserChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCreateUser({ ...createUser, [e.target.name]: e.target.value });
+  };
+
+  const handleSignupClick = () => {
+    apiClient
+      .post('/users/register', {
+        user_name: createUser.username,
+        user_email: createUser.email,
+        user_password: createUser.password,
+        account_description: createUser.business,
+        company_code: ''
+      })
+      .then((response: any) => {
+        const { token } = response;
+        console.log(token);
+      });
+    navigate('/auth/payment'); // Navigate to payment page on button click
+  };
 
   return (
     <div className="w-full h-full grid grid-cols-9 text-primary-text bg-white rounded-lg overflow-hidden">
@@ -26,28 +63,31 @@ const Register = () => {
                 name="email"
                 placeholder="E-post"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
+                value={createUser.email}
+                onChange={handleUserChange}
               />
               <Input
                 name="business"
                 placeholder="Vård / Företag"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
+                value={createUser.business}
+                onChange={handleUserChange}
               />
               <Input
                 name="username"
                 placeholder="Användarnamn"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
+                value={createUser.username}
+                onChange={handleUserChange}
               />
               <Input
                 name="password"
                 placeholder="Lösenord"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
+                value={createUser.password}
+                onChange={handleUserChange}
               />
-              <Button
-                className="mt-4"
-                onClick={() => {
-                  navigate("/auth/payment"); // Navigate to payment page on button click
-                }}
-              >
+              <Button className="mt-4" onClick={handleSignupClick}>
                 Skapa
               </Button>
               <span className="text-primary-text/50 text-xs text-center">
@@ -57,7 +97,7 @@ const Register = () => {
                 variant="outlined"
                 className="text-disabled-text"
                 onClick={() => {
-                  navigate("/auth/signup-with-bank"); // Navigate to signup with Bank ID page
+                  navigate('/auth/signup-with-bank'); // Navigate to signup with Bank ID page
                 }}
               >
                 Bank ID
@@ -87,7 +127,7 @@ const Register = () => {
             color="secondary"
             className="absolute bottom-0 right-0"
             onClick={() => {
-              navigate("/auth/sign-in"); // Navigate to sign-in page on button click
+              navigate('/auth/sign-in'); // Navigate to sign-in page on button click
             }}
           >
             Tillbaka
@@ -101,7 +141,7 @@ const Register = () => {
                 Denna sida innehåller tre sätt att logga in på.
               </p>
               <ul
-                style={{ listStyleType: "square" }}
+                style={{ listStyleType: 'square' }}
                 className="pl-7 flex flex-col gap-y-4 text-focused-background"
               >
                 <li>
