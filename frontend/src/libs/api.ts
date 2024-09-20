@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import config from '../config';
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_ENDPOINT_URI
+  baseURL: config.api.endpoint_uri
 });
 
 apiClient.interceptors.response.use(

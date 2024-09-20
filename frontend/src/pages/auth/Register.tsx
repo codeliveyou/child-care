@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -6,44 +6,18 @@ import Input from '../../components/common/Input';
 import Checkbox from '../../components/common/Checkbox';
 import Button from '../../components/common/Button';
 import TradeMark from '../../components/user/TradeMark';
-import apiClient from '../../libs/api';
-
-interface ICreateUser {
-  email: string;
-  business: string;
-  username: string;
-  password: string;
-}
-
-const defaultUserValues: ICreateUser = {
-  email: '',
-  business: '',
-  username: '',
-  password: ''
-};
+import { useAppDispatch, useAppSelector } from '../../store';
+import { updateCreateUser } from '../../store/reducers/authReducer';
 
 const Register = () => {
   const navigate = useNavigate(); // Hook to programmatically navigate between routes
-  const [createUser, setCreateUser] = useState<ICreateUser>(defaultUserValues);
+  const dispatch = useAppDispatch();
+  const createUser = useAppSelector((state) => state.auth.createUser);
 
   const handleUserChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCreateUser({ ...createUser, [e.target.name]: e.target.value });
-  };
-
-  const handleSignupClick = () => {
-    apiClient
-      .post('/users/register', {
-        user_name: createUser.username,
-        user_email: createUser.email,
-        user_password: createUser.password,
-        account_description: createUser.business,
-        company_code: ''
-      })
-      .then((response: any) => {
-        const { token } = response;
-        console.log(token);
-      });
-    navigate('/auth/payment'); // Navigate to payment page on button click
+    dispatch(
+      updateCreateUser({ name: e.target.name as any, value: e.target.value })
+    );
   };
 
   return (
@@ -60,34 +34,39 @@ const Register = () => {
             <div className="max-w-[250px] w-full flex flex-col gap-y-2">
               <p className="font-extrabold text-2xl">Skapa ett konto</p>
               <Input
-                name="email"
+                name="user_email"
                 placeholder="E-post"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
-                value={createUser.email}
+                value={createUser.user_email}
                 onChange={handleUserChange}
               />
               <Input
-                name="business"
+                name="account_description"
                 placeholder="Vård / Företag"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
-                value={createUser.business}
+                value={createUser.account_description}
                 onChange={handleUserChange}
               />
               <Input
-                name="username"
+                name="user_name"
                 placeholder="Användarnamn"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
-                value={createUser.username}
+                value={createUser.user_name}
                 onChange={handleUserChange}
               />
               <Input
-                name="password"
+                name="user_password"
                 placeholder="Lösenord"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
-                value={createUser.password}
+                value={createUser.user_password}
                 onChange={handleUserChange}
               />
-              <Button className="mt-4" onClick={handleSignupClick}>
+              <Button
+                className="mt-4"
+                onClick={() => {
+                  navigate('/auth/payment');
+                }}
+              >
                 Skapa
               </Button>
               <span className="text-primary-text/50 text-xs text-center">
