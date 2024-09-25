@@ -1,12 +1,72 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import TradeMark from "../../../components/user/TradeMark";
 import Button from "../../../components/common/Button";
 import Input from "../../../components/common/Input";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { MeetingContext } from "../../../MeetingContext";
+
+interface LocationState {
+  roomName: string;
+  patientName: string;
+  patientPersonalID: string;
+  avatarName: string;
+}
+
+const API_LOCATION = "http://localhost:8000";
 
 const RoomCreateOnboarding4 = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const stateParams = location.state as LocationState;
+  // const [username, setUsername] = useState("");
+  // const [meetinginfo, setMeetingInfo] = useState({});
+  const [meetingCreated, setMeetingCreated] = useState(false);
+  const [roomName, setRoomName] = useState<string>("");
+
+
+  const meteredMeeting = useContext(MeetingContext);
+
+  useEffect(() => {
+    if (meetingCreated && roomName) {
+      localStorage.setItem("roomName", roomName);
+      localStorage.setItem("username", stateParams.patientName);
+      navigate(`/room/${roomName}`);
+      // navigate(`/room/${roomName}`, {
+      //   state: {roomName: roomName, username: stateParams.patientName}
+      // });
+    }
+  }, [meetingCreated]);
+
+  async function handleCreateMeeting(username: string) {
+    // Calling API to create room
+    const { data } = await axios.post(API_LOCATION + `/api/create/room`,{
+      username,
+    });
+    // Calling API to fetch Metered Domain
+    const response = await axios.get(API_LOCATION + "/api/metered-domain");
+    // Extracting Metered Domain and Room Name
+    // From responses.
+
+    const METERED_DOMAIN = response.data.METERED_DOMAIN;
+    const meetingRoomName = data.roomName;
+    
+    // Calling the join() of Metered SDK
+    const joinResponse = await meteredMeeting.join({
+      name: username,
+      roomURL: METERED_DOMAIN + "/" + meetingRoomName,
+    });
+
+    if(joinResponse) {}
+
+    // setUsername(username);
+    setRoomName(meetingRoomName);
+    // setMeetingInfo(joinResponse);
+    setMeetingCreated(true);
+    // setMeetingJoined(true);
+  }
 
   return (
     <motion.div
@@ -83,7 +143,11 @@ const RoomCreateOnboarding4 = () => {
               size="compress"
               color="secondary"
               onClick={() => {
-                navigate("/room/0"); // Navigate to the room page or dashboard
+                handleCreateMeeting(stateParams.patientName);
+                // setMeetingCreated(true);
+                // navigate(`/room/${stateParams.roomName}`, {
+                //   state:  {roomName: roomName, username: stateParams.patientName} ,
+                // }); 
               }}
             >
               Klart

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import TradeMark from "../../../components/user/TradeMark";
@@ -24,8 +24,21 @@ const keywords = [
   "Hemma",
 ];
 
+interface LocationState {
+  roomName: string;
+  patientName: string;
+  patientPersonalID: string;
+  avatarName: string;
+}
+
 const RoomCreateOnboarding3 = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const stateParams = location.state as LocationState;
+
+  const handleNextClick = () => {
+    navigate("/room/create/onboarding/step4", { state: stateParams });
+  };
 
   // State to control whether AI is being used
   const [isUsingAI, setIsUsingAI] = useState<boolean>(false);
@@ -153,7 +166,7 @@ const RoomCreateOnboarding3 = () => {
           {/* Button to proceed to the next onboarding step */}
           <Button
             size="compress"
-            onClick={() => navigate("/room/create/onboarding/step4")}
+            onClick={handleNextClick}
           >
             Nästa
           </Button>

@@ -1,24 +1,13 @@
-import { ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-import Input from '../../components/common/Input';
-import Checkbox from '../../components/common/Checkbox';
-import Button from '../../components/common/Button';
-import TradeMark from '../../components/user/TradeMark';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { updateCreateUser } from '../../store/reducers/authReducer';
+import Input from "../../components/common/Input";
+import Checkbox from "../../components/common/Checkbox";
+import Button from "../../components/common/Button";
+import TradeMark from "../../components/user/TradeMark";
 
 const Register = () => {
   const navigate = useNavigate(); // Hook to programmatically navigate between routes
-  const dispatch = useAppDispatch();
-  const createUser = useAppSelector((state) => state.auth.createUser);
-
-  const handleUserChange = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(
-      updateCreateUser({ name: e.target.name as any, value: e.target.value })
-    );
-  };
 
   return (
     <div className="w-full h-full grid grid-cols-9 text-primary-text bg-white rounded-lg overflow-hidden">
@@ -34,37 +23,29 @@ const Register = () => {
             <div className="max-w-[250px] w-full flex flex-col gap-y-2">
               <p className="font-extrabold text-2xl">Skapa ett konto</p>
               <Input
-                name="user_email"
+                name="email"
                 placeholder="E-post"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
-                value={createUser.user_email}
-                onChange={handleUserChange}
               />
               <Input
-                name="account_description"
+                name="business"
                 placeholder="Vård / Företag"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
-                value={createUser.account_description}
-                onChange={handleUserChange}
               />
               <Input
-                name="user_name"
+                name="username"
                 placeholder="Användarnamn"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
-                value={createUser.user_name}
-                onChange={handleUserChange}
               />
               <Input
-                name="user_password"
+                name="password"
                 placeholder="Lösenord"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
-                value={createUser.user_password}
-                onChange={handleUserChange}
               />
               <Button
                 className="mt-4"
                 onClick={() => {
-                  navigate('/auth/payment');
+                  navigate("/auth/payment"); // Navigate to payment page on button click
                 }}
               >
                 Skapa
@@ -76,7 +57,7 @@ const Register = () => {
                 variant="outlined"
                 className="text-disabled-text"
                 onClick={() => {
-                  navigate('/auth/signup-with-bank'); // Navigate to signup with Bank ID page
+                  navigate("/auth/signup-with-bank"); // Navigate to signup with Bank ID page
                 }}
               >
                 Bank ID
@@ -106,7 +87,7 @@ const Register = () => {
             color="secondary"
             className="absolute bottom-0 right-0"
             onClick={() => {
-              navigate('/auth/sign-in'); // Navigate to sign-in page on button click
+              navigate("/auth/sign-in"); // Navigate to sign-in page on button click
             }}
           >
             Tillbaka
@@ -120,7 +101,7 @@ const Register = () => {
                 Denna sida innehåller tre sätt att logga in på.
               </p>
               <ul
-                style={{ listStyleType: 'square' }}
+                style={{ listStyleType: "square" }}
                 className="pl-7 flex flex-col gap-y-4 text-focused-background"
               >
                 <li>

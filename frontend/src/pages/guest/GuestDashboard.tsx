@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import TradeMark from "../../components/user/TradeMark";
@@ -11,94 +11,366 @@ import Button from "../../components/common/Button";
 import ChatItem from "../room/components/ChatItem";
 
 import SendSVG from "../../assets/send.svg?react";
-import DocIcon from "/images/report/doc.svg";
-import PdfIcon from "/images/report/pdf.svg";
+// import DocIcon from "/images/report/doc.svg";
+// import PdfIcon from "/images/report/pdf.svg";
+import { io, Socket } from "socket.io-client";
+
+import MeetingRoom from "../../components/room/MeetingRoom";
+import { MeetingContext } from "../../MeetingContext";
+import axios from "axios";
+import { useSearchParams } from "react-router-dom";
+import {
+  // Role,
+  User,
+  // ChatRequest,
+  Message,
+  // ChatRoom,
+  InitResponse,
+  RoomMessage,
+  ChatApproved,
+  ChatStarted,
+  ChatDenied,
+  // ChatRequestData,
+  // ChatHistory,
+} from "../room/types";
 
 const patientList = ["Sara"]; // List of patients
 
 const chatList = ["Lukas", "Anna", "Sara"]; // List of chat participants
 
-const guestMessages = [
-  {
-    name: "Anna",
-    messages: [
-      {
-        user: "Johan Prompt",
-        role: "me",
-        message:
-          "Hej, Anna. Jag behöver din expertis när det gäller en ung patient som jag såg tidigare idag. Det är en 6-årig pojke med återkommande magbesvär och frekventa buksmärtor.",
-      },
-      {
-        user: "Anna",
-        role: "guest",
-        message:
-          "Hej, Johan. Jag är här för att hjälpa till med det. Berätta mer om patienten och hans symptom.",
-      },
-    ],
-  },
-  {
-    name: "Lukas",
-    messages: [
-      {
-        user: "Johan Prompt",
-        role: "me",
-        message:
-          "Hej, Lukas. Jag behöver din expertis när det gäller en ung patient som jag såg tidigare idag. Det är en 6-årig pojke med återkommande magbesvär och frekventa buksmärtor.",
-      },
-      {
-        user: "Lukas",
-        role: "guest",
-        message:
-          "Hej, Lukas. Jag är här för att hjälpa till med det. Berätta mer om patienten och hans symptom.",
-      },
-    ],
-  },
-  {
-    name: "Sara",
-    messages: [
-      {
-        user: "Johan Prompt",
-        role: "me",
-        message:
-          "Hej, Sara. Jag behöver din expertis när det gäller en ung patient som jag såg tidigare idag. Det är en 6-årig pojke med återkommande magbesvär och frekventa buksmärtor.",
-      },
-      {
-        user: "Sara",
-        role: "guest",
-        message:
-          " och symtom kan det vara värt att överväga en pediatrisk gastroenterologisk bedömning för att utesluta eller bekräfta tillstånd som laktosintolerans, IBS eller andra mag-tarmrelaterade störningar.",
-      },
-    ],
-  },
-];
+const API_LOCATION = "http://localhost:8000";
 
-const reportData = [
-  {
-    type: "doc",
-    title: "Elsas möte rapport",
-    lastDate: "Igår 11:11",
-  },
-  {
-    type: "pdf",
-    title: "Elsas laddad information",
-    lastDate: "Den 23-03-2024",
-  },
-  {
-    type: "doc",
-    title: "Noah möte rapport",
-    lastDate: "Den 20-03-2024",
-  },
-  {
-    type: "doc",
-    title: "Stella rooms",
-    lastDate: "Den 20-03-2024",
-  },
-];
+interface TrackItem {
+  streamId: string;
+  track: MediaStreamTrack;
+  type: "audio" | "video";
+  participantSessionId: string;
+}
+
+interface Participant {
+  _id: string;
+  name: string;
+}
 
 function GuestDashboard() {
   const [isFilePanelActive, setFilePanelActive] = useState<boolean>(false); // State to manage file panel visibility
   const [isChatPanelActive, setChatPanelActive] = useState<boolean>(false); // State to manage chat panel visibility
   const [isReportDialogOpen, setReportDialogOpen] = useState<boolean>(false); // State to manage report dialog visibility
+  const [micShared, setMicShared] = useState(false);
+  const [cameraShared, setCameraShared] = useState(false);
+  const [screenShared, setScreenShared] = useState(false);
+  const [localVideoStream, setLocalVideoStream] = useState<MediaStream | null>(
+    null
+  );
+  const [meetingEnded, setMeetingEnded] = useState(false);
+  const [remoteTracks, setRemoteTracks] = useState<TrackItem[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<Participant[]>([]);
+  const [meetingInfo, setMeetingInfo] = useState<any>({});
+  const [meetingjoined, setMeetingJoined] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+
+  if(meetingEnded || meetingjoined) {}
+
+  const [searchParams] = useSearchParams();
+  const roomName = searchParams.get("roomname") as string;
+  const username = searchParams.get("username") as string;
+
+  const meteredMeeting = useContext(MeetingContext);
+
+  const handleMicBtn = async (): Promise<void> => {
+    if (micShared) {
+      await meteredMeeting.stopAudio();
+      setMicShared(false);
+    } else {
+      await meteredMeeting.startAudio();
+      setMicShared(true);
+    }
+  };
+
+  const handleCameraBtn = async (): Promise<void> => {
+    if (cameraShared) {
+      await meteredMeeting.stopVideo();
+      setLocalVideoStream(null);
+      setCameraShared(false);
+    } else {
+      await meteredMeeting.startVideo();
+      const stream = await meteredMeeting.getLocalVideoStream();
+      setLocalVideoStream(stream);
+      setCameraShared(true);
+    }
+  };
+
+  const handleScreenBtn = async (): Promise<void> => {
+    if (!screenShared) {
+      await meteredMeeting.startScreenShare();
+      setScreenShared(true);
+    } else {
+      await meteredMeeting.stopVideo();
+      setCameraShared(false);
+      setScreenShared(false);
+    }
+  };
+
+  const handleLeaveBtn = async (): Promise<void> => {
+    await meteredMeeting.leaveMeeting();
+
+    const response = await axios.get(
+      `${API_LOCATION}/api/room/end?roomName=${roomName}&userName=${username}`
+    );
+    if(response){}
+    setMeetingEnded(true);
+  };
+
+  async function handleJoinMeeting(roomName: string, username: string) {
+    roomName = roomName.trim();
+
+    try {
+      // Calling API to validate the roomName
+      const response = await axios.get<{ roomFound: boolean }>(
+        `${API_LOCATION}/api/validate-meeting?roomName=${roomName}`
+      );
+      if (response.data.roomFound) {
+        // Calling API to fetch Metered Domain
+        const { data } = await axios.get<{ METERED_DOMAIN: string }>(
+          `${API_LOCATION}/api/metered-domain`
+        );
+        // Extracting Metered Domain from response
+        const METERED_DOMAIN = data.METERED_DOMAIN;
+
+        // Calling the join() of Metered SDK
+        const joinResponse = await meteredMeeting.join({
+          name: username,
+          roomURL: `${METERED_DOMAIN}/${roomName}`,
+        });
+
+        const role = "guest";
+        const joinResponseToBackend = await axios.get(
+          `${API_LOCATION}/api/room/join?roomName=${roomName}&userName=${username}&role=${role}`
+        );
+
+        const uuid = joinResponseToBackend.data.uuid;
+        if (uuid) {}
+        // setUsername(username);
+        // setRoomName(roomName);
+        setMeetingInfo(joinResponse);
+        setMeetingJoined(true);
+
+        return true;
+      } else {
+        alert("Invalid roomName");
+      }
+    } catch (error) {
+      console.error("Error joining meeting:", error);
+      alert("An error occurred while joining the meeting. Please try again.");
+    }
+  }
+
+  useEffect(() => {
+    handleJoinMeeting(roomName, username);
+    setMeetingJoined(true);
+  }, []);
+
+  useEffect(() => {
+    const handleRemoteTrackStarted = (trackItem: TrackItem) => {
+      setRemoteTracks((prevTracks) => [...prevTracks, trackItem]);
+    };
+
+    const handleRemoteTrackStopped = (trackItem: TrackItem) => {
+      setRemoteTracks((prevTracks) =>
+        prevTracks.filter((track) => track.streamId !== trackItem.streamId)
+      );
+    };
+
+    const hanldeParticipantJoined = (participant: Participant) => {
+      if (participant) {
+      }
+    };
+
+    const handleParticipantLeft = (participant: Participant) => {
+      // Handle participant left
+      if (participant) {
+      }
+    };
+
+    const handleOnlineParticipants = (onlineParticipants: Participant[]) => {
+      setOnlineUsers(onlineParticipants);
+    };
+
+    const handleLocalTrackUpdated = (item: TrackItem) => {
+      const stream = new MediaStream([item.track]);
+      setLocalVideoStream(stream);
+    };
+
+    meteredMeeting.on("remoteTrackStarted", handleRemoteTrackStarted);
+    meteredMeeting.on("remoteTrackStopped", handleRemoteTrackStopped);
+    meteredMeeting.on("participantJoined", hanldeParticipantJoined);
+    meteredMeeting.on("participantLeft", handleParticipantLeft);
+    meteredMeeting.on("onlineParticipants", handleOnlineParticipants);
+    meteredMeeting.on("localTrackUpdated", handleLocalTrackUpdated);
+
+    return () => {
+      meteredMeeting.removeListener("remoteTrackStarted");
+      meteredMeeting.removeListener("remoteTrackStopped");
+      meteredMeeting.removeListener("participantJoined");
+      meteredMeeting.removeListener("participantLeft");
+      meteredMeeting.removeListener("onlineParticipants");
+      meteredMeeting.removeListener("localTrackUpdated");
+    };
+  });
+
+  const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [messageList, setMessageList] = useState<Message[]>([]);
+
+  if (allUsers) {
+  }
+
+  // Socket initialization
+  useEffect(() => {
+    const socket: Socket = io(API_LOCATION, {
+      transports: ["websocket"],
+      // Removed 'cors' as it's handled server-side
+    });
+
+    // Set the socket instance
+    setSocketInstance(socket);
+
+    // Emit 'init' event upon connection
+    socket.on("connect", () => {
+      // setLoading(false);
+      // setActiveUser((prevUser) => ({ ...prevUser, sid: socket.id? socket.id : "" }));
+      // Emit init with username and role
+      socket.emit("init", {
+        username: username,
+        role: "guest",
+        roomName: roomName,
+      });
+    });
+
+    // Listen for 'init_response'
+    socket.on("init_response", (data: InitResponse) => {
+      setAllUsers(data.users);
+    });
+
+    // Listen for 'user_disconnected'
+    socket.on(
+      "user_disconnected",
+      (data: { sid: string; username: string }) => {
+        setAllUsers((prevUsers) =>
+          prevUsers.filter((user) => user.sid !== data.sid)
+        );
+        // Optionally, remove messages from messageList if necessary
+      }
+    );
+
+    // Listen for 'chat_approved' and 'chat_started' to handle room creation
+    socket.on("chat_approved", (data: ChatApproved) => {
+      const { room_id, patient_sid, guest_sid } = data;
+      console.log(
+        `Chat approved: Room ID ${room_id} between ${patient_sid} and ${guest_sid}`
+      );
+      // Optionally, set activeUser based on the role
+
+      // Join the room
+      socket.emit("join_room", { room_id });
+      // Fetch chat history
+      socket.emit("get_chat_history", { room_id });
+    });
+
+    socket.on("chat_started", (data: ChatStarted) => {
+      const { room_id, guest_sid } = data;
+      console.log(`Chat started: Room ID ${room_id} with ${guest_sid}`);
+      // Join the room
+      socket.emit("join_room", { room_id });
+      // Fetch chat history
+      socket.emit("get_chat_history", { room_id });
+    });
+
+    // Listen for 'chat_denied'
+    socket.on("chat_denied", (data: ChatDenied) => {
+      alert(data.msg);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Connection Error:", error);
+      // Optionally, notify the user about the connection issue
+    });
+
+    // Listen for 'chat_history'
+    // socket.on("chat_history", (data: ChatHistory) => {
+    //   const { room_id, messages } = data;
+    //   const formattedMessages: Message[] = messages.map((msg) => ({
+    //     from: msg.sender_id === socket.id ? "me" : msg.sender_id,
+    //     message: msg.message,
+    //     timestamp: msg.timestamp,
+    //     role: activeUser.role,
+    //   }));
+    //   setMessageList(formattedMessages);
+    // });
+
+    // Cleanup on component unmount or buttonStatus change
+    return () => {
+      socket.disconnect();
+      setSocketInstance(null);
+    };
+  }, []);
+
+  // Display received message
+  useEffect(() => {
+    if (socketInstance) {
+      socketInstance.on("room_message", (data: RoomMessage) => {
+        const { from, message, to, timestamp } = data;
+        const newMessage: Message = {
+          from: from === socketInstance.id ? "me" : from,
+          to: "me",
+          message,
+          timestamp,
+          role: "guest",
+        };
+        if (to == username)
+          setMessageList((prevList) => [...prevList, newMessage]);
+      });
+    }
+  }, [socketInstance]);
+
+  // Function to send messages
+  const sendMessage = () => {
+    // Check if the message is not empty
+    if (message.trim() === "") {
+      // alert("Message cannot be empty");
+      return;
+    }
+
+    // Create a new message object
+    const newMessage: Message = {
+      from: username,
+      to: "creator",
+      role: "guest",
+      message: message.trim(),
+      timestamp: new Date().toISOString(),
+    };
+
+    // Update the message list state
+    setMessageList((prevList) => [...prevList, newMessage]);
+
+    // Emit the message via Socket.IO
+    if (socketInstance) {
+      socketInstance.emit("room_message", {
+        room_id: roomName, // Assuming room_id is activeUser.sid; adjust as per backend
+        from: username,
+        to: "creator",
+        role: "guest",
+        message: message.trim(),
+      });
+    }
+
+    // Clear the input field
+    setMessage("");
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") sendMessage();
+  };
 
   return (
     <>
@@ -113,7 +385,8 @@ function GuestDashboard() {
                   key={index}
                   className="w-9 h-9 text-white bg-primary-text"
                 >
-                  {userItem.charAt(0).toUpperCase()} {/* Display first letter of patient name */}
+                  {userItem.charAt(0).toUpperCase()}{" "}
+                  {/* Display first letter of patient name */}
                 </ActionButton>
               ))}
             </div>
@@ -123,11 +396,12 @@ function GuestDashboard() {
             </div>
           </div>
         </div>
-        <div className="grow flex gap-x-6">
+        <div className="grow flex gap-x-6 overflow-y-auto">
           <div className="flex flex-col justify-end">
-            <Avatar uri="/images/guest/avatar.png" /> {/* Display guest avatar */}
+            <Avatar uri="/images/guest/avatar.png" />{" "}
+            {/* Display guest avatar */}
           </div>
-          <div className="grow flex gap-x-2.5">
+          <div className="grow h-full flex gap-x-2.5">
             <div className="grow flex flex-col gap-y-2">
               <div className="py-2 flex flex-col items-center justify-center">
                 <p className="font-semibold text-xl leading-6 text-primary-background">
@@ -136,17 +410,21 @@ function GuestDashboard() {
                 <p className="text-sm leading-4">2 Mars, 2024</p>
               </div>
               <div className="grow relative p-2.5 w-full flex justify-end rounded-lg overflow-hidden">
-                <img
-                  src="/images/guest/background.png"
-                  alt="Background image"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-auto"
+                <MeetingRoom
+                  handleMicBtn={handleMicBtn}
+                  handleCameraBtn={handleCameraBtn}
+                  handelScreenBtn={handleScreenBtn}
+                  handleLeaveBtn={handleLeaveBtn}
+                  localVideoStream={localVideoStream}
+                  onlineUsers={onlineUsers}
+                  remoteTracks={remoteTracks}
+                  username={username}
+                  roomName={roomName}
+                  meetingInfo={meetingInfo}
+                  micShared={micShared}
+                  cameraShared={cameraShared}
+                  screenShared={screenShared}
                 />
-                <div className="relative w-[160px] h-[190px] rounded-lg overflow-hidden">
-                  <img
-                    src="/images/room/call/mine.png"
-                    className="absolute h-full w-auto left-1/2 -translate-x-1/2"
-                  />
-                </div>
               </div>
               <div className="w-full flex gap-x-4">
                 <div className="flex-[3] p-4 flex flex-col gap-y-2 bg-white rounded-lg">
@@ -181,7 +459,8 @@ function GuestDashboard() {
                             key={index}
                             className="w-9 h-9 bg-primary-text text-light-background"
                           >
-                            {chatItem.charAt(0).toUpperCase()} {/* Display first letter of chat participant */}
+                            {chatItem.charAt(0).toUpperCase()}{" "}
+                            {/* Display first letter of chat participant */}
                           </ActionButton>
                         ))}
                       </div>
@@ -222,7 +501,8 @@ function GuestDashboard() {
                             key={index}
                             className="w-9 h-9 bg-primary-text text-light-background"
                           >
-                            {patient.charAt(0).toUpperCase()} {/* Display first letter of patient */}
+                            {patient.charAt(0).toUpperCase()}{" "}
+                            {/* Display first letter of patient */}
                           </ActionButton>
                         ))}
                       </div>
@@ -236,7 +516,7 @@ function GuestDashboard() {
                     </p>
                     <div className="grow py-4 max-h-[180px] flex flex-col gap-4 pr-4 overflow-y-auto">
                       {/* DOCs report items */}
-                      {reportData.map((reportItem, index) => (
+                      {/* {reportData.map((reportItem: any, index: number) => (
                         <div
                           key={index}
                           className="flex items-center cursor-pointer"
@@ -265,14 +545,14 @@ function GuestDashboard() {
                             )}
                           </div>
                         </div>
-                      ))}
+                      ))} */}
                     </div>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="p-2 flex flex-col gap-2.5 bg-white rounded-2xl w-80">
+            <div className="p-2 h-full flex flex-col gap-2.5 bg-white rounded-2xl w-80 overflow-y-auto">
               <div className="p-2 grid grid-cols-2 gap-x-2 bg-light-background rounded-xl font-bold text-lg">
                 <button
                   className={twMerge(
@@ -284,13 +564,14 @@ function GuestDashboard() {
               </div>
 
               {/* Chat items */}
-              <div className="grow py-4 px-2 flex flex-col gap-2.5">
-                {guestMessages[0].messages.map((message, index) => (
+              <div className="grow py-4 px-2 flex-1 flex flex-col gap-2.5 overflow-y-auto">
+                {messageList.map((msg, index) => (
                   <ChatItem
                     key={index}
-                    name={message.user}
-                    role={message.role}
-                    content={message.message}
+                    name={msg.from === username ? "Me" : msg.from}
+                    role={msg.from === username ? "me" : msg.role}
+                    content={msg.message}
+                    // timestamp={msg.timestamp}
                   />
                 ))}
               </div>
@@ -300,8 +581,14 @@ function GuestDashboard() {
                   name="message"
                   placeholder="Skriva ett meddelande"
                   className="grow h-12 w-12"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
                 />
-                <ActionButton className="bg-primary-background">
+                <ActionButton
+                  className="bg-primary-background"
+                  onClick={sendMessage}
+                >
                   <SendSVG />
                 </ActionButton>
               </div>

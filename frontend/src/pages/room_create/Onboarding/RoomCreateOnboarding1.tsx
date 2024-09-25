@@ -5,9 +5,28 @@ import Input from "../../../components/common/Input";
 import Button from "../../../components/common/Button";
 import ProgressBar from "../../../components/common/ProgressBar";
 import TradeMark from "../../../components/user/TradeMark";
+import { useState } from "react";
 
 const RoomCreateOnboarding1 = () => {
   const navigate = useNavigate();
+  const [roomName, setRoomName] = useState<string>("");
+  const [patientName, setPatientName] = useState<string>("");
+  const [patientPersonalID, setPatientPersonalID] = useState<string>("");
+  const [avatarName, setAvatarName] = useState<string>("");
+
+  const params = {
+    roomName, patientName, patientPersonalID, avatarName
+  }
+
+  const handleRoomNameInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRoomName(e.target.value);
+  };
+
+  const handleNextClick = () => {
+    navigate("/room/create/onboarding/step2", { state:  params  });
+  };
 
   return (
     // <AnimatePresence mode="wait">
@@ -62,28 +81,36 @@ const RoomCreateOnboarding1 = () => {
             name="room"
             placeholder="Rum namn"
             className="border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
+            value={roomName}
+            onChange={handleRoomNameInputChange}
           />
           <Input
             name="patient"
             placeholder="Patient namn"
             className="border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
+            value={patientName}
+            onChange={(e) => setPatientName(e.target.value)}
           />
           <Input
             name="patientID"
             placeholder="Patient personnumret"
             className="border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
+            value={patientPersonalID}
+            onChange={(e) => setPatientPersonalID(e.target.value)}
           />
           <Input
             name="avatar"
             placeholder="Avatar namn"
             className="border border-primary-border/25 placeholder:text-primary-placeholder bg-white"
+            value={avatarName}
+            onChange={(e) => setAvatarName(e.target.value)}
           />
         </div>
         <div className="flex justify-end">
           {/* Button to proceed to the next step in the onboarding process */}
           <Button
             size="compress"
-            onClick={() => navigate("/room/create/onboarding/step2")}
+            onClick={handleNextClick}
           >
             Nästa
           </Button>

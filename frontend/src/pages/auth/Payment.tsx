@@ -1,16 +1,12 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import TradeMark from '../../components/user/TradeMark';
-import Input from '../../components/common/Input';
-import Button from '../../components/common/Button';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { updateCreateUser } from '../../store/reducers/authReducer';
+import TradeMark from "../../components/user/TradeMark";
+import Input from "../../components/common/Input";
+import Button from "../../components/common/Button";
 
 const Payment = () => {
   // Hook to programmatically navigate to different routes
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const createUser = useAppSelector((state) => state.auth.createUser);
 
   return (
     <div className="w-full h-full grid grid-cols-2 rounded-lg overflow-hidden">
@@ -28,18 +24,9 @@ const Payment = () => {
               </p>
               {/* Input field for company code */}
               <Input
-                name="company_code"
+                name="code"
                 placeholder="Företag kod"
                 className="border border-white/50 placeholder:text-light-background text-light-background bg-white/10"
-                value={createUser.company_code}
-                onChange={(e) =>
-                  dispatch(
-                    updateCreateUser({
-                      name: 'company_code',
-                      value: e.target.value
-                    })
-                  )
-                }
               />
               {/* Instructions for specifying payment method */}
               <p className="text-[10px] leading-3 text-disabled-text">
@@ -68,7 +55,7 @@ const Payment = () => {
                   // Navigate to payment detail page with subscription method
                   navigate(
                     `/auth/payment-detail?${new URLSearchParams({
-                      method: 'subscription'
+                      method: "subscription",
                     })}`
                   );
                 }}
@@ -85,7 +72,7 @@ const Payment = () => {
                   // Navigate to payment detail page with hourly method
                   navigate(
                     `/auth/payment-detail?${new URLSearchParams({
-                      method: 'hourly'
+                      method: "hourly",
                     })}`
                   );
                 }}
@@ -102,7 +89,7 @@ const Payment = () => {
               variant="outlined"
               className="absolute bottom-2.5 right-1"
               onClick={() => {
-                navigate('/auth/sign-up');
+                navigate("/auth/sign-up");
               }}
             >
               Tillbaka

@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, KeyboardEvent } from "react";
 import { twMerge } from "tailwind-merge";
 
 type InputSize = "large" | "medium" | "small";
@@ -18,6 +18,8 @@ interface InputProps {
   className?: string;
   // Function to handle change events
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+
+  onKeyPress?: (event: KeyboardEvent<HTMLInputElement>) => void;
 }
 
 /**
@@ -31,6 +33,7 @@ interface InputProps {
  * @param {string} [props.placeholder=""] - Placeholder text for the input field.
  * @param {string} [props.className=""] - Additional CSS classes for the input field.
  * @param {(event: ChangeEvent<HTMLInputElement>) => void} [props.onChange=() => {}] - Callback function to handle input changes.
+ * @param {(event: KeyboardEvent<HTMLInputElement>) => void} [props.onKeyPress=() => {}] - Callback function to handle input changes.
  * @returns {JSX.Element} The rendered input field.
  */
 function Input({
@@ -41,6 +44,7 @@ function Input({
   placeholder = "",
   className = "",
   onChange = () => {},
+  onKeyPress =() => {},
 }: InputProps) {
   // Determines the CSS class for the input size based on the size prop
   const sizeClass =
@@ -62,6 +66,7 @@ function Input({
         className
       )}
       onChange={onChange}
+      onKeyDown={onKeyPress}
     />
   );
 }

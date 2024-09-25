@@ -20,7 +20,10 @@ import RoomSVG from "../../assets/navbar/Room.svg?react";
 import CalendarSVG from "../../assets/navbar/Calendar.svg?react";
 import FolderSVG from "../../assets/navbar/Folder.svg?react";
 import SettingsSVG from "../../assets/navbar/Settings.svg?react";
+import { io, Socket } from "socket.io-client";
+import { InitResponse } from "../../pages/room/types";
 
+const API_LOCATION = "http://localhost:8000";
 // Sidebar items with their corresponding icons and paths
 const sidebarItems = [
   {
@@ -52,8 +55,13 @@ const sidebarItems = [
 ];
 
 // Lists of users based on their types
-const guestList = ["Anna", "Lukas", "Sara"];
-const patientList = ["Elsa"];
+// const guestList = ["Anna", "Lukas", "Sara"];
+// const patientList = ["Elsa"];
+
+// interface User {
+//   id: string;
+//   name: string;
+// }
 
 // MainLayout component definition
 const MainLayout = () => {
@@ -66,7 +74,10 @@ const MainLayout = () => {
   const [isSidebarExpand, setSidebarExpand] = useState<boolean>(false); // State to control sidebar expansion
   const [activeUser, setActiveUser] = useState<string>(""); // State to store the active user
   const [userType, setUserType] = useState<string>("guest"); // State to store the current user type
-  const [userList, setUserList] = useState<string[]>([]); // State to store the list of users based on the user type
+  const [userList, setUserList] = useState<Participant[]>([]); // State to store the list of users based on the user type
+
+  const [patientList, setPatientList] = useState<Participant[]>([]);
+  const [guestList, setGuestList] = useState<Participant[]>([]);
 
   // Function to handle user click and update the URL with the selected user
   const handleUserClick = (user: string) => () => {
@@ -78,13 +89,43 @@ const MainLayout = () => {
   useEffect(() => {
     const userType = (searchParams[0].get("message") as string) || "guest";
     const userList = userType === "patient" ? patientList : guestList;
-    const currentUser = (searchParams[0].get("user") as string) || userList[0];
+    const currentUser = (searchParams[0].get("user") as string) || userList[0]?.username;
+
 
     setUserType(userType);
     setUserList(userList);
-    if (!currentUser) setActiveUser(userList[0]);
+    if (!currentUser) setActiveUser(guestList[0]?.username || "");
     else setActiveUser(currentUser);
-  }, [searchParams]);
+  }, [searchParams, patientList, guestList]);
+
+  interface Participant {
+    username: string;
+    role: string;
+    user_id: string;
+  }
+
+  useEffect(() =>  {
+
+    const socket: Socket = io(API_LOCATION, {
+      transports: ['websocket'],
+    });
+
+    socket.on("connect", () =>  {
+      const roomName = localStorage.getItem("roomName");
+      const username = localStorage.getItem("username");
+      socket.emit("init", { username: username, role: "creator" , roomName: roomName});
+    })
+
+    socket.on("init_response", (data: InitResponse) => {
+      const patients = data.users.filter(user => user.role === "patient").map(user => ({ ...user, user_id: user.sid }));
+      const guests = data.users.filter(user=> user.role === "guest").map(user => ({ ...user, user_id: user.sid })) || [];
+
+      setGuestList(guests);
+      setPatientList(patients);
+      
+    });
+
+  },[]);
 
   return (
     <div className="bg-light-background flex flex-col w-full h-full py-4 gap-y-4">
@@ -101,13 +142,13 @@ const MainLayout = () => {
                   key={index}
                   className={twMerge(
                     "w-9 h-9 text-white",
-                    userItem === activeUser
+                    userItem.username === activeUser
                       ? "bg-primary-background"
                       : "bg-primary-text"
                   )}
-                  onClick={handleUserClick(userItem)}
+                  onClick={handleUserClick(userItem.username)}
                 >
-                  {userItem.charAt(0).toUpperCase()}
+                  {userItem.username.charAt(0).toUpperCase()}
                 </ActionButton>
               ))}
             </div>

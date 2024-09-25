@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import AvatarList from "../../../components/room/AvatarList";
@@ -7,8 +7,21 @@ import Button from "../../../components/common/Button";
 import ProgressBar from "../../../components/common/ProgressBar";
 import TradeMark from "../../../components/user/TradeMark";
 
+interface LocationState {
+  roomName: string;
+  patientName: string;
+  patientPersonalID: string;
+  avatarName: string;
+}
+
 const RoomCreateOnboarding2 = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const stateParams = location.state as LocationState;
+  
+  const handleNextClick = () => {
+    navigate("/room/create/onboarding/step3", { state:  stateParams  });
+  };
 
   return (
     <motion.div
@@ -88,7 +101,7 @@ const RoomCreateOnboarding2 = () => {
           {/* Button to proceed to the next step in onboarding */}
           <Button
             size="compress"
-            onClick={() => navigate("/room/create/onboarding/step3")}
+            onClick={handleNextClick}
           >
             Nästa
           </Button>

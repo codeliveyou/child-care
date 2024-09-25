@@ -1,13 +1,103 @@
 import { useNavigate } from "react-router-dom";
+import {
+  // BlockquoteHTMLAttributes,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { motion } from "framer-motion";
 
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import TradeMark from "../../components/user/TradeMark";
+import { MeetingContext } from "../../MeetingContext";
+
+
+interface TrackItem {
+  streamId: string;
+  track: MediaStreamTrack;
+  type: "audio" | "video";
+  participantSessionId: string;
+}
+
+interface Participant {
+  _id: string;
+  name: string;
+}
 
 const GuestLogin = () => {
   // useNavigate hook to programmatically navigate between routes
   const navigate = useNavigate();
+  const [username, setUsername] = useState<string>("");
+  const [roomName, setRoomName] = useState<string>("");
+  // const [meetinginfo, setMeetingInfo] = useState<any>({});
+  // const [meetingjoined, setMeetingJoined] = useState<boolean>(false);
+
+  const [remoteTracks, setRemoteTracks] = useState<TrackItem[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<Participant[]>([]);
+  const [localVideoStream, setLocalVideoStream] = useState<MediaStream | null>(
+    null
+  );
+
+  if (remoteTracks && onlineUsers && localVideoStream) {
+  }
+
+  const meteredMeeting = useContext(MeetingContext);
+
+  async function handleClick() {
+    // navigate("/guest", {
+    //   state: { guestname: username, roomname: roomName },
+    // }); // Navigates to the guest route
+    navigate(`/guest?${new URLSearchParams({ roomname: roomName, username })}`);
+  }
+
+  useEffect(() => {
+    const handleRemoteTrackStarted = (trackItem: TrackItem) => {
+      setRemoteTracks((prevTracks) => [...prevTracks, trackItem]);
+    };
+
+    const handleRemoteTrackStopped = (trackItem: TrackItem) => {
+      setRemoteTracks((prevTracks) =>
+        prevTracks.filter((track) => track.streamId !== trackItem.streamId)
+      );
+    };
+
+    const hanldeParticipantJoined = (participant: Participant) => {
+      if (participant) {
+      }
+    };
+
+    const handleParticipantLeft = (participant: Participant) => {
+      // Handle participant left
+      if (participant) {
+      }
+    };
+
+    const handleOnlineParticipants = (onlineParticipants: Participant[]) => {
+      setOnlineUsers(onlineParticipants);
+    };
+
+    const handleLocalTrackUpdated = (item: TrackItem) => {
+      const stream = new MediaStream([item.track]);
+      setLocalVideoStream(stream);
+    };
+
+    meteredMeeting.on("remoteTrackStarted", handleRemoteTrackStarted);
+    meteredMeeting.on("remoteTrackStopped", handleRemoteTrackStopped);
+    meteredMeeting.on("participantJoined", hanldeParticipantJoined);
+    meteredMeeting.on("participantLeft", handleParticipantLeft);
+    meteredMeeting.on("onlineParticipants", handleOnlineParticipants);
+    meteredMeeting.on("localTrackUpdated", handleLocalTrackUpdated);
+
+    return () => {
+      meteredMeeting.removeListener("remoteTrackStarted");
+      meteredMeeting.removeListener("remoteTrackStopped");
+      meteredMeeting.removeListener("participantJoined");
+      meteredMeeting.removeListener("participantLeft");
+      meteredMeeting.removeListener("onlineParticipants");
+      meteredMeeting.removeListener("localTrackUpdated");
+    };
+  });
 
   return (
     <div className="w-full h-full grid grid-cols-9 bg-white rounded-lg overflow-hidden">
@@ -31,19 +121,23 @@ const GuestLogin = () => {
                 name="name"
                 placeholder="Gästnamn"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
               />
               {/* Input field for guest key ID */}
               <Input
                 name="keyID"
                 placeholder="Nyckel ID"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
+                value={roomName}
+                onChange={(e) => setRoomName(e.target.value)}
               />
               {/* Button to navigate to guest page upon click */}
               <Button
                 className="mt-4 border border-primary-border/25"
-                onClick={() => {
-                  navigate("/guest"); // Navigates to the guest route
-                }}
+                onClick={handleClick}
               >
                 Delta
               </Button>

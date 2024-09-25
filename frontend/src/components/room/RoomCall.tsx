@@ -1,73 +1,246 @@
-import { TbDotsVertical } from "react-icons/tb";
 import { twMerge } from "tailwind-merge";
-
-import ActionButton from "../common/ActionButton";
+import "../../pages/room/MeetingComponents/index.css";
+import MeetingRoom from "./MeetingRoom";
+import { MeetingContext } from "../../MeetingContext";
+import { useState, useContext, useEffect } from "react";
+import axios from "axios";
 
 // Define props for the RoomCall component
 interface RoomCallProps {
-  className?: string;  // Optional className for additional styling
+  className?: string; // Optional className for additional styling
   onShare: () => void; // Callback function for the share action
 }
 
+interface TrackItem {
+  streamId: string;
+  track: MediaStreamTrack;
+  type: "audio" | "video";
+  participantSessionId: string;
+}
+
+interface Participant {
+  _id: string;
+  name: string;
+}
+
+const API_LOCATION = "http://localhost:8000";
+
 function RoomCall({ className = "", onShare }: RoomCallProps) {
+  const [meetingJoined, setMeetingJoined] = useState(false);
+  const [username, setUsername] = useState("");
+  const [micShared, setMicShared] = useState(false);
+  const [cameraShared, setCameraShared] = useState(false);
+  const [screenShared, setScreenShared] = useState(false);
+  const [meetingEnded, setMeetingEnded] = useState(false);
+  const [roomName, setRoomName] = useState<string>("");
+  const [meetingInfo, setMeetingInfo] = useState<any>({});
+  // const [role, setRole] = useState<"creator" | "participant">("participant");
+
+  const [remoteTracks, setRemoteTracks] = useState<TrackItem[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<Participant[]>([]);
+  const [localVideoStream, setLocalVideoStream] = useState<MediaStream | null>(
+    null
+  );
+
+  if (meetingEnded && meetingJoined) {
+    onShare;
+  }
+
+  const meteredMeeting = useContext(MeetingContext);
+
+  // const location = useLocation();
+  // const state = location.state;
+
+  const roomname = localStorage.getItem("roomName") || "";
+  const user_name = localStorage.getItem("username") || "";
+
+  useEffect(() => {
+    handleJoinMeeting(roomname, user_name);
+    setMeetingJoined(true);
+  }, []);
+
+  useEffect(() => {
+    const handleRemoteTrackStarted = (trackItem: TrackItem) => {
+      setRemoteTracks((prevTracks) => [...prevTracks, trackItem]);
+    };
+
+    const handleRemoteTrackStopped = (trackItem: TrackItem) => {
+      setRemoteTracks((prevTracks) =>
+        prevTracks.filter((track) => track.streamId !== trackItem.streamId)
+      );
+    };
+
+    const hanldeParticipantJoined = (participant: Participant) => {
+      if (participant) {
+      }
+    };
+
+    const handleParticipantLeft = (participant: Participant) => {
+      if (participant) {
+      }
+      // Handle participant left
+    };
+
+    const handleOnlineParticipants = (onlineParticipants: Participant[]) => {
+      setOnlineUsers(onlineParticipants);
+    };
+
+    const handleLocalTrackUpdated = (item: TrackItem) => {
+      const stream = new MediaStream([item.track]);
+      setLocalVideoStream(stream);
+    };
+
+    meteredMeeting.on("remoteTrackStarted", handleRemoteTrackStarted);
+    meteredMeeting.on("remoteTrackStopped", handleRemoteTrackStopped);
+    meteredMeeting.on("participantJoined", hanldeParticipantJoined);
+    meteredMeeting.on("participantLeft", handleParticipantLeft);
+    meteredMeeting.on("onlineParticipants", handleOnlineParticipants);
+    meteredMeeting.on("localTrackUpdated", handleLocalTrackUpdated);
+
+    return () => {
+      meteredMeeting.removeListener("remoteTrackStarted");
+      meteredMeeting.removeListener("remoteTrackStopped");
+      meteredMeeting.removeListener("participantJoined");
+      meteredMeeting.removeListener("participantLeft");
+      meteredMeeting.removeListener("onlineParticipants");
+      meteredMeeting.removeListener("localTrackUpdated");
+    };
+  });
+
+  // async function handleCreateMeeting(username: string) {
+  //   // Calling API to create room
+  //   const { data } = await axios.post(API_LOCATION + "/api/create/room");
+  //   // Calling API to fetch Metered Domain
+  //   const response = await axios.get(API_LOCATION + "/api/metered-domain");
+  //   // Extracting Metered Domain and Room Name
+  //   // From responses.
+  //   const METERED_DOMAIN = response.data.METERED_DOMAIN;
+  //   const roomName = data.roomName;
+
+  //   // Calling the join() of Metered SDK
+  //   const joinResponse = await meteredMeeting.join({
+  //     name: username,
+  //     roomURL: METERED_DOMAIN + "/" + roomName,
+  //   });
+
+  //   setUsername(username);
+  //   setRoomName(roomName);
+  //   setMeetingInfo(joinResponse);
+  //   // setMeetingJoined(true);
+  // }
+
+  async function handleJoinMeeting(roomName: string, username: string) {
+    roomName = roomName.trim();
+
+    try {
+      // Calling API to validate the roomName
+      const response = await axios.get<{ roomFound: boolean }>(
+        `${API_LOCATION}/api/validate-meeting?roomName=${roomName}`
+      );
+
+      if (response.data.roomFound) {
+        // Calling API to fetch Metered Domain
+        const { data } = await axios.get<{ METERED_DOMAIN: string }>(
+          `${API_LOCATION}/api/metered-domain`
+        );
+
+        // Extracting Metered Domain from response
+        const METERED_DOMAIN = data.METERED_DOMAIN;
+
+        // Calling the join() of Metered SDK
+        const joinResponse = await meteredMeeting.join({
+          name: username,
+          roomURL: `${METERED_DOMAIN}/${roomName}`,
+        });
+
+        const joinResponseToBackend = await axios.get(
+          `${API_LOCATION}/api/room/join?roomName=${roomName}`
+        );
+
+        if (joinResponseToBackend) {
+        }
+
+        setUsername(username);
+        setRoomName(roomName);
+        setMeetingInfo(joinResponse);
+        setMeetingJoined(true);
+      } else {
+        alert("Invalid roomName");
+      }
+    } catch (error) {
+      console.error("Error joining meeting:", error);
+      alert("An error occurred while joining the meeting. Please try again.");
+    }
+  }
+
+  const handleMicBtn = async (): Promise<void> => {
+    if (micShared) {
+      await meteredMeeting.stopAudio();
+      setMicShared(false);
+    } else {
+      await meteredMeeting.startAudio();
+      setMicShared(true);
+    }
+  };
+
+  const handleCameraBtn = async (): Promise<void> => {
+    if (cameraShared) {
+      await meteredMeeting.stopVideo();
+      setLocalVideoStream(null);
+      setCameraShared(false);
+    } else {
+      await meteredMeeting.startVideo();
+      const stream = await meteredMeeting.getLocalVideoStream();
+      setLocalVideoStream(stream);
+      setCameraShared(true);
+    }
+  };
+
+  const handleScreenBtn = async (): Promise<void> => {
+    if (!screenShared) {
+      await meteredMeeting.startScreenShare();
+      setScreenShared(true);
+    } else {
+      await meteredMeeting.stopVideo();
+      setCameraShared(false);
+      setScreenShared(false);
+    }
+  };
+
+  const handleLeaveBtn = async (): Promise<void> => {
+    await meteredMeeting.leaveMeeting();
+
+    const response = await axios.get(
+      `${API_LOCATION}/room/end?roomName=${roomName}`
+    );
+    if (response) {
+    }
+    setMeetingEnded(true);
+  };
+
   return (
     <div
       className={twMerge(
-        "relative w-full rounded-lg overflow-hidden", // Container with relative positioning and full width
+        "relative w-full h-full rounded-lg overflow-hidden", // Container with relative positioning and full width
         className // Apply additional styles from props
       )}
     >
-      {/* Background image for the call room */}
-      <img
-        src="/images/room/call/background.png"
-        alt="Background image"
-        className="absolute top-1/2 -translate-y-1/2 w-full h-auto"
-      />
-      <div className="absolute top-0 p-2.5 w-full flex justify-between">
-        {/* Share button */}
-        <ActionButton className="bg-primary-background" onClick={onShare}>
-          <img src="/icons/call/share.svg" className="w-6 h-6" />
-        </ActionButton>
-        {/* User's image */}
-        <img
-          src="/images/room/call/mine.png"
-          alt="Mine image"
-          className="w-[150px] h-[160px] rounded-lg"
+      <div className="h-full" id="roomview">
+        <MeetingRoom
+          handleMicBtn={handleMicBtn}
+          handleCameraBtn={handleCameraBtn}
+          handelScreenBtn={handleScreenBtn}
+          handleLeaveBtn={handleLeaveBtn}
+          localVideoStream={localVideoStream}
+          onlineUsers={onlineUsers}
+          remoteTracks={remoteTracks}
+          username={username}
+          roomName={roomName}
+          meetingInfo={meetingInfo}
+          micShared={micShared}
+          cameraShared={cameraShared}
+          screenShared={screenShared}
         />
-      </div>
-      <div className="absolute bottom-0 p-2.5 w-full">
-        <div className="py-2 px-4 flex items-center justify-between">
-          {/* End call button */}
-          <ActionButton className="rounded-full bg-red-500">
-            <img src="/icons/call/stop.svg" className="w-4 h-4" />
-          </ActionButton>
-          <div className="flex items-center gap-x-4">
-            {/* Mute button */}
-            <ActionButton className="rounded-full bg-white">
-              <img src="/icons/call/mute.svg" className="w-6 h-6" />
-            </ActionButton>
-            {/* Photo button */}
-            <ActionButton className="rounded-full bg-white">
-              <img src="/icons/call/photo.svg" className="w-6 h-6" />
-            </ActionButton>
-            {/* Phone button */}
-            <ActionButton className="rounded-2xl bg-green-500 w-16 h-16">
-              <img src="/icons/call/phone.svg" className="w-9 h-9" />
-            </ActionButton>
-            {/* Microphone button */}
-            <ActionButton className="rounded-full bg-white">
-              <img src="/icons/call/microphone.svg" className="w-6 h-6" />
-            </ActionButton>
-            {/* Video button */}
-            <ActionButton className="rounded-full bg-white">
-              <img src="/icons/call/video.svg" className="w-5 h-4" />
-            </ActionButton>
-          </div>
-          {/* More options button */}
-          <ActionButton className="justify-end text-white">
-            <TbDotsVertical size={24} />
-          </ActionButton>
-        </div>
       </div>
     </div>
   );

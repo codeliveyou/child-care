@@ -1,6 +1,13 @@
+// src/RoomDetail.tsx
+
 import { useEffect, useState } from "react";
 import { FaChevronLeft } from "react-icons/fa6";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
 
@@ -12,9 +19,28 @@ import RoomCall from "../../components/room/RoomCall";
 import ShareDialog from "../../components/room/ShareDialog";
 import ActionButton from "../../components/common/ActionButton";
 
+import { io, Socket } from "socket.io-client";
+
+import {
+  // Role,
+  User,
+  ChatRequest,
+  Message,
+  // ChatRoom,
+  // InitResponse,
+  RoomMessage,
+  ChatApproved,
+  ChatStarted,
+  ChatDenied,
+  ChatRequestData,
+  // ChatHistory,
+} from "./types"; // Adjust the path as necessary
+// import { RiPlayReverseLine } from "react-icons/ri";
+import axios from "axios";
+
 interface ITabItem {
-  title: string;  // Title of the tab
-  key: string;  // Unique key for the tab
+  title: string; // Title of the tab
+  key: string; // Unique key for the tab
 }
 
 // Tab items for switching between patient and guest views
@@ -29,110 +55,261 @@ const tabItems: ITabItem[] = [
   },
 ];
 
-// Example messages for patients and guests
-const patientMessages = [
-  {
-    name: "Elsa",
-    messages: [
-      {
-        user: "AI-Alex",
-        role: "AI",
-        message: "Hej Elsa! Vad gör du?",
-      },
-      {
-        user: "Elsa",
-        role: "patient",
-        message: "Hej! Pratar du med mig?",
-      },
-    ],
-  },
-];
+const API_LOCATION = "http://localhost:8000";
 
-const guestMessages = [
-  {
-    name: "Anna",
-    messages: [
-      {
-        user: "Johan Prompt",
-        role: "me",
-        message:
-          "Hej, Anna. Jag behöver din expertis när det gäller en ung patient som jag såg tidigare idag. Det är en 6-årig pojke med återkommande magbesvär och frekventa buksmärtor.",
-      },
-      {
-        user: "Anna",
-        role: "guest",
-        message:
-          "Hej, Johan. Jag är här för att hjälpa till med det. Berätta mer om patienten och hans symptom.",
-      },
-    ],
-  },
-  {
-    name: "Lukas",
-    messages: [
-      {
-        user: "Johan Prompt",
-        role: "me",
-        message:
-          "Hej, Lukas. Jag behöver din expertis när det gäller en ung patient som jag såg tidigare idag. Det är en 6-årig pojke med återkommande magbesvär och frekventa buksmärtor.",
-      },
-      {
-        user: "Lukas",
-        role: "guest",
-        message:
-          "Hej, Lukas. Jag är här för att hjälpa till med det. Berätta mer om patienten och hans symptom.",
-      },
-    ],
-  },
-  {
-    name: "Sara",
-    messages: [
-      {
-        user: "Johan Prompt",
-        role: "me",
-        message:
-          "Hej, Sara. Jag behöver din expertis när det gäller en ung patient som jag såg tidigare idag. Det är en 6-årig pojke med återkommande magbesvär och frekventa buksmärtor.",
-      },
-      {
-        user: "Sara",
-        role: "guest",
-        message:
-          " och symtom kan det vara värt att överväga en pediatrisk gastroenterologisk bedömning för att utesluta eller bekräfta tillstånd som laktosintolerans, IBS eller andra mag-tarmrelaterade störningar.",
-      },
-    ],
-  },
-];
-
-const RoomPage = () => {
+const RoomPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const searchParams = useSearchParams();
+  const { id: roomName } = useParams();
+  const [searchParams] = useSearchParams();
   const pathname = location.pathname;
+  const receiver_role = searchParams.get("message") as string;
+  const receiver = searchParams.get("user") as string;
+  const myname = localStorage.getItem("username") || "";
 
-  const [activePanel, setActivePanel] = useState<string>("guest");
-  const [activeUser, setActiveUser] = useState<string>("Lukas");
-  const [messageList, setMessageList] = useState<any[]>([]);
+  const [activePanel, setActivePanel] = useState<string>("patient"); // "patient" or "guest"
+  const [messageList, setMessageList] = useState<Message[]>([]); // Array of chat messages
+  const [activeUser, setActiveUser] = useState<User>({
+    sid: "",
+    username: "John Doe",
+    role: "creator",
+  }); // Active chat user
   const [shareDialogOpen, setShareDialogOpen] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
 
-  // Handle tab click to update URL and state
-  const handleTabItemClick = (tabItem: ITabItem) => () => {
-    navigate(`${pathname}?${new URLSearchParams({ message: tabItem.key })}`);
+  // Socket.IO states
+  const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  // const [buttonStatus, setButtonStatus] = useState<boolean>(false);
+
+  const [chatRequests, setChatRequests] = useState<ChatRequest[]>([]); // For Room Creator
+  const [roomInfo, setRoomInfo] = useState<any>({});
+
+  if (roomInfo && chatRequests && loading) {}
+
+  // Function to handle tab click
+  const handleTabItemClick =
+    (tabItem: { title: string; key: string }) => () => {
+      setActivePanel(tabItem.key);
+      navigate(`${pathname}?${new URLSearchParams({ message: tabItem.key})}`);
+      setActiveUser({
+        sid: "",
+        username: activeUser.username,
+        role: tabItem.key === "patient" ? "patient" : "guest",
+      });
+    };
+
+  // Handle input change
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(event.target.value);
   };
 
+  // Function to send messages
+  const sendMessage = () => {
+    // Role-based restriction
+    if (activeUser.role === "guest" && activePanel === "patient") {
+      alert("Guests can't chat directly with patients.");
+      return;
+    }
+
+    // Check if the message is not empty
+    if (message.trim() === "") {
+      // alert("Message cannot be empty");
+      return;
+    }
+
+    // Create a new message object
+    const newMessage: Message = {
+      from: myname,
+      to: receiver,
+      role: receiver_role,
+      message: message.trim(),
+      timestamp: new Date().toISOString(),
+    };
+
+    // Update the message list state
+    if (receiver == null)
+      alert("Select one user for chat...")
+    else
+      setMessageList((prevList) => [...prevList, newMessage]);
+    // Emit the message via Socket.IO
+    if (socketInstance) {
+      socketInstance.emit("room_message", {
+        room_id: roomName, // Assuming room_id is activeUser.sid; adjust as per backend
+        from: myname,
+        to: receiver,
+        role: receiver_role,
+        message: message.trim(),
+      });
+    }
+
+    // Clear the input field
+    setMessage("");
+  };
+
+  // Socket initialization
   useEffect(() => {
-    // Determine active role and user from search params
-    const role = (searchParams[0].get("message") as string) || "guest";
-    const userList =
-      role === "guest"
-        ? guestMessages.map((item) => item.name)
-        : patientMessages.map((item) => item.name);
-    const messages = role === "guest" ? guestMessages : patientMessages;
-    const user = (searchParams[0].get("user") as string) || userList[0];
-    setActivePanel(role);
-    setActiveUser(user);
-    setMessageList(
-      messages.find((message) => message.name === user)?.messages || []
-    );
-  }, [searchParams]);
+    const socket: Socket = io(API_LOCATION, {
+      transports: ["websocket"],
+      // Removed 'cors' as it's handled server-side
+    });
+
+    // Set the socket instance
+    setSocketInstance(socket);
+
+    // Emit 'init' event upon connection
+    socket.on("connect", () => {
+      setLoading(false);
+      setActiveUser((prevUser) => ({
+        ...prevUser,
+        sid: socket.id ? socket.id : "",
+      }));
+      // Emit init with username and role
+      socket.emit("init", {
+        username: myname,
+        role: "creator",
+        roomName: roomName,
+      });
+    });
+
+    // Listen for 'init_response'
+    // socket.on("init_response", (data: InitResponse) => {
+    //   setAllUsers(data.users);
+    // });
+
+    // Listen for 'user_disconnected'
+    // socket.on(
+    //   "user_disconnected",
+    //   (data: { sid: string; username: string }) => {
+    //     setAllUsers((prevUsers) =>
+    //       prevUsers.filter((user) => user.sid !== data.sid)
+    //     );
+    //     // Optionally, remove messages from messageList if necessary
+    //   }
+    // );
+
+    // Listen for 'room_message'
+    // socket.on("room_message", (data: RoomMessage) => {
+    //   const { room, from, to, role, message, timestamp } = data;
+    //   const newMessage: Message = {
+    //     from: from === socket.id ? "me" : from,
+    //     to: receiver,
+    //     role: role,
+    //     message,
+    //     timestamp,
+    //     // role: activeUser.role,
+    //   };
+    //   setMessageList((prevList) => [...prevList, newMessage]);
+    // });
+
+    // Listen for 'chat_approved' and 'chat_started' to handle room creation
+    socket.on("chat_approved", (data: ChatApproved) => {
+      const { room_id, patient_sid, guest_sid } = data;
+      console.log(
+        `Chat approved: Room ID ${room_id} between ${patient_sid} and ${guest_sid}`
+      );
+      // Optionally, set activeUser based on the role
+      const target_sid =
+        activeUser.role === "creator" ? patient_sid : guest_sid;
+      setActiveUser((prevUser) => ({ ...prevUser, sid: target_sid }));
+      // Join the room
+      socket.emit("join_room", { room_id });
+      // Fetch chat history
+      socket.emit("get_chat_history", { room_id });
+    });
+
+    socket.on("chat_started", (data: ChatStarted) => {
+      const { room_id, guest_sid } = data;
+      console.log(`Chat started: Room ID ${room_id} with ${guest_sid}`);
+      setActiveUser((prevUser) => ({ ...prevUser, sid: guest_sid }));
+      // Join the room
+      socket.emit("join_room", { room_id });
+      // Fetch chat history
+      socket.emit("get_chat_history", { room_id });
+    });
+
+    // Listen for 'chat_denied'
+    socket.on("chat_denied", (data: ChatDenied) => {
+      alert(data.msg);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Connection Error:", error);
+      setLoading(false);
+      // Optionally, notify the user about the connection issue
+    });
+
+    // Listen for 'chat_request' (Room Creator only)
+    if (activeUser.role === "creator") {
+      socket.on("chat_request", (data: ChatRequestData) => {
+        console.log("Received chat request:", data);
+        setChatRequests((prev) => [...prev, data]);
+      });
+    }
+
+    // Listen for 'chat_history'
+    // socket.on("chat_history", (data: ChatHistory) => {
+    //   const { room_id, messages } = data;
+    //   const formattedMessages: Message[] = messages.map((msg) => ({
+    //     from: msg.sender_id === socket.id ? "me" : msg.sender_id,
+    //     message: msg.message,
+    //     timestamp: msg.timestamp,
+    //     role: activeUser.role,
+    //   }));
+    //   setMessageList(formattedMessages);
+    // });
+
+    // Cleanup on component unmount or buttonStatus change
+    return () => {
+      socket.disconnect();
+      setSocketInstance(null);
+      setLoading(true);
+    };
+  }, []);
+
+  // Display received message
+  useEffect(() => {
+    if (socketInstance) {
+      socketInstance.on("room_message", (data: RoomMessage) => {
+        const { from, message, to, timestamp } = data;
+        const newMessage: Message = {
+          from: from === socketInstance.id ? "me" : from,
+          to: to,
+          message,
+          timestamp,
+          role: activeUser.role,
+        };
+        if (from != myname)
+          setMessageList((prevList) => [...prevList, newMessage]);
+      });
+    }
+  }, [socketInstance]);
+
+  useEffect(() => {
+    const fetchRoomData = async () => {
+      try {
+        const response = await axios.post(
+          `${API_LOCATION}/rooms/fetch_room_data`,
+          {
+            roomName,
+          }
+        );
+        setRoomInfo(response);
+      } catch (err: any) {
+        console.log("Error in fetching room data", err);
+      }
+    };
+
+    fetchRoomData();
+  }, []);
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") sendMessage();
+  };
+
+  // buttonStatus, activeUser.username, activeUser.role, activeUser.sid
+
+  // const [allUsers, setAllUsers] = useState<User[]>([]); // List of all connected users
 
   return (
     <>
@@ -238,7 +415,7 @@ const RoomPage = () => {
                 <p>{tabItem.title}</p>
                 {tabItem.key === "guest" && (
                   <span className="rounded-lg text-white px-2 py-0 font-thin text-base bg-primary-background">
-                    {activeUser.charAt(0).toUpperCase()}
+                    { receiver ? receiver.charAt(0).toUpperCase() : (<></>)}
                   </span>
                 )}
               </button>
@@ -246,25 +423,41 @@ const RoomPage = () => {
           </div>
 
           {/* Display chat messages */}
-          <div className="flex-1 flex flex-col gap-2.5">
-            {messageList.map((message, index) => (
-              <ChatItem
-                key={index}
-                name={message.user}
-                role={message.role}
-                content={message.message}
-              />
-            ))}
+          <div className="flex-1 flex flex-col gap-2.5 overflow-y-auto">
+            {messageList
+              .filter((msg) => {
+                // Adjust filters based on role and active panel
+                if (receiver_role !== msg.role ) {
+                  return false;
+                }
+                if ((msg.from === myname && msg.to === receiver ) || (msg.from === receiver && msg.to === "creator" ))
+                  return true;
+              })
+              .map((msg, index) => (
+                <ChatItem
+                  key={index}
+                  name={msg.from === myname ? "Me" : msg.from}
+                  role={msg.from === myname ? "me" : msg.role}
+                  content={msg.message}
+                  // timestamp={msg.timestamp}
+                />
+              ))}
           </div>
 
           {/* Input field for sending messages */}
           <div className="flex gap-2 m-2">
             <Input
               name="message"
-              placeholder="Skriva ett meddelande"
+              value={message}
+              placeholder="Skriv ett meddelande"
               className="flex-1 h-12 px-5 !py-[12.5px] bg-light-background border-none text-base"
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
             />
-            <ActionButton className="bg-primary-background">
+            <ActionButton
+              className="bg-primary-background"
+              onClick={sendMessage}
+            >
               <SendSVG />
             </ActionButton>
           </div>

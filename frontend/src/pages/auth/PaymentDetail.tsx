@@ -1,32 +1,20 @@
-import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import { FaChevronDown } from 'react-icons/fa6';
-import { twMerge } from 'tailwind-merge';
+import { useState } from "react";
+import { FaChevronDown } from "react-icons/fa6";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
-import Button from '../../components/common/Button';
-import Input from '../../components/common/Input';
-import TradeMark from '../../components/user/TradeMark';
-import { useAppSelector } from '../../store';
-import apiClient from '../../libs/api';
+import Button from "../../components/common/Button";
+import Input from "../../components/common/Input";
+import TradeMark from "../../components/user/TradeMark";
 
 const PaymentDetail = () => {
   // Initialize navigation and search parameters
   const navigate = useNavigate();
   const searchParams = useSearchParams();
-  const method = searchParams[0].get('method') || 'subscription'; // Default to "subscription" if method is not provided
-
-  const createUser = useAppSelector((state) => state.auth.createUser);
+  const method = searchParams[0].get("method") || "subscription"; // Default to "subscription" if method is not provided
 
   // State to manage selected payment option
-  const [option, setOption] = useState<string>('short-pay');
-
-  const handleComplete = () => {
-    apiClient.post('/users/register', createUser).then(() => {
-      toast.success('Signup success.');
-      navigate('/room/create'); // Navigate to the room creation page
-    });
-  };
+  const [option, setOption] = useState<string>("short-pay");
 
   return (
     <div className="w-full h-full text-primary-text bg-white rounded-lg overflow-hidden">
@@ -35,7 +23,7 @@ const PaymentDetail = () => {
           <TradeMark className="pt-2.5 pl-2.5 font-extrabold text-2xl leading-6 !text-primary-background" />
           <div className="flex flex-col items-end gap-y-2">
             <p className="font-extrabold text-2xl leading-8">
-              {method === 'subscription' ? 'Prenumeration' : 'Timpriser'}
+              {method === "subscription" ? "Prenumeration" : "Timpriser"}
             </p>
             <p className="text-[10px] leading-3 text-disabled-text">
               Välj betalningsmetod
@@ -45,8 +33,8 @@ const PaymentDetail = () => {
         <div className="grow grid grid-cols-8 gap-x-6">
           <div
             className={twMerge(
-              'flex flex-col justify-center',
-              method === 'subscription' ? 'col-span-5 px-8' : 'col-span-4 px-2'
+              "flex flex-col justify-center",
+              method === "subscription" ? "col-span-5 px-8" : "col-span-4 px-2"
             )}
           >
             <p className="font-semibold text-base leading-5 pb-4">
@@ -56,13 +44,13 @@ const PaymentDetail = () => {
               <div
                 className="flex items-center gap-x-2 cursor-pointer"
                 onClick={() => {
-                  setOption('short-pay'); // Set payment option to short-pay
+                  setOption("short-pay"); // Set payment option to short-pay
                 }}
               >
                 <span
                   className={twMerge(
-                    'w-5 h-5 rounded-full flex items-center justify-center border border-disabled-text',
-                    option === 'short-pay' ? '!border-[7px] !border-black' : ''
+                    "w-5 h-5 rounded-full flex items-center justify-center border border-disabled-text",
+                    option === "short-pay" ? "!border-[7px] !border-black" : ""
                   )}
                 />
                 <p className="text-sm leading-4 text-primary-placeholder">
@@ -86,7 +74,7 @@ const PaymentDetail = () => {
             <div className="pt-2">
               <ul
                 style={{
-                  listStyle: 'square'
+                  listStyle: "square",
                 }}
                 className="pl-10 py-4 px-5 flex flex-col font-semibold text-xs leading-6 bg-light-background"
               >
@@ -104,15 +92,15 @@ const PaymentDetail = () => {
               <div
                 className="flex items-center gap-x-2 cursor-pointer"
                 onClick={() => {
-                  setOption('invoice-pay'); // Set payment option to invoice-pay
+                  setOption("invoice-pay"); // Set payment option to invoice-pay
                 }}
               >
                 <span
                   className={twMerge(
-                    'w-5 h-5 rounded-full flex items-center justify-center border border-disabled-text',
-                    option === 'invoice-pay'
-                      ? '!border-[7px] !border-black'
-                      : ''
+                    "w-5 h-5 rounded-full flex items-center justify-center border border-disabled-text",
+                    option === "invoice-pay"
+                      ? "!border-[7px] !border-black"
+                      : ""
                   )}
                 />
                 <p className="text-sm leading-4 text-primary-placeholder">
@@ -121,7 +109,7 @@ const PaymentDetail = () => {
               </div>
               <img src="/images/auth/klarna.png" alt="Pay icon" />
             </div>
-            {method === 'hourly' && (
+            {method === "hourly" && (
               <div className="pt-2 flex flex-col items-center gap-y-2">
                 <p className="text-sm leading-4">Totalsumma inkluderar moms</p>
                 <p className="font-bold text-base leading-5">500 SEK</p>
@@ -133,10 +121,10 @@ const PaymentDetail = () => {
           </div>
           <div
             className={twMerge(
-              'flex flex-col gap-y-1',
-              method === 'subscription'
-                ? 'col-span-3 px-8 justify-center'
-                : 'col-span-4 justify-between'
+              "flex flex-col gap-y-1",
+              method === "subscription"
+                ? "col-span-3 px-8 justify-center"
+                : "col-span-4 justify-between"
             )}
           >
             <div className="flex flex-col gap-y-1">
@@ -157,7 +145,7 @@ const PaymentDetail = () => {
                 <p>653 49 Karlstad</p>
               </div>
             </div>
-            {method === 'hourly' && (
+            {method === "hourly" && (
               <div className="py-6 px-2 flex flex-col gap-y-2.5 bg-light-background rounded-lg">
                 <p className="font-semibold text-base leading-5">TId</p>
                 <div className="py-3 px-2 rounded-[4px] flex items-center justify-between font-bold text-xs leading-4 bg-white">
@@ -180,12 +168,17 @@ const PaymentDetail = () => {
             size="small"
             variant="outlined"
             onClick={() => {
-              navigate('/auth/payment'); // Navigate back to the payment page
+              navigate("/auth/payment"); // Navigate back to the payment page
             }}
           >
             Tillbaka
           </Button>
-          <Button variant="contained" onClick={handleComplete}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              navigate("/room/create"); // Navigate to the room creation page
+            }}
+          >
             Slutför
           </Button>
         </div>
