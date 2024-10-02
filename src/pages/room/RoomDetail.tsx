@@ -150,6 +150,7 @@ const RoomPage: React.FC = () => {
   // Socket initialization
   useEffect(() => {
     const socket: Socket = io(API_LOCATION, {
+      path: "/socket.io/",
       transports: ["websocket"],
       // Removed 'cors' as it's handled server-side
     });
