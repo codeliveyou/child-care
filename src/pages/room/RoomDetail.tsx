@@ -273,7 +273,7 @@ const RoomPage: React.FC = () => {
     if (socketInstance) {
       socketInstance.on("room_message", (data: RoomMessage) => {
         const { from, message, to, timestamp } = data;
-        console.log('messagedata', data)
+        // console.log('messagedata', data)
         const newMessage: Message = {
           from: from === socketInstance.id ? "me" : from,
           to: to,
@@ -281,7 +281,7 @@ const RoomPage: React.FC = () => {
           timestamp,
           role: activeUser.role,
         };
-        if (from != myname)
+        if (to == "creator")
           setMessageList((prevList) => [...prevList, newMessage]);
       });
     }
