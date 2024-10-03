@@ -174,7 +174,7 @@ const RoomListPage = () => {
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
-        const response = await axios.get(`${API_LOCATION}/rooms/fetch_rooms_data`);
+        const response = await axios.get(`${API_LOCATION}/api/rooms/fetch_rooms_data`);
         setRoomData(response.data);
       } catch (err: any) {
         console.log("Error in fetching room data", err);

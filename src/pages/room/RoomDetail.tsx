@@ -291,7 +291,7 @@ const RoomPage: React.FC = () => {
     const fetchRoomData = async () => {
       try {
         const response = await axios.post(
-          `${API_LOCATION}/rooms/fetch_room_data`,
+          `${API_LOCATION}/api/rooms/fetch_room_data`,
           {
             roomName,
           }

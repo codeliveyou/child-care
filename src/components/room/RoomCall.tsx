@@ -211,7 +211,7 @@ function RoomCall({ className = "", onShare }: RoomCallProps) {
     await meteredMeeting.leaveMeeting();
 
     const response = await axios.get(
-      `${API_LOCATION}/room/end?roomName=${roomName}`
+      `${API_LOCATION}/api/room/end?roomName=${roomName}`
     );
     if (response) {
     }
