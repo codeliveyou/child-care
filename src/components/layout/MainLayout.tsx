@@ -107,6 +107,7 @@ const MainLayout = () => {
   useEffect(() =>  {
 
     const socket: Socket = io(API_LOCATION, {
+      path: "/socket.io/",
       transports: ['websocket'],
     });
 
