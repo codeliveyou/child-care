@@ -281,8 +281,8 @@ const RoomPage: React.FC = () => {
           timestamp,
           role: activeUser.role,
         };
-        if (from != myname) console.log("altered");
-        setMessageList((prevList) => [...prevList, newMessage]);
+        if (from != myname) 
+          setMessageList((prevList) => [...prevList, newMessage]);
         console.log(messageList);
       };
       socketInstance.on("room_message", handleNewMessage);
