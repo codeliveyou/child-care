@@ -85,13 +85,14 @@ const RoomPage: React.FC = () => {
   const [chatRequests, setChatRequests] = useState<ChatRequest[]>([]); // For Room Creator
   const [roomInfo, setRoomInfo] = useState<any>({});
 
-  if (roomInfo && chatRequests && loading) {}
+  if (roomInfo && chatRequests && loading) {
+  }
 
   // Function to handle tab click
   const handleTabItemClick =
     (tabItem: { title: string; key: string }) => () => {
       setActivePanel(tabItem.key);
-      navigate(`${pathname}?${new URLSearchParams({ message: tabItem.key})}`);
+      navigate(`${pathname}?${new URLSearchParams({ message: tabItem.key })}`);
       setActiveUser({
         sid: "",
         username: activeUser.username,
@@ -128,10 +129,8 @@ const RoomPage: React.FC = () => {
     };
 
     // Update the message list state
-    if (receiver == null)
-      alert("Select one user for chat...")
-    else
-      setMessageList((prevList) => [...prevList, newMessage]);
+    if (receiver == null) alert("Select one user for chat...");
+    else setMessageList((prevList) => [...prevList, newMessage]);
     // Emit the message via Socket.IO
     if (socketInstance) {
       socketInstance.emit("room_message", {
@@ -269,11 +268,12 @@ const RoomPage: React.FC = () => {
   }, []);
 
   // Display received message
+
   useEffect(() => {
     if (socketInstance) {
-      socketInstance.on("room_message", (data: RoomMessage) => {
+      const handleNewMessage = (data: RoomMessage) => {
         const { from, message, to, timestamp } = data;
-        console.log('messagedata', data, 'myname', myname)
+        console.log("messagedata", data, "myname", myname, from, to);
         const newMessage: Message = {
           from: from === socketInstance.id ? "me" : from,
           to: to,
@@ -281,11 +281,36 @@ const RoomPage: React.FC = () => {
           timestamp,
           role: activeUser.role,
         };
-        if (to === "creator")
-          setMessageList((prevList) => [...prevList, newMessage]);
-      });
+        if (from != myname) console.log("altered");
+        setMessageList((prevList) => [...prevList, newMessage]);
+        console.log(messageList);
+      };
+      socketInstance.on("room_message", handleNewMessage);
+      return () => {
+        socketInstance.off("room_message", handleNewMessage)
+      }
     }
-  }, [socketInstance]);
+  }, [socketInstance, messageList]);
+
+  // useEffect(() => {
+  //   if (socketInstance) {
+  //     socketInstance.on("room_message", (data: RoomMessage) => {
+  //       const { from, message, to, timestamp } = data;
+  //       console.log('messagedata', data, 'myname', myname, from, to)
+  //       const newMessage: Message = {
+  //         from: from === socketInstance.id ? "me" : from,
+  //         to: to,
+  //         message,
+  //         timestamp,
+  //         role: activeUser.role,
+  //       };
+  //       if (from != myname)
+  //         console.log('altered')
+  //         setMessageList((prevList) => [...prevList, newMessage]);
+  //       console.log(messageList)
+  //     });
+  //   }
+  // }, [socketInstance]);
 
   useEffect(() => {
     const fetchRoomData = async () => {
@@ -417,7 +442,7 @@ const RoomPage: React.FC = () => {
                 <p>{tabItem.title}</p>
                 {tabItem.key === "guest" && (
                   <span className="rounded-lg text-white px-2 py-0 font-thin text-base bg-primary-background">
-                    { receiver ? receiver.charAt(0).toUpperCase() : (<></>)}
+                    {receiver ? receiver.charAt(0).toUpperCase() : <></>}
                   </span>
                 )}
               </button>
@@ -429,10 +454,13 @@ const RoomPage: React.FC = () => {
             {messageList
               .filter((msg) => {
                 // Adjust filters based on role and active panel
-                if (receiver_role !== msg.role ) {
+                if (receiver_role !== msg.role) {
                   return false;
                 }
-                if ((msg.from === myname && msg.to === receiver ) || (msg.from === receiver && msg.to === "creator" ))
+                if (
+                  (msg.from === myname && msg.to === receiver) ||
+                  (msg.from === receiver && msg.to === "creator")
+                )
                   return true;
               })
               .map((msg, index) => (

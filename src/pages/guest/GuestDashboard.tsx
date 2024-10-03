@@ -69,7 +69,8 @@ function GuestDashboard() {
   const [meetingjoined, setMeetingJoined] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
-  if(meetingEnded || meetingjoined) {}
+  if (meetingEnded || meetingjoined) {
+  }
 
   const [searchParams] = useSearchParams();
   const roomName = searchParams.get("roomname") as string;
@@ -117,7 +118,8 @@ function GuestDashboard() {
     const response = await axios.get(
       `${API_LOCATION}/api/room/end?roomName=${roomName}&userName=${username}`
     );
-    if(response){}
+    if (response) {
+    }
     setMeetingEnded(true);
   };
 
@@ -149,7 +151,8 @@ function GuestDashboard() {
         );
 
         const uuid = joinResponseToBackend.data.uuid;
-        if (uuid) {}
+        if (uuid) {
+        }
         // setUsername(username);
         // setRoomName(roomName);
         setMeetingInfo(joinResponse);
@@ -317,10 +320,12 @@ function GuestDashboard() {
   }, []);
 
   // Display received message
+
   useEffect(() => {
     if (socketInstance) {
-      socketInstance.on("room_message", (data: RoomMessage) => {
+      const handleNewMessage = (data: RoomMessage) => {
         const { from, message, to, timestamp } = data;
+        console.log("messagedata", from, to, timestamp);
         const newMessage: Message = {
           from: from === socketInstance.id ? "me" : from,
           to: "me",
@@ -330,9 +335,33 @@ function GuestDashboard() {
         };
         if (to == username)
           setMessageList((prevList) => [...prevList, newMessage]);
-      });
+        console.log(messageList);
+      };
+      socketInstance.on("room_message", handleNewMessage);
+      return () => {
+        socketInstance.off("room_message", handleNewMessage);
+      };
     }
-  }, [socketInstance]);
+  }, [socketInstance, messageList]);
+
+  // useEffect(() => {
+  //   if (socketInstance) {
+  //     socketInstance.on("room_message", (data: RoomMessage) => {
+  //       const { from, message, to, timestamp } = data;
+  //       console.log('messagedata', from, to, timestamp)
+  //       const newMessage: Message = {
+  //         from: from === socketInstance.id ? "me" : from,
+  //         to: "me",
+  //         message,
+  //         timestamp,
+  //         role: "guest",
+  //       };
+  //       if (to == username)
+  //         setMessageList((prevList) => [...prevList, newMessage]);
+  //       console.log(messageList)
+  //     });
+  //   }
+  // }, [socketInstance]);
 
   // Function to send messages
   const sendMessage = () => {
