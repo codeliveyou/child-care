@@ -281,7 +281,7 @@ const RoomPage: React.FC = () => {
           timestamp,
           role: activeUser.role,
         };
-        if (to == "creator")
+        if (to === "creator")
           setMessageList((prevList) => [...prevList, newMessage]);
       });
     }
