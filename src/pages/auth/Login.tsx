@@ -33,7 +33,7 @@ const Login = () => {
   };
 
   const handleSubmit = () => {
-    apiClient.post('/users/login', loginUser).then((response: any) => {
+    apiClient.post('api/users/login', loginUser).then((response: any) => {
       toast.success('Login success.');
       const { token } = response;
       dispatch(userLogin());

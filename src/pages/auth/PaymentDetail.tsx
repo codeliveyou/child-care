@@ -22,7 +22,7 @@ const PaymentDetail = () => {
   const [option, setOption] = useState<string>('short-pay');
 
   const handleComplete = () => {
-    apiClient.post('/users/register', createUser).then(() => {
+    apiClient.post('api/users/register', createUser).then(() => {
       toast.success('Signup success.');
       navigate('/room/create'); // Navigate to the room creation page
     });
