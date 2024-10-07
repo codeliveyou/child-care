@@ -273,7 +273,7 @@ const RoomPage: React.FC = () => {
     if (socketInstance) {
       const handleNewMessage = (data: RoomMessage) => {
         const { from, message, to, timestamp } = data;
-        console.log("messagedata", data, "myname", myname, from, to);
+        // console.log("messagedata", data, "myname", myname, from, to);
         const newMessage: Message = {
           from: from === socketInstance.id ? "me" : from,
           to: to,
@@ -281,14 +281,14 @@ const RoomPage: React.FC = () => {
           timestamp,
           role: activeUser.role,
         };
-        if (from != myname) 
+        if (to == "creator")
           setMessageList((prevList) => [...prevList, newMessage]);
-        console.log(messageList);
+        // console.log(messageList);
       };
       socketInstance.on("room_message", handleNewMessage);
       return () => {
-        socketInstance.off("room_message", handleNewMessage)
-      }
+        socketInstance.off("room_message", handleNewMessage);
+      };
     }
   }, [socketInstance, messageList]);
 
@@ -442,7 +442,15 @@ const RoomPage: React.FC = () => {
                 <p>{tabItem.title}</p>
                 {tabItem.key === "guest" && (
                   <span className="rounded-lg text-white px-2 py-0 font-thin text-base bg-primary-background">
-                    {receiver ? receiver.charAt(0).toUpperCase() : <></>}
+                    {receiver ? (
+                      receiver_role === "geust" ? (
+                        receiver.charAt(0).toUpperCase()
+                      ) : (
+                        <></>
+                      )
+                    ) : (
+                      <></>
+                    )}
                   </span>
                 )}
               </button>
@@ -457,11 +465,11 @@ const RoomPage: React.FC = () => {
                 if (receiver_role !== msg.role) {
                   return false;
                 }
-                if (
-                  (msg.from === myname && msg.to === receiver) ||
-                  (msg.from === receiver && msg.to === "creator")
-                )
-                  return true;
+                // if (
+                //   (msg.from === myname && msg.to === receiver) ||
+                //   (msg.from === receiver && msg.to === "creator")
+                // )
+                if (msg.from === myname || msg.to === "creator") return true;
               })
               .map((msg, index) => (
                 <ChatItem

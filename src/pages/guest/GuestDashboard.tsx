@@ -342,7 +342,7 @@ function GuestDashboard() {
         socketInstance.off("room_message", handleNewMessage);
       };
     }
-  }, [socketInstance, messageList]);
+  }, [socketInstance]);
 
   // useEffect(() => {
   //   if (socketInstance) {

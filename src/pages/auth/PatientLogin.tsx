@@ -4,9 +4,86 @@ import { motion } from "framer-motion"; // Importing motion for animation effect
 import Input from "../../components/common/Input"; // Custom Input component
 import Button from "../../components/common/Button"; // Custom Button component
 import TradeMark from "../../components/user/TradeMark"; // TradeMark component for branding
+import { useScreen } from "usehooks-ts";
+import { useContext, useState } from "react";
+import { MeetingContext } from "../../MeetingContext";
+import { useEffect } from "react";
+
+interface TrackItem {
+  streamId: string;
+  track: MediaStreamTrack;
+  type: "audio" | "video";
+  participantSessionId: string;
+}
+
+interface Participant {
+  _id: string;
+  name: string;
+}
 
 const PatientLogin = () => {
   const navigate = useNavigate(); // Hook to programmatically navigate between routes
+  const [roomName, setRoomName] = useState<string>("");
+  const meteredMeeting = useContext(MeetingContext);
+
+  const [remoteTracks, setRemoteTracks] = useState<TrackItem[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<Participant[]>([]);
+  const [localVideoStream, setLocalVideoStream] = useState<MediaStream | null>(
+    null
+  );
+
+  if (remoteTracks && onlineUsers && localVideoStream) {
+  }
+
+  
+  useEffect(() => {
+    const handleRemoteTrackStarted = (trackItem: TrackItem) => {
+      setRemoteTracks((prevTracks) => [...prevTracks, trackItem]);
+    };
+
+    const handleRemoteTrackStopped = (trackItem: TrackItem) => {
+      setRemoteTracks((prevTracks) =>
+        prevTracks.filter((track) => track.streamId !== trackItem.streamId)
+      );
+    };
+
+    const hanldeParticipantJoined = (participant: Participant) => {
+      if (participant) {
+      }
+    };
+
+    const handleParticipantLeft = (participant: Participant) => {
+      // Handle participant left
+      if (participant) {
+      }
+    };
+
+    const handleOnlineParticipants = (onlineParticipants: Participant[]) => {
+      setOnlineUsers(onlineParticipants);
+    };
+
+    const handleLocalTrackUpdated = (item: TrackItem) => {
+      const stream = new MediaStream([item.track]);
+      setLocalVideoStream(stream);
+    };
+
+    meteredMeeting.on("remoteTrackStarted", handleRemoteTrackStarted);
+    meteredMeeting.on("remoteTrackStopped", handleRemoteTrackStopped);
+    meteredMeeting.on("participantJoined", hanldeParticipantJoined);
+    meteredMeeting.on("participantLeft", handleParticipantLeft);
+    meteredMeeting.on("onlineParticipants", handleOnlineParticipants);
+    meteredMeeting.on("localTrackUpdated", handleLocalTrackUpdated);
+
+    return () => {
+      meteredMeeting.removeListener("remoteTrackStarted");
+      meteredMeeting.removeListener("remoteTrackStopped");
+      meteredMeeting.removeListener("participantJoined");
+      meteredMeeting.removeListener("participantLeft");
+      meteredMeeting.removeListener("onlineParticipants");
+      meteredMeeting.removeListener("localTrackUpdated");
+    };
+  });
+
 
   return (
     <div className="w-full h-full grid grid-cols-9 bg-white rounded-lg overflow-hidden">
@@ -32,13 +109,17 @@ const PatientLogin = () => {
                   name="roomID"
                   placeholder="Rum-ID eller Perssonnumer"
                   className="border border-primary-border/25 text-primary-placeholder bg-white/30"
+                  onChange={(e) => setRoomName(e.target.value)}
+                  value={roomName}
                 />
               </div>
               {/* Button to navigate to the patient page */}
               <Button
                 className="mt-5 border border-primary-border/25"
                 onClick={() => {
-                  navigate("/patient"); // Navigate to the patient page when clicked
+                  navigate(
+                    `/patient?${new URLSearchParams({ roomname: roomName })}`
+                  ); // Navigate to the patient page when clicked
                 }}
               >
                 Delta
@@ -47,7 +128,7 @@ const PatientLogin = () => {
           </div>
         </div>
       </motion.div>
-      
+
       {/* Animated div for the right side of the login form with additional info */}
       <motion.div
         initial={{ x: -550 }} // Initial animation state
