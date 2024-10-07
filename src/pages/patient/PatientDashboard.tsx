@@ -8,11 +8,11 @@ import Input from "../../components/common/Input";
 import { useSearchParams } from "react-router-dom";
 import ActionButton from "../../components/common/ActionButton";
 import SendSVG from "../../assets/send.svg?react";
-import { motion } from "framer-motion";
 import { useSocket } from "../../contexts/SocketContext";
 import { MeetingContext } from "../../MeetingContext";
 import axios from "axios";
 import config from "../../config";
+import MeetingRoom from "../../components/room/MeetingRoom";
 
 interface TrackItem {
   streamId: string;
@@ -34,9 +34,6 @@ function PatientDashboard() {
   const [searchParams] = useSearchParams();
   const roomName = searchParams.get("roomname") as string;
 
-  const [isFilePanelActive, setFilePanelActive] = useState<boolean>(false); // State to manage file panel visibility
-  const [isChatPanelActive, setChatPanelActive] = useState<boolean>(false); // State to manage chat panel visibility
-  const [isReportDialogOpen, setReportDialogOpen] = useState<boolean>(false); // State to manage report dialog visibility
   const [micShared, setMicShared] = useState(false);
   const [cameraShared, setCameraShared] = useState(false);
   const [screenShared, setScreenShared] = useState(false);
@@ -49,7 +46,14 @@ function PatientDashboard() {
   const [meetingInfo, setMeetingInfo] = useState<any>({});
   const [meetingjoined, setMeetingJoined] = useState<boolean>(false);
 
-  if (meetingEnded || meetingjoined) {
+  if (
+    meetingEnded ||
+    meetingjoined ||
+    localVideoStream ||
+    remoteTracks ||
+    onlineUsers ||
+    meetingInfo
+  ) {
   }
 
   const { socketInstance } = useSocket();
@@ -65,7 +69,9 @@ function PatientDashboard() {
         });
       });
 
-      socketInstance.on("init_response", (data: InitResponse) => {});
+      socketInstance.on("init_response", (data: InitResponse) => {
+        data;
+      });
     }
   }, [socketInstance]);
 
@@ -116,7 +122,7 @@ function PatientDashboard() {
         from: "patient",
         to: "creator",
         role: "patient",
-        message: message.trim(),        
+        message: message.trim(),
       });
     }
 
@@ -168,9 +174,7 @@ function PatientDashboard() {
     await meteredMeeting.leaveMeeting();
 
     const response = await axios.get(
-      `${
-        config.api.endpoint_uri
-      }/api/room/end?roomName=${roomName}&userName=${""}`
+      `${config.api.endpoint_uri}/api/room/end?roomName=${roomName}&userName=${"patient"}`
     );
     if (response) {
     }
@@ -276,72 +280,154 @@ function PatientDashboard() {
   });
 
   return (
-    <div className="relative p-4 w-full h-full overflow-hidden">
-      {/* Background image for the patient dashboard */}
-      <img
-        src="/images/patient/background.png"
-        alt="Patient background"
-        className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-auto -z-10"
-      />
-      <div className="w-full flex items-center justify-between">
-        {/* Trademark component displayed with specific styling */}
-        <TradeMark className="font-extrabold text-white text-[32px] leading-10" />
-        {/* Sign out button with redirect URI to patient sign-in page */}
-        <SignOutButton redirectUri="/auth/patient-signin" />
-      </div>
+    // <div className="relative p-4 w-full h-full overflow-hidden">
+    //   {/* Background image for the patient dashboard */}
+    //   {/* <img
+    //     src="/images/patient/background.png"
+    //     alt="Patient background"
+    //     className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-auto -z-10"
+    //   /> */}
+    //   <div className="w-full flex items-center justify-between">
+    //     {/* Trademark component displayed with specific styling */}
+    //     <TradeMark className="font-extrabold text-white text-[32px] leading-10" />
+    //     {/* Sign out button with redirect URI to patient sign-in page */}
+    //     <SignOutButton redirectUri="/auth/patient-signin" />
+    //   </div>
 
-      <motion.div
-        className="w-full h-full flex gap-x-4 text-primary-text"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="w-full flex justify-end mt-2">
-          <div className="p-2 h-full flex flex-col gap-2.5 bg-white rounded-2xl w-80 overflow-y-auto">
-            <div className="p-2 grid grid-cols-2 gap-x-2 bg-light-background rounded-xl font-bold text-lg">
-              <button
-                className={twMerge(
-                  "p-2 flex-1 flex items-center justify-center gap-2"
-                )}
-              >
-                <p className="font-semibold text-xl leading-6">Användare</p>
-              </button>
-            </div>
+    //   <div>
+    //     <div className="w-full flex justify-end mt-2">
+    //       <div className="p-2 h-full flex flex-col gap-2.5 bg-white rounded-2xl w-80 overflow-y-auto">
+    //         <div className="p-2 grid grid-cols-2 gap-x-2 bg-light-background rounded-xl font-bold text-lg">
+    //           <button
+    //             className={twMerge(
+    //               "p-2 flex-1 flex items-center justify-center gap-2"
+    //             )}
+    //           >
+    //             <p className="font-semibold text-xl leading-6">Användare</p>
+    //           </button>
+    //         </div>
 
-            {/* Chat items */}
-            <div className="grow py-4 px-2 flex-1 flex flex-col gap-2.5 overflow-y-auto">
-              {messageList.map((msg, index) => (
-                <ChatItem
-                  key={index}
-                  name={msg.from === "patient" ? "Me" : msg.from}
-                  role={msg.from === "patient" ? "me" : msg.role}
-                  content={msg.message}
-                  // timestamp={msg.timestamp}
-                />
-              ))}
-            </div>
+    //         {/* Chat items */}
+    //         <div className="grow py-4 px-2 flex-1 flex flex-col gap-2.5 overflow-y-auto">
+    //           {messageList.map((msg, index) => (
+    //             <ChatItem
+    //               key={index}
+    //               name={msg.from === "patient" ? "Me" : msg.from}
+    //               role={msg.from === "patient" ? "me" : msg.role}
+    //               content={msg.message}
+    //               // timestamp={msg.timestamp}
+    //             />
+    //           ))}
+    //         </div>
 
-            <div className="p-2 flex items-center gap-x-2.5">
-              <Input
-                name="message"
-                placeholder="Skriva ett meddelande"
-                className="grow h-12 w-12"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-              />
-              <ActionButton
-                className="bg-primary-background"
-                onClick={sendMessage}
-              >
-                <SendSVG />
-              </ActionButton>
+    //         <div className="p-2 flex items-center gap-x-2.5">
+    //           <Input
+    //             name="message"
+    //             placeholder="Skriva ett meddelande"
+    //             className="grow h-12 w-12"
+    //             value={message}
+    //             onChange={(e) => setMessage(e.target.value)}
+    //             onKeyPress={handleKeyPress}
+    //           />
+    //           <ActionButton
+    //             className="bg-primary-background"
+    //             onClick={sendMessage}
+    //           >
+    //             <SendSVG />
+    //           </ActionButton>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
+
+    <>
+      <div className="p-4 w-full h-full flex flex-col gap-y-2.5 bg-light-background">
+        <div className="w-full flex items-center justify-between">
+          <TradeMark className="font-extrabold text-[32px] leading-10 !text-primary-background" />
+          {/* Notification and sign-out buttons */}
+          <div className="flex items-center gap-2">
+            
+            <div className="p-0.5">
+              <SignOutButton redirectUri="/auth/guest-signin" />{" "}
+              {/* Button to sign out */}
             </div>
           </div>
         </div>
-      </motion.div>
-    </div>
+        <div className="grow flex gap-x-6 overflow-y-auto">          
+          <div className="grow h-full flex gap-x-2.5">
+            <div className="grow flex flex-col gap-y-2">
+              <div className="py-2 flex flex-col items-center justify-center">
+                <p className="font-semibold text-xl leading-6 text-primary-background">
+                  Elsa rum
+                </p>
+                <p className="text-sm leading-4">2 Mars, 2024</p>
+              </div>
+              <div className="grow relative p-2.5 w-full flex justify-end rounded-lg overflow-hidden">
+                <MeetingRoom
+                  handleMicBtn={handleMicBtn}
+                  handleCameraBtn={handleCameraBtn}
+                  handelScreenBtn={handleScreenBtn}
+                  handleLeaveBtn={handleLeaveBtn}
+                  localVideoStream={localVideoStream}
+                  onlineUsers={onlineUsers}
+                  remoteTracks={remoteTracks}
+                  username={"patient"}
+                  roomName={roomName}
+                  meetingInfo={meetingInfo}
+                  micShared={micShared}
+                  cameraShared={cameraShared}
+                  screenShared={screenShared}
+                />
+              </div>
+              
+            </div>
+
+            <div className="p-2 h-full flex flex-col gap-2.5 bg-white rounded-2xl w-80 overflow-y-auto">
+              <div className="p-2 grid grid-cols-2 gap-x-2 bg-light-background rounded-xl font-bold text-lg">
+                <button
+                  className={twMerge(
+                    "p-2 flex-1 flex items-center justify-center gap-2"
+                  )}
+                >
+                  <p className="font-semibold text-xl leading-6">Användare</p>
+                </button>
+              </div>
+
+              {/* Chat items */}
+              <div className="grow py-4 px-2 flex-1 flex flex-col gap-2.5 overflow-y-auto">
+                {messageList.map((msg, index) => (
+                  <ChatItem
+                    key={index}
+                    name={msg.from === "patient" ? "Me" : msg.from}
+                    role={msg.from === "patient" ? "me" : msg.role}
+                    content={msg.message}
+                    // timestamp={msg.timestamp}
+                  />
+                ))}
+              </div>
+
+              <div className="p-2 flex items-center gap-x-2.5">
+                <Input
+                  name="message"
+                  placeholder="Skriva ett meddelande"
+                  className="grow h-12 w-12"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                />
+                <ActionButton
+                  className="bg-primary-background"
+                  onClick={sendMessage}
+                >
+                  <SendSVG />
+                </ActionButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>      
+    </>
   );
 }
 

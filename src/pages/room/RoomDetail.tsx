@@ -273,7 +273,7 @@ const RoomPage: React.FC = () => {
     if (socketInstance) {
       const handleNewMessage = (data: RoomMessage) => {
         const { from, message, to, timestamp } = data;
-        // console.log("messagedata", data, "myname", myname, from, to);
+        console.log("messagedata", data, "myname", myname, from, to);
         const newMessage: Message = {
           from: from === socketInstance.id ? "me" : from,
           to: to,
@@ -462,6 +462,7 @@ const RoomPage: React.FC = () => {
             {messageList
               .filter((msg) => {
                 // Adjust filters based on role and active panel
+                console.log(receiver_role, ':', msg.role)
                 if (receiver_role !== msg.role) {
                   return false;
                 }

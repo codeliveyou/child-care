@@ -4,7 +4,6 @@ import { motion } from "framer-motion"; // Importing motion for animation effect
 import Input from "../../components/common/Input"; // Custom Input component
 import Button from "../../components/common/Button"; // Custom Button component
 import TradeMark from "../../components/user/TradeMark"; // TradeMark component for branding
-import { useScreen } from "usehooks-ts";
 import { useContext, useState } from "react";
 import { MeetingContext } from "../../MeetingContext";
 import { useEffect } from "react";
