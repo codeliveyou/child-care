@@ -1,11 +1,31 @@
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import SearchInput from "../layout/header/SearchInput";
 import SignOutButton from "../layout/header/SignOutButton";
+import { useAppDispatch } from "../../store";
+import { adminLogin, updateEmail } from "../../store/reducers/adminReducer";
+import apiClient, { setupApiToken } from "../../libs/api";
 import Logo from "../admin/Logo";
 
 function AdminLayout() {
+  const dispatch = useAppDispatch();
+  const [isLoading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) setupApiToken(token);
+    setLoading(true);
+    apiClient.get('api/admins/me').then((response: any) => {
+      const { email } = response;
+      dispatch(adminLogin());
+      dispatch(updateEmail(email));
+    }).finally(() => {
+      setLoading(false)
+    })
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0 }} // Initial opacity for fade-in effect
@@ -33,7 +53,7 @@ function AdminLayout() {
         </div>
       </div>
       {/* Outlet for rendering nested routes */}
-      <Outlet />
+      {isLoading ? 'Loading...' : <Outlet />}
     </motion.div>
   );
 }

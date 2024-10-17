@@ -8,7 +8,7 @@ import Button from "../../components/common/Button";
 import apiClient from '../../libs/api';
 import toast from "react-hot-toast";
 import { useAppDispatch } from "../../store";
-import { userLogin } from "../../store/reducers/authReducer";
+import { adminLogin, updateEmail } from "../../store/reducers/adminReducer";
 import { setupToken } from "../../libs/token";
 
 type LoginUser = {
@@ -26,15 +26,19 @@ function Login() {
   });
 
   const handleLoginUserChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setLoginUser({...loginUser, [e.target.name]: e.target.value});
+    setLoginUser({ ...loginUser, [e.target.name]: e.target.value });
   }
 
   const handleSubmit = () => {
     apiClient.post('api/admins/login', loginUser).then((response: any) => {
       toast.success('Admin Login success.');
       const { token } = response;
-      dispatch(userLogin());
+      dispatch(adminLogin());
       setupToken(token);
+      apiClient.get('api/admins/me').then((response: any) => {
+        const { email } = response;
+        dispatch(updateEmail(email));
+      })
       navigate('/admin'); // Navigates to the home page after successful login
     });
   }

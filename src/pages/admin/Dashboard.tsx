@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineMail } from "react-icons/md"; // Importing mail icon for use in email column
 
 import Button from "../../components/common/Button"; // Common button component
 import Table, { type IColumn, type IRow } from "../../components/common/Table"; // Common table component with column and row types
 import CompanyCreateDialog from "./CompanyCreateDialog"; // Dialog component for creating a new company
+import apiClient from "../../libs/api";
+import { useAppSelector } from "../../store";
 
 // Interface defining the shape of company data
 interface ICompany {
@@ -174,13 +176,29 @@ const dummyCompanyData: ICompany[] = [
 
 // Main dashboard component for managing and displaying company information
 function Dashboard() {
-  const [companyData, setCompanyData] = useState<ICompany[]>(dummyCompanyData); // State to manage the list of companies
+  const adminEmail = useAppSelector(state => state.admin.email);
+  const [companyData, setCompanyData] = useState<ICompany[]>([]); // State to manage the list of companies
   const [isCreateOpen, setIsCreateOpen] = useState<boolean>(false); // State to manage the visibility of the create dialog
 
   // Handler to add a new company to the state
   const handleCompanyCreate = (company: ICompany) => {
     setCompanyData([...companyData, company]);
   };
+
+  useEffect(() => {
+    apiClient.post('api/companys/companies-and-users', { company_admin_email: adminEmail }).then((response: any) => {
+      setCompanyData(response.map((company: any) => {
+        const { company_description, company_email, company_name, created_at, status, use_time, users } = company;
+        return {
+          description: company_description, email: company_email, name: company_name, date: created_at, status, use_time,
+          children: users.map((user: any) => {
+            const { account_description, created_at, status, use_time, user_email, user_name } = user;
+            return { name: user_name, email: user_email, description: account_description, date: created_at, use_time, status };
+          })
+        }
+      }))
+    });
+  }, []);
 
   return (
     <>

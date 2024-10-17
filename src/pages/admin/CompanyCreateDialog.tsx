@@ -7,6 +7,8 @@ import Input from "../../components/common/Input";
 import TextField from "../../components/common/TextField";
 
 import { ICompany } from "./Dashboard";
+import apiClient from "../../libs/api";
+import { useAppSelector } from "../../store";
 
 // Define possible pay options for companies
 type PayOption = "short-pay" | "invoice-pay";
@@ -29,9 +31,10 @@ function CompanyCreateDialog({
   onCreate,
   onClose,
 }: CompanyCreateDialogProps) {
+  const adminEmail = useAppSelector(state => state.admin.email);
   // State for managing selected payment option, defaults to "short-pay"
   const [payOption, setPayOption] = useState<PayOption>("short-pay");
-  
+
   // State for managing company details input by the user
   const [company, setCompany] = useState<ICompany>({
     name: "",
@@ -60,8 +63,21 @@ function CompanyCreateDialog({
    * Calls the onCreate callback with the company data and closes the dialog.
    */
   const handleCreateClick = () => {
-    onCreate({ ...company, children: [] }); // Add children property to company
-    onClose(); // Close the dialog after creation
+    const payload = {
+      "company_name": company.name,
+      "company_description": company.description,
+      "company_email": company.email,
+      "company_telephone": company.phone,
+      "company_admin_email": adminEmail,
+      "company_payment_options": [
+        "credit",
+        "paypal"
+      ]
+    };
+    apiClient.post('api/companys/', payload).then(() => {
+      onCreate({ ...company, children: [] }); // Add children property to company
+      onClose(); // Close the dialog after creation
+    });
   };
 
   return (
