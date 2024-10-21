@@ -135,13 +135,13 @@ function RoomCall({ className = "", onShare }: RoomCallProps) {
     try {
       // Calling API to validate the roomName
       const response = await axios.get<{ roomFound: boolean }>(
-        `${API_LOCATION}/api/validate-meeting?roomName=${roomName}`
+        `${API_LOCATION}/api/room/validate-meeting?roomName=${roomName}`
       );
 
       if (response.data.roomFound) {
         // Calling API to fetch Metered Domain
         const { data } = await axios.get<{ METERED_DOMAIN: string }>(
-          `${API_LOCATION}/api/metered-domain`
+          `${API_LOCATION}/api/room/metered-domain`
         );
 
         // Extracting Metered Domain from response
@@ -211,7 +211,7 @@ function RoomCall({ className = "", onShare }: RoomCallProps) {
     await meteredMeeting.leaveMeeting();
 
     const response = await axios.get(
-      `${API_LOCATION}/api/room/end?roomName=${roomName}`
+      `${API_LOCATION}/api/room/leave?roomName=${roomName}&userName=${username}&role=participant`
     );
     if (response) {
     }

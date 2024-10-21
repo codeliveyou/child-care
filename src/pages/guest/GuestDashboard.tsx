@@ -116,11 +116,17 @@ function GuestDashboard() {
     await meteredMeeting.leaveMeeting();
 
     const response = await axios.get(
-      `${API_LOCATION}/api/room/end?roomName=${roomName}&userName=${username}`
+      `${API_LOCATION}/api/room/leave?roomName=${roomName}&userName=${username}&role=guest`
     );
-    if (response) {
+    if (response.status === 200) {
+      console.log("left meeting");
+    } else {
+      console.log("error leaving meeting");
     }
     setMeetingEnded(true);
+
+    // Redirect to guest sign-in page
+    window.location.href = '/auth/guest-signin';
   };
 
   async function handleJoinMeeting(roomName: string, username: string) {
@@ -129,12 +135,12 @@ function GuestDashboard() {
     try {
       // Calling API to validate the roomName
       const response = await axios.get<{ roomFound: boolean }>(
-        `${API_LOCATION}/api/validate-meeting?roomName=${roomName}`
+        `${API_LOCATION}/api/room/validate-meeting?roomName=${roomName}`
       );
       if (response.data.roomFound) {
         // Calling API to fetch Metered Domain
         const { data } = await axios.get<{ METERED_DOMAIN: string }>(
-          `${API_LOCATION}/api/metered-domain`
+          `${API_LOCATION}/api/room/metered-domain`
         );
         // Extracting Metered Domain from response
         const METERED_DOMAIN = data.METERED_DOMAIN;
@@ -325,7 +331,6 @@ function GuestDashboard() {
     if (socketInstance) {
       const handleNewMessage = (data: RoomMessage) => {
         const { from, message, to, timestamp } = data;
-        console.log("messagedata", from, to, timestamp);
         const newMessage: Message = {
           from: from === socketInstance.id ? "me" : from,
           to: "me",
@@ -335,7 +340,6 @@ function GuestDashboard() {
         };
         if (to == username)
           setMessageList((prevList) => [...prevList, newMessage]);
-        console.log(messageList);
       };
       socketInstance.on("room_message", handleNewMessage);
       return () => {
@@ -344,24 +348,6 @@ function GuestDashboard() {
     }
   }, [socketInstance]);
 
-  // useEffect(() => {
-  //   if (socketInstance) {
-  //     socketInstance.on("room_message", (data: RoomMessage) => {
-  //       const { from, message, to, timestamp } = data;
-  //       console.log('messagedata', from, to, timestamp)
-  //       const newMessage: Message = {
-  //         from: from === socketInstance.id ? "me" : from,
-  //         to: "me",
-  //         message,
-  //         timestamp,
-  //         role: "guest",
-  //       };
-  //       if (to == username)
-  //         setMessageList((prevList) => [...prevList, newMessage]);
-  //       console.log(messageList)
-  //     });
-  //   }
-  // }, [socketInstance]);
 
   // Function to send messages
   const sendMessage = () => {

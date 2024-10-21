@@ -273,7 +273,6 @@ const RoomPage: React.FC = () => {
     if (socketInstance) {
       const handleNewMessage = (data: RoomMessage) => {
         const { from, message, to, timestamp } = data;
-        console.log("messagedata", data, "myname", myname, from, to);
         const newMessage: Message = {
           from: from === socketInstance.id ? "me" : from,
           to: to,
@@ -283,7 +282,6 @@ const RoomPage: React.FC = () => {
         };
         if (to == "creator")
           setMessageList((prevList) => [...prevList, newMessage]);
-        // console.log(messageList);
       };
       socketInstance.on("room_message", handleNewMessage);
       return () => {
@@ -316,7 +314,7 @@ const RoomPage: React.FC = () => {
     const fetchRoomData = async () => {
       try {
         const response = await axios.post(
-          `${API_LOCATION}/api/rooms/fetch_room_data`,
+          `${API_LOCATION}/api/room/fetch_room_data`,
           {
             roomName,
           }
@@ -462,7 +460,6 @@ const RoomPage: React.FC = () => {
             {messageList
               .filter((msg) => {
                 // Adjust filters based on role and active panel
-                console.log(receiver_role, ':', msg.role)
                 if (receiver_role !== msg.role) {
                   return false;
                 }

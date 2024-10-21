@@ -41,21 +41,42 @@ const RoomCreateOnboarding4 = () => {
   }, [meetingCreated]);
 
   async function handleCreateMeeting(username: string) {
+    // Fetch user email using the token
+    const token = localStorage.getItem('token');
+    let userEmail = '';
+    
+    if (token) {
+      try {
+        const userResponse = await axios.get(API_LOCATION + '/api/users/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        userEmail = userResponse.data.user_email;
+      } catch (error) {
+        console.error('Error fetching user email:', error);
+      }
+    }
+
     // Calling API to create room
-    const { data } = await axios.post(API_LOCATION + `/api/create/room`,{
+    const { data } = await axios.post(API_LOCATION + `/api/room/create`,{
       username,
+      userEmail,
     });
     // Calling API to fetch Metered Domain
-    const response = await axios.get(API_LOCATION + "/api/metered-domain");
+    const response = await axios.get(API_LOCATION + "/api/room/metered-domain");
     // Extracting Metered Domain and Room Name
     // From responses.
 
     const METERED_DOMAIN = response.data.METERED_DOMAIN;
     const meetingRoomName = data.roomName;
+
+    
+
     
     // Calling the join() of Metered SDK
-    const joinResponse = await meteredMeeting.join({
-      name: username,
+    const joinResponse = await meteredMeeting.join({      
+      name: username,      
       roomURL: METERED_DOMAIN + "/" + meetingRoomName,
     });
 

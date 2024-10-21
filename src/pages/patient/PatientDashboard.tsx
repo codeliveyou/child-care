@@ -174,7 +174,7 @@ function PatientDashboard() {
     await meteredMeeting.leaveMeeting();
 
     const response = await axios.get(
-      `${config.api.endpoint_uri}/api/room/end?roomName=${roomName}&userName=${"patient"}`
+      `${config.api.endpoint_uri}/api/room/leave?roomName=${roomName}&userName=${"patient"}&role=patient`
     );
     if (response) {
     }
@@ -187,12 +187,12 @@ function PatientDashboard() {
     try {
       // Calling API to validate the roomName
       const response = await axios.get<{ roomFound: boolean }>(
-        `${config.api.endpoint_uri}/api/validate-meeting?roomName=${roomName}`
+        `${config.api.endpoint_uri}/api/room/validate-meeting?roomName=${roomName}`
       );
       if (response.data.roomFound) {
         // Calling API to fetch Metered Domain
         const { data } = await axios.get<{ METERED_DOMAIN: string }>(
-          `${config.api.endpoint_uri}/api/metered-domain`
+          `${config.api.endpoint_uri}/api/room/metered-domain`
         );
         // Extracting Metered Domain from response
         const METERED_DOMAIN = data.METERED_DOMAIN;

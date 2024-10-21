@@ -173,8 +173,26 @@ const RoomListPage = () => {
 
   useEffect(() => {
     const fetchRoomData = async () => {
+      const token = localStorage.getItem('token');
+      let userEmail = '';
+      
+      if (token) {
+        try {
+          const userResponse = await axios.get(API_LOCATION + '/api/users/me', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          userEmail = userResponse.data.user_email;
+        } catch (error) {
+          console.error('Error fetching user email:', error);
+        }
+      }
+
       try {
-        const response = await axios.get(`${API_LOCATION}/api/rooms/fetch_rooms_data`);
+        const response = await axios.post(`${API_LOCATION}/api/room/fetch_rooms_data`, {
+          userEmail
+        });
         setRoomData(response.data);
       } catch (err: any) {
         console.log("Error in fetching room data", err);
