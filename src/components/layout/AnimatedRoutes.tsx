@@ -1,4 +1,5 @@
-import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
 import AuthLayout from "../../components/layout/AuthLayout";
@@ -31,14 +32,43 @@ import RoomCreateOnboarding2 from "../../pages/room_create/Onboarding/RoomCreate
 import RoomCreateOnboarding3 from "../../pages/room_create/Onboarding/RoomCreateOnboarding3";
 import RoomCreateOnboarding4 from "../../pages/room_create/Onboarding/RoomCreateOnboarding4";
 
+import { useAppDispatch, useAppSelector } from "../../store";
+import { updateCreateUser, userLogin } from "../../store/reducers/authReducer";
+import apiClient, { setupApiToken } from "../../libs/api";
+
 // import routes from "../../routes";
 
 function AnimatedRoutes() {
+  const dispatch = useAppDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const isAuth = useAppSelector(state => state.auth.isAuth)
+  const [isLoading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isAuth) return;
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    setLoading(true);
+    setupApiToken(token)
+    apiClient.get('/api/users/me').then((response: any) => {
+      const { user_name, user_email, account_description } = response;
+      if (user_email) {
+        dispatch(userLogin());
+        dispatch(updateCreateUser({ name: 'user_name', value: user_name }))
+        dispatch(updateCreateUser({ name: 'user_email', value: user_email }))
+        dispatch(updateCreateUser({ name: 'account_description', value: account_description }))
+        navigate('/')
+      }
+    }).finally(() => {
+      setLoading(false);
+    })
+  }, [isAuth])
 
   // Use the routes configuration to generate the routes for the application
   return (
-    <AnimatePresence>
+    isLoading ? 'Loading...' : <AnimatePresence>
       <Routes location={location} key={location.pathname}>
         <Route path="patient" element={<PatientDashboard />} /> // Patient
         dashboard layout
@@ -51,27 +81,6 @@ function AnimatedRoutes() {
             // Layout for admin dashboard and other pages
             <Route index element={<AdminDashboard />} /> // Default route for
             admin dashboard
-          </Route>
-        </Route>
-        <Route path="room" element={<Outlet />}>
-          // Room-related layout with nested routes
-          <Route path="create" element={<Outlet />}>
-            // Room creation layout with nested routes
-            <Route index element={<CreateRoomMain />} /> // Default route for
-            room creation main page
-            <Route path="onboarding" element={<RoomCreateOnboardingMain />}>
-              // Onboarding page for room creation
-              <Route index element={<Navigate to={"step1"} />} />
-              <Route path="step1" element={<RoomCreateOnboarding1 />} />
-              <Route path="step2" element={<RoomCreateOnboarding2 />} />
-              <Route path="step3" element={<RoomCreateOnboarding3 />} />
-              <Route path="step4" element={<RoomCreateOnboarding4 />} />
-              <Route path="ai-structure" element={<MainLayout />}>
-                // Main layout for AI structure management
-                <Route index element={<AIStructureList />} /> // AI structure
-                list page
-              </Route>
-            </Route>
           </Route>
         </Route>
         <Route path="auth" element={<AuthLayout />}>
@@ -91,7 +100,7 @@ function AnimatedRoutes() {
           <Route path="signup-with-bank" element={<RegisterWithBank />} /> //
           Register with bank page
         </Route>
-        <Route path="" element={<MainLayout />}>
+        {isAuth && <Route path="" element={<MainLayout />}>
           <Route index element={<DashboardPage />} /> // Default route for
           dashboard
           <Route path="rooms" element={<RoomListPage />} /> // Rooms list page
@@ -100,7 +109,29 @@ function AnimatedRoutes() {
           <Route path="settings" element={<SettingsPage />} /> // Settings page
           <Route path="room/:id" element={<RoomPage />} /> // Room details page,
           with dynamic ID
-        </Route>
+        </Route>}
+        {isAuth && <Route path="room" element={<Outlet />}>
+          // Room-related layout with nested routes
+          <Route path="create" element={<Outlet />}>
+            // Room creation layout with nested routes
+            <Route index element={<CreateRoomMain />} /> // Default route for
+            room creation main page
+            <Route path="onboarding" element={<RoomCreateOnboardingMain />}>
+              // Onboarding page for room creation
+              <Route index element={<Navigate to={"step1"} />} />
+              <Route path="step1" element={<RoomCreateOnboarding1 />} />
+              <Route path="step2" element={<RoomCreateOnboarding2 />} />
+              <Route path="step3" element={<RoomCreateOnboarding3 />} />
+              <Route path="step4" element={<RoomCreateOnboarding4 />} />
+              <Route path="ai-structure" element={<MainLayout />}>
+                // Main layout for AI structure management
+                <Route index element={<AIStructureList />} /> // AI structure
+                list page
+              </Route>
+            </Route>
+          </Route>
+        </Route>}
+        <Route path="*" element={<Navigate to={'/auth'} />} />
       </Routes>
     </AnimatePresence>
   ); // Render the configured routes
