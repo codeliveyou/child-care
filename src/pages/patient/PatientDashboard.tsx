@@ -13,6 +13,7 @@ import { MeetingContext } from "../../MeetingContext";
 import axios from "axios";
 import config from "../../config";
 import MeetingRoom from "../../components/room/MeetingRoom";
+import { useNavigate } from "react-router-dom";
 
 interface TrackItem {
   streamId: string;
@@ -45,6 +46,8 @@ function PatientDashboard() {
   const [onlineUsers, setOnlineUsers] = useState<Participant[]>([]);
   const [meetingInfo, setMeetingInfo] = useState<any>({});
   const [meetingjoined, setMeetingJoined] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   if (
     meetingEnded ||
@@ -197,13 +200,14 @@ function PatientDashboard() {
         // Extracting Metered Domain from response
         const METERED_DOMAIN = data.METERED_DOMAIN;
 
+        const role = "patient";
         // Calling the join() of Metered SDK
         const joinResponse = await meteredMeeting.join({
-          name: username,
+          name: role,
           roomURL: `${METERED_DOMAIN}/${roomName}`,
         });
 
-        const role = "patient";
+        
         const joinResponseToBackend = await axios.get(
           `${config.api.endpoint_uri}/api/room/join?roomName=${roomName}&userName=${username}&role=${role}`
         );
@@ -249,7 +253,12 @@ function PatientDashboard() {
 
     const handleParticipantLeft = (participant: Participant) => {
       // Handle participant left
+      console.log('participant left', participant);
       if (participant) {
+        if (participant.name === 'creator') {
+          alert("creator left the room");
+          navigate('/auth/guest-signin');
+        }
       }
     };
 

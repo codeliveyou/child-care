@@ -35,7 +35,7 @@ const RoomCreateOnboarding3 = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const stateParams = location.state as LocationState;
-
+  console.log("stateParams", stateParams);
   const handleNextClick = () => {
     navigate("/room/create/onboarding/step4", { state: stateParams });
   };

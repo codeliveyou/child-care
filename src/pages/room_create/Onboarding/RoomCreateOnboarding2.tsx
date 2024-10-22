@@ -6,6 +6,7 @@ import VoiceList from "../../../components/room/VoiceList";
 import Button from "../../../components/common/Button";
 import ProgressBar from "../../../components/common/ProgressBar";
 import TradeMark from "../../../components/user/TradeMark";
+import { useState } from "react";
 
 interface LocationState {
   roomName: string;
@@ -17,11 +18,21 @@ interface LocationState {
 const RoomCreateOnboarding2 = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [avatarType, setAvatarType] = useState<string>("");
+  const [voiceType, setVoiceType] = useState<string>("");
   const stateParams = location.state as LocationState;
-  
+
   const handleNextClick = () => {
-    navigate("/room/create/onboarding/step3", { state:  stateParams  });
+    const updatedParams = {
+      ...stateParams,
+      avatarType,
+      voiceType
+    };
+    navigate("/room/create/onboarding/step3", { state: updatedParams });
   };
+  // const handleNextClick = () => {
+  //   navigate("/room/create/onboarding/step3", { state:  stateParams  });
+  // };
 
   return (
     <motion.div
@@ -71,7 +82,7 @@ const RoomCreateOnboarding2 = () => {
       <div className="flex-1 flex flex-col py-4 px-8">
         <div className="py-3.5">
           {/* Progress bar indicating completion of onboarding step */}
-          <ProgressBar value={50} />
+          <ProgressBar value={50}  />
         </div>
         <div className="flex-1 flex flex-col justify-center">
           <div className="py-4 flex flex-col gap-y-2">
@@ -79,14 +90,14 @@ const RoomCreateOnboarding2 = () => {
               Välj en avatar
             </p>
             {/* Component to select avatar */}
-            <AvatarList />
+            <AvatarList setAvatarType={setAvatarType} />
           </div>
           <div className="py-1 flex flex-col gap-y-2">
             <p className="text-base leading-5 text-primary-text font-bold">
               Välj en röst
             </p>
             {/* Component to select voice */}
-            <VoiceList />
+            <VoiceList setVoiceType={setVoiceType} />
           </div>
         </div>
         <div className="flex items-center justify-end gap-x-2.5">

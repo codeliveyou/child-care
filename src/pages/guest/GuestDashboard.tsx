@@ -33,6 +33,7 @@ import {
   // ChatRequestData,
   // ChatHistory,
 } from "../room/types";
+import { useNavigate } from "react-router-dom";
 
 const patientList = ["Sara"]; // List of patients
 
@@ -75,8 +76,10 @@ function GuestDashboard() {
   const [searchParams] = useSearchParams();
   const roomName = searchParams.get("roomname") as string;
   const username = searchParams.get("username") as string;
-
+  const navigate = useNavigate();
   const meteredMeeting = useContext(MeetingContext);
+
+
 
   const handleMicBtn = async (): Promise<void> => {
     if (micShared) {
@@ -144,14 +147,14 @@ function GuestDashboard() {
         );
         // Extracting Metered Domain from response
         const METERED_DOMAIN = data.METERED_DOMAIN;
-
+        const role = "guest";
         // Calling the join() of Metered SDK
         const joinResponse = await meteredMeeting.join({
-          name: username,
+          name: role,
           roomURL: `${METERED_DOMAIN}/${roomName}`,
         });
 
-        const role = "guest";
+        
         const joinResponseToBackend = await axios.get(
           `${API_LOCATION}/api/room/join?roomName=${roomName}&userName=${username}&role=${role}`
         );
@@ -197,7 +200,12 @@ function GuestDashboard() {
 
     const handleParticipantLeft = (participant: Participant) => {
       // Handle participant left
+      console.log('participant left', participant);
       if (participant) {
+        if (participant.name === 'creator') {
+          alert("creator left the room");
+          navigate('/auth/guest-signin');
+        }
       }
     };
 
@@ -210,12 +218,22 @@ function GuestDashboard() {
       setLocalVideoStream(stream);
     };
 
+    const handleMeetingLeft = (item: any) => {
+      alert("meeting left");
+    }
+
+    const handleStateChanged = (meetingState: any) => {
+      console.log("meeting state changed", meetingState);
+    };
+
     meteredMeeting.on("remoteTrackStarted", handleRemoteTrackStarted);
     meteredMeeting.on("remoteTrackStopped", handleRemoteTrackStopped);
     meteredMeeting.on("participantJoined", hanldeParticipantJoined);
     meteredMeeting.on("participantLeft", handleParticipantLeft);
     meteredMeeting.on("onlineParticipants", handleOnlineParticipants);
     meteredMeeting.on("localTrackUpdated", handleLocalTrackUpdated);
+    meteredMeeting.on("meetingLeft", handleMeetingLeft);
+    meteredMeeting.on("stateChanged", handleStateChanged);
 
     return () => {
       meteredMeeting.removeListener("remoteTrackStarted");
@@ -224,6 +242,8 @@ function GuestDashboard() {
       meteredMeeting.removeListener("participantLeft");
       meteredMeeting.removeListener("onlineParticipants");
       meteredMeeting.removeListener("localTrackUpdated");
+      meteredMeeting.removeListener("meetingLeft");
+      meteredMeeting.removeListener("stateChanged");
     };
   });
 

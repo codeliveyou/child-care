@@ -13,6 +13,8 @@ interface LocationState {
   patientName: string;
   patientPersonalID: string;
   avatarName: string;
+  avatarType: string;
+  voiceType: string;
 }
 
 const API_LOCATION = import.meta.env.VITE_BACKEND_URL;
@@ -59,9 +61,16 @@ const RoomCreateOnboarding4 = () => {
     }
 
     // Calling API to create room
+    console.log('State', stateParams)
     const { data } = await axios.post(API_LOCATION + `/api/room/create`,{
       username,
       userEmail,
+      roomName: stateParams.roomName,
+      avatarType: stateParams.avatarType,
+      voiceType: stateParams.voiceType,
+      patientName: stateParams.patientName,
+      patientPersonalID: stateParams.patientPersonalID,
+      avatarName: stateParams.avatarName,
     });
     // Calling API to fetch Metered Domain
     const response = await axios.get(API_LOCATION + "/api/room/metered-domain");
@@ -74,13 +83,13 @@ const RoomCreateOnboarding4 = () => {
     
 
     
-    // Calling the join() of Metered SDK
-    const joinResponse = await meteredMeeting.join({      
-      name: username,      
-      roomURL: METERED_DOMAIN + "/" + meetingRoomName,
-    });
+    // // Calling the join() of Metered SDK
+    // const joinResponse = await meteredMeeting.join({      
+    //   name: username,      
+    //   roomURL: METERED_DOMAIN + "/" + meetingRoomName,
+    // });
 
-    if(joinResponse) {}
+    // if(joinResponse) {}
 
     // setUsername(username);
     setRoomName(meetingRoomName);

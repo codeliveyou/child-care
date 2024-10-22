@@ -4,6 +4,7 @@ import MeetingRoom from "./MeetingRoom";
 import { MeetingContext } from "../../MeetingContext";
 import { useState, useContext, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // Define props for the RoomCall component
 interface RoomCallProps {
@@ -41,6 +42,8 @@ function RoomCall({ className = "", onShare }: RoomCallProps) {
   const [localVideoStream, setLocalVideoStream] = useState<MediaStream | null>(
     null
   );
+
+  const navigate = useNavigate();
 
   if (meetingEnded && meetingJoined) {
     onShare;
@@ -107,27 +110,43 @@ function RoomCall({ className = "", onShare }: RoomCallProps) {
     };
   });
 
-  // async function handleCreateMeeting(username: string) {
-  //   // Calling API to create room
-  //   const { data } = await axios.post(API_LOCATION + "/api/create/room");
-  //   // Calling API to fetch Metered Domain
-  //   const response = await axios.get(API_LOCATION + "/api/metered-domain");
-  //   // Extracting Metered Domain and Room Name
-  //   // From responses.
-  //   const METERED_DOMAIN = response.data.METERED_DOMAIN;
-  //   const roomName = data.roomName;
+  const endMeeting = async () => {
+    const response = await axios.get(
+      `${API_LOCATION}/api/room/end?roomName=${roomName}`
+    );
+    if (response) {
+    }
+  }
 
-  //   // Calling the join() of Metered SDK
-  //   const joinResponse = await meteredMeeting.join({
-  //     name: username,
-  //     roomURL: METERED_DOMAIN + "/" + roomName,
-  //   });
+  useEffect(() => {
+    const handleParticipantLeft = (participantInfo: any) => {
+      console.log("participant had left the room", participantInfo);
+    };
 
-  //   setUsername(username);
-  //   setRoomName(roomName);
-  //   setMeetingInfo(joinResponse);
-  //   // setMeetingJoined(true);
-  // }
+    const handleParticipantJoined = (participantInfo: any) => {
+      console.log("participant had joined the room", participantInfo);
+    };
+
+    const handleStateChanged = (meetingState: any) => {
+      console.log("meeting state changed", meetingState);
+    };
+
+    const handleMeetingLeft = (meetingState: any) => {
+      endMeeting();
+      navigate('/');
+    };
+
+    meteredMeeting.on("participantLeft", handleParticipantLeft);
+    meteredMeeting.on("participantJoined", handleParticipantJoined);
+    meteredMeeting.on("stateChanged", handleStateChanged);
+    meteredMeeting.on("meetingLeft", handleMeetingLeft);
+    return () => {
+      meteredMeeting.removeListener("participantLeft", handleParticipantLeft);
+      meteredMeeting.removeListener("participantJoined", handleParticipantJoined);
+      meteredMeeting.removeListener("stateChanged", handleStateChanged);
+      meteredMeeting.removeListener("meetingLeft", handleMeetingLeft);
+    };
+  });
 
   async function handleJoinMeeting(roomName: string, username: string) {
     roomName = roomName.trim();
@@ -149,7 +168,7 @@ function RoomCall({ className = "", onShare }: RoomCallProps) {
 
         // Calling the join() of Metered SDK
         const joinResponse = await meteredMeeting.join({
-          name: username,
+          name: 'creator',
           roomURL: `${METERED_DOMAIN}/${roomName}`,
         });
 
@@ -200,6 +219,7 @@ function RoomCall({ className = "", onShare }: RoomCallProps) {
     if (!screenShared) {
       await meteredMeeting.startScreenShare();
       setScreenShared(true);
+      navigate('/');
     } else {
       await meteredMeeting.stopVideo();
       setCameraShared(false);
@@ -209,9 +229,9 @@ function RoomCall({ className = "", onShare }: RoomCallProps) {
 
   const handleLeaveBtn = async (): Promise<void> => {
     await meteredMeeting.leaveMeeting();
-
+    
     const response = await axios.get(
-      `${API_LOCATION}/api/room/leave?roomName=${roomName}&userName=${username}&role=participant`
+      `${API_LOCATION}/api/room/end?roomName=${roomName}&userName=${username}&role=creator`
     );
     if (response) {
     }

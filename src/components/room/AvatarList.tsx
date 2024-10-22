@@ -1,4 +1,4 @@
-import { MutableRefObject, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { useDraggable } from "react-use-draggable-scroll";
 
@@ -11,7 +11,7 @@ const avatarUris = [
   "/images/room/avatar/5.png",
 ];
 
-function AvatarList() {
+function AvatarList({ setAvatarType }: { setAvatarType: (name: string) => void }) {
   // Reference to the container of avatar images for scroll interaction
   const avatarListRef = useRef<HTMLDivElement>(null);
 
@@ -20,8 +20,14 @@ function AvatarList() {
     avatarListRef as MutableRefObject<HTMLElement>
   );
 
+  
+
   // State to keep track of the currently active (selected) avatar
   const [activeIndex, setActiveIndex] = useState<number>(0);
+
+  useEffect(() => {
+    setAvatarType(avatarUris[activeIndex]);
+  }, [activeIndex]);
 
   return (
     <div className="flex items-center gap-x-2.5">
@@ -57,6 +63,7 @@ function AvatarList() {
             onClick={() => {
               // Update the active avatar index when clicked
               setActiveIndex(index);
+              setAvatarType(avatarUri);
             }}
           >
             <img

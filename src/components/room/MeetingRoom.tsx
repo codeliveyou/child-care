@@ -109,7 +109,7 @@ function MeetingRoom({
       id="meetingView"
       className="relative flex flex-col w-full h-full h-min-30"
     >
-      <div className="h-8 text-center bg-black">MeetingID: {roomName}</div>
+      <div className="h-8 text-center text-white bg-black">MeetingID: {roomName}</div>
       <div className="h-full flex flex-row">
         <div className="relative w-full h-full">
           <div
