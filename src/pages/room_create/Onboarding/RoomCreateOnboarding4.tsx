@@ -5,7 +5,7 @@ import TradeMark from "../../../components/user/TradeMark";
 import Button from "../../../components/common/Button";
 import Input from "../../../components/common/Input";
 import axios from "axios";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 // import { MeetingContext } from "../../../MeetingContext";
 
 interface LocationState {
@@ -27,7 +27,7 @@ const RoomCreateOnboarding4 = () => {
   // const [meetinginfo, setMeetingInfo] = useState({});
   const [meetingCreated, setMeetingCreated] = useState(false);
   const [roomName, setRoomName] = useState<string>("");
-
+  const [roomId, setRoomId] = useState<string>("");
 
   // const meteredMeeting = useContext(MeetingContext);
 
@@ -35,34 +35,38 @@ const RoomCreateOnboarding4 = () => {
     if (meetingCreated && roomName) {
       localStorage.setItem("roomName", roomName);
       localStorage.setItem("username", stateParams.patientName);
-      navigate(`/room/${roomName}`);
-      // navigate(`/room/${roomName}`, {
-      //   state: {roomName: roomName, username: stateParams.patientName}
-      // });
     }
   }, [meetingCreated]);
 
+  useEffect(() => {
+    handleCreateMeeting(stateParams.patientName);
+  }, []);
+
+  const roomIdToClipboard = (roomId: string) => {
+    navigator.clipboard.writeText(roomId);
+  };
+
   async function handleCreateMeeting(username: string) {
     // Fetch user email using the token
-    const token = localStorage.getItem('token');
-    let userEmail = '';
-    
+    const token = localStorage.getItem("token");
+    let userEmail = "";
+
     if (token) {
       try {
-        const userResponse = await axios.get(API_LOCATION + '/api/users/me', {
+        const userResponse = await axios.get(API_LOCATION + "/api/users/me", {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         userEmail = userResponse.data.user_email;
       } catch (error) {
-        console.error('Error fetching user email:', error);
+        console.error("Error fetching user email:", error);
       }
     }
 
     // Calling API to create room
-    console.log('State', stateParams)
-    const { data } = await axios.post(API_LOCATION + `/api/room/create`,{
+    console.log("State", stateParams);
+    const { data } = await axios.post(API_LOCATION + `/api/room/create`, {
       username,
       userEmail,
       roomName: stateParams.roomName,
@@ -79,13 +83,11 @@ const RoomCreateOnboarding4 = () => {
 
     // const METERED_DOMAIN = response.data.METERED_DOMAIN;
     const meetingRoomName = data.roomName;
+    setRoomId(meetingRoomName);
 
-    
-
-    
     // // Calling the join() of Metered SDK
-    // const joinResponse = await meteredMeeting.join({      
-    //   name: username,      
+    // const joinResponse = await meteredMeeting.join({
+    //   name: username,
     //   roomURL: METERED_DOMAIN + "/" + meetingRoomName,
     // });
 
@@ -133,23 +135,27 @@ const RoomCreateOnboarding4 = () => {
             {/* Patient ID input field */}
             <div className="w-full flex items-center justify-end gap-x-2.5">
               <p className="text-lg leading-6 text-light-background">
-                Patient ID:
+                Room ID:
               </p>
               <div className="relative">
                 <Input
                   name="patientID"
                   placeholder="#123445456546"
+                  value={roomId}
                   className="border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text rounded-2xl"
                 />
                 {/* Copy icon for patient ID */}
-                <span className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer">
+                <span
+                  className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer"
+                  onClick={() => roomIdToClipboard(roomId)}
+                >
                   <img src="/icons/copy.svg" alt="Copy icon" />
                 </span>
               </div>
             </div>
 
             {/* Guest ID input field */}
-            <div className="w-full flex items-center justify-end gap-x-2.5">
+            {/* <div className="w-full flex items-center justify-end gap-x-2.5">
               <p className="text-lg leading-6 text-light-background">
                 Gäst ID:
               </p>
@@ -159,12 +165,11 @@ const RoomCreateOnboarding4 = () => {
                   placeholder="#234234fdf2345"
                   className=" border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text rounded-2xl"
                 />
-                {/* Copy icon for guest ID */}
                 <span className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer">
                   <img src="/icons/copy.svg" alt="Copy icon" />
                 </span>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Button to finalize the onboarding process */}
@@ -173,11 +178,11 @@ const RoomCreateOnboarding4 = () => {
               size="compress"
               color="secondary"
               onClick={() => {
-                handleCreateMeeting(stateParams.patientName);
+                navigate(`/room/${roomName}`);
                 // setMeetingCreated(true);
                 // navigate(`/room/${stateParams.roomName}`, {
                 //   state:  {roomName: roomName, username: stateParams.patientName} ,
-                // }); 
+                // });
               }}
             >
               Klart
