@@ -219,6 +219,7 @@ function GuestDashboard() {
     };
 
     const handleMeetingLeft = (item: any) => {
+      if (item) {}
       alert("meeting left");
     }
 

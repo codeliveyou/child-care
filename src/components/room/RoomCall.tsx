@@ -132,8 +132,9 @@ function RoomCall({ className = "", onShare }: RoomCallProps) {
     };
 
     const handleMeetingLeft = (meetingState: any) => {
-      endMeeting();
-      navigate('/');
+      if (meetingState) {}
+        endMeeting();
+        navigate('/');      
     };
 
     meteredMeeting.on("participantLeft", handleParticipantLeft);

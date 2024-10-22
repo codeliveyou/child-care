@@ -5,8 +5,8 @@ import TradeMark from "../../../components/user/TradeMark";
 import Button from "../../../components/common/Button";
 import Input from "../../../components/common/Input";
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
-import { MeetingContext } from "../../../MeetingContext";
+import {  useEffect, useState } from "react";
+// import { MeetingContext } from "../../../MeetingContext";
 
 interface LocationState {
   roomName: string;
@@ -29,7 +29,7 @@ const RoomCreateOnboarding4 = () => {
   const [roomName, setRoomName] = useState<string>("");
 
 
-  const meteredMeeting = useContext(MeetingContext);
+  // const meteredMeeting = useContext(MeetingContext);
 
   useEffect(() => {
     if (meetingCreated && roomName) {
@@ -73,11 +73,11 @@ const RoomCreateOnboarding4 = () => {
       avatarName: stateParams.avatarName,
     });
     // Calling API to fetch Metered Domain
-    const response = await axios.get(API_LOCATION + "/api/room/metered-domain");
+    // const response = await axios.get(API_LOCATION + "/api/room/metered-domain");
     // Extracting Metered Domain and Room Name
     // From responses.
 
-    const METERED_DOMAIN = response.data.METERED_DOMAIN;
+    // const METERED_DOMAIN = response.data.METERED_DOMAIN;
     const meetingRoomName = data.roomName;
 
     
