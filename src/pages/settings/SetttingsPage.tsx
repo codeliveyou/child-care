@@ -4,6 +4,10 @@ import { MdClose } from "react-icons/md";
 
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import apiClient from "../../libs/api";
+import { useAppSelector } from "../../store";
 
 // Static data for different categories with their progress and capacity
 const statisData = [
@@ -150,7 +154,55 @@ const aiData = [
   },
 ];
 
+type Account = {
+  "user_name": string,
+  "user_email": string,
+  "account_description": string,
+  "old_user_password": string,
+  "new_user_password": string,
+  "new_password_confirm": string
+}
+
+const initialAccount: Account = {
+  "user_name": "",
+  "user_email": "",
+  "account_description": "",
+  "old_user_password": "",
+  "new_user_password": "",
+  "new_password_confirm": ""
+}
+
 const SettingsPage = () => {
+  const accountMe = useAppSelector(state => state.auth.createUser)
+  const [account, setAccount] = useState<Account>({
+    ...initialAccount,
+    user_name: accountMe.user_name,
+    user_email: accountMe.user_email,
+    account_description: accountMe.account_description,
+  })
+  const profileRef = useRef<HTMLInputElement>(null)
+
+  const handleAccountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAccount({ ...account, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = () => {
+    if (Object.values(account).some(value => !value) || account.new_user_password !== account.new_password_confirm) {
+      return toast.error('Invalid user account data.')
+    }
+    apiClient.put('/api/users/change-profile-info', account).then((response: any) => {
+      const { message } = response;
+      toast.success(message)
+      setAccount(initialAccount)
+    })
+  }
+
+  const handleImageSelect = () => {
+    if (profileRef.current) {
+      profileRef.current.click();
+    }
+  }
+
   return (
     <motion.div
       className="flex pt-0 gap-4 w-full h-full text-primary-text"
@@ -167,18 +219,19 @@ const SettingsPage = () => {
             className="rounded-xl aspect-square object-cover"
             alt="Profile" // Alt text for the profile image
           />
-          <Button size="compress" className="font-bold">
+          <Button size="compress" className="font-bold" onClick={handleImageSelect}>
             Byt profil bild
           </Button>
+          <input ref={profileRef} type="file" hidden />
           <div className="pt-4">
             <div className="text-center text-lg font-bold text-primary-background">
-              Johan Anders
+              {accountMe.user_name}
             </div>
             <div className="text-center text-disabled-text text-xs">
-              johan.anders@region.se
+              {accountMe.user_email}
             </div>
             <div className="text-center text-sm">
-              Värmlands central sjukhuset
+              {accountMe.account_description}
             </div>
           </div>
         </div>
@@ -271,42 +324,51 @@ const SettingsPage = () => {
             <div className="flex flex-col gap-2.5">
               <div className="font-bold text-xl">Profil inställningar</div>
               <Input
-                name="name"
-                placeholder="Johan Anders"
+                name="user_name"
+                value={account.user_name}
                 className="border border-primary-border/25 bg-white/30"
+                onChange={handleAccountChange}
               />
               <Input
-                name="email"
-                placeholder="johan.anders@region.se"
+                name="user_email"
+                value={account.user_email}
                 className="border border-primary-border/25 bg-white/30"
+                onChange={handleAccountChange}
               />
               <Input
-                name="address"
-                placeholder="Värmlands central sjukhuset"
+                name="account_description"
+                value={account.account_description}
                 className="border border-primary-border/25 bg-white/30"
+                onChange={handleAccountChange}
               />
             </div>
             <div className="grow flex flex-col justify-end gap-2.5">
               <p className="font-bold text-xl">Lösenord</p>
               <Input
-                name="password"
+                name="old_user_password"
+                value={account.old_user_password}
                 placeholder="Nuvarande lösenord"
                 className="border border-primary-border/25 bg-white/30"
+                onChange={handleAccountChange}
               />
               <Input
-                name="newpass"
+                name="new_user_password"
+                value={account.new_user_password}
                 placeholder="Nytt lösenord"
                 className="border border-primary-border/25 bg-white/30"
+                onChange={handleAccountChange}
               />
               <Input
-                name="confirmpass"
+                name="new_password_confirm"
+                value={account.new_password_confirm}
                 placeholder="Upprepa lösenord"
                 className="border border-primary-border/25 bg-white/30"
+                onChange={handleAccountChange}
               />
             </div>
           </div>
           <div className="flex justify-end pt-4 pr-4">
-            <Button size="compress">Ändra lösenord</Button>
+            <Button size="compress" onClick={handleSubmit}>Ändra lösenord</Button>
           </div>
         </div>
       </div>
