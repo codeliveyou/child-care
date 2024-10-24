@@ -6,6 +6,7 @@ interface CreateUserState {
   user_password: string;
   company_code: string;
   account_description: string;
+  picture_id: string;
 }
 
 interface AuthState {
@@ -24,7 +25,8 @@ const initialState: AuthState = {
     user_name: '',
     user_password: '',
     company_code: '',
-    account_description: ''
+    account_description: '',
+    picture_id: ''
   },
   isAuth: false
 };

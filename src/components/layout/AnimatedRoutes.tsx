@@ -53,12 +53,13 @@ function AnimatedRoutes() {
     setLoading(true);
     setupApiToken(token)
     apiClient.get('/api/users/me').then((response: any) => {
-      const { user_name, user_email, account_description } = response;
+      const { user_name, user_email, account_description, picture_id } = response;
       if (user_email) {
         dispatch(userLogin());
         dispatch(updateCreateUser({ name: 'user_name', value: user_name }))
         dispatch(updateCreateUser({ name: 'user_email', value: user_email }))
         dispatch(updateCreateUser({ name: 'account_description', value: account_description }))
+        dispatch(updateCreateUser({ name: 'picture_id', value: picture_id }))
         navigate('/')
       }
     }).finally(() => {

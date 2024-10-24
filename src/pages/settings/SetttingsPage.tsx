@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import apiClient from "../../libs/api";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { updateCreateUser } from "../../store/reducers/authReducer";
+import config from "../../config";
 
 // Static data for different categories with their progress and capacity
 const statisData = [
@@ -162,7 +163,7 @@ type Account = {
   "old_user_password": string,
   "new_user_password": string,
   "new_password_confirm": string,
-  "picture_url": string
+  "picture_id": string
 }
 
 const initialAccount: Account = {
@@ -172,17 +173,19 @@ const initialAccount: Account = {
   "old_user_password": "",
   "new_user_password": "",
   "new_password_confirm": "",
-  "picture_url": ''
+  "picture_id": ''
 }
 
 const SettingsPage = () => {
   const dispatch = useAppDispatch();
   const accountMe = useAppSelector(state => state.auth.createUser)
+  console.log(accountMe)
   const [account, setAccount] = useState<Account>({
     ...initialAccount,
     user_name: accountMe.user_name,
     user_email: accountMe.user_email,
     account_description: accountMe.account_description,
+    picture_id: accountMe.picture_id
   })
   const profileRef = useRef<HTMLInputElement>(null)
 
@@ -214,7 +217,7 @@ const SettingsPage = () => {
       console.log('picture url', picture_id)
       if (picture_id) {
         toast.success(message)
-        setAccount({ ...account, picture_url: picture_id })
+        setAccount({ ...account, picture_id })
       }
     });
   }
@@ -231,7 +234,7 @@ const SettingsPage = () => {
         {/* User profile section */}
         <div className="bg-white rounded-xl flex-1 flex flex-col gap-2.5 p-4 pb-9">
           <img
-            src={`http://192.168.130.222:8000/api/users/profile-picture/${account.picture_url}`}
+            src={`${config.api.resource_uri}/${account.picture_id}`}
             className="rounded-xl aspect-square object-cover"
             alt="Profile" // Alt text for the profile image
           />
