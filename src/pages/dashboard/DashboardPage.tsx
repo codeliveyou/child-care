@@ -3,35 +3,35 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import Button from "../../components/common/Button";
-import LastActivityItem from "./components/LastActivityItem";
+//import LastActivityItem from "./components/LastActivityItem";
 import Calendar from "../../components/dashboard/Calendar";
 import VideoDialog from "../../components/dashboard/VideoDialog";
 import ReportDialog from "../../components/dashboard/ReportDialog";
 
-import MessageIcon from "/Message.svg";
+//import MessageIcon from "/Message.svg";
 import DocIcon from "/images/report/doc.svg";
 import PdfIcon from "/images/report/pdf.svg";
 import axios from "axios";
 import RoomListItem, { IRoomListItem } from "../../components/room/RoomListItem";
 
 // Sample data for activities, rooms, videos, and reports
-const activityData = [
-  {
-    imageUri: "/images/activity/1.png",
-    title: "Noah rum",
-    activity: "Skapades rapport 2024-03-25",
-  },
-  {
-    imageUri: "/images/activity/2.png",
-    title: "Elsa rum",
-    activity: "Skapades rapport 2024-03-25",
-  },
-  {
-    imageUri: "/images/activity/2.png",
-    title: "Elsa rum",
-    activity: "Skapades rapport 2024-03-25",
-  },
-];
+// const activityData = [
+//   {
+//     imageUri: "/images/activity/1.png",
+//     title: "Noah rum",
+//     activity: "Skapades rapport 2024-03-25",
+//   },
+//   {
+//     imageUri: "/images/activity/2.png",
+//     title: "Elsa rum",
+//     activity: "Skapades rapport 2024-03-25",
+//   },
+//   {
+//     imageUri: "/images/activity/2.png",
+//     title: "Elsa rum",
+//     activity: "Skapades rapport 2024-03-25",
+//   },
+// ];
 
 // const roomData = [
 //   {
