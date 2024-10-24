@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -11,6 +11,8 @@ import ReportDialog from "../../components/dashboard/ReportDialog";
 import MessageIcon from "/Message.svg";
 import DocIcon from "/images/report/doc.svg";
 import PdfIcon from "/images/report/pdf.svg";
+import axios from "axios";
+import RoomListItem, { IRoomListItem } from "../../components/room/RoomListItem";
 
 // Sample data for activities, rooms, videos, and reports
 const activityData = [
@@ -31,30 +33,30 @@ const activityData = [
   },
 ];
 
-const roomData = [
-  {
-    name: "Elsa rum",
-    imageUri: "/images/dashboard/room/1.png",
-    badge: 5,
-  },
-  {
-    name: "Noah rum",
-    imageUri: "/images/dashboard/room/2.png",
-    activity: "Skapades nästa möte",
-    badge: 2,
-  },
-  {
-    name: "Anna Lindberg",
-    imageUri: "/images/dashboard/room/3.png",
-    activity: "Video samtal",
-    badge: 2,
-  },
-  {
-    name: "Elsa",
-    imageUri: "/images/dashboard/room/4.png",
-    activity: "Skapades rapport 2024-02-23",
-  },
-];
+// const roomData = [
+//   {
+//     name: "Elsa rum",
+//     imageUri: "/images/dashboard/room/1.png",
+//     badge: 5,
+//   },
+//   {
+//     name: "Noah rum",
+//     imageUri: "/images/dashboard/room/2.png",
+//     activity: "Skapades nästa möte",
+//     badge: 2,
+//   },
+//   {
+//     name: "Anna Lindberg",
+//     imageUri: "/images/dashboard/room/3.png",
+//     activity: "Video samtal",
+//     badge: 2,
+//   },
+//   {
+//     name: "Elsa",
+//     imageUri: "/images/dashboard/room/4.png",
+//     activity: "Skapades rapport 2024-02-23",
+//   },
+// ];
 
 const videoData = [
   {
@@ -102,10 +104,44 @@ const reportData = [
   },
 ];
 
+const API_LOCATION = import.meta.env.VITE_BACKEND_URL;
+
 const DashboardPage = () => {
   const navigate = useNavigate();
   const [videoDialogOpen, setVideoDialogOpen] = useState<boolean>(false); // State to manage video dialog visibility
   const [reportDialogOpen, setReportDialogOpen] = useState<boolean>(false); // State to manage report dialog visibility
+  const [roomData, setRoomData] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchRoomData = async () => {
+      const token = localStorage.getItem('token');
+      let userEmail = '';
+
+      if (token) {
+        try {
+          const userResponse = await axios.get(API_LOCATION + '/api/users/me', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          userEmail = userResponse.data.user_email;
+        } catch (error) {
+          console.error('Error fetching user email:', error);
+        }
+      }
+
+      try {
+        const response = await axios.post(`${API_LOCATION}/api/room/fetch_rooms_data`, {
+          userEmail
+        });
+        setRoomData(response.data);
+      } catch (err: any) {
+        console.log("Error in fetching room data", err);
+      }
+    };
+
+    fetchRoomData();
+  }, []);
 
   return (
     <>
@@ -123,13 +159,16 @@ const DashboardPage = () => {
             </div>
             <div className="flex-1 pr-2 my-5 flex flex-col overflow-y-auto">
               {/* Render each activity item */}
-              {activityData.map((activity, index) => (
+              {/* {activityData.map((activity, index) => (
                 <LastActivityItem
                   key={index}
                   title={activity.title}
                   imageUri={activity.imageUri}
                   activity={activity.activity}
                 />
+              ))} */}
+              {roomData.length > 0 && roomData.map((room: IRoomListItem, index: Key | null | undefined) => (
+                <RoomListItem key={index} room={room} room_name={0} />
               ))}
             </div>
             {/* Button to view more details */}
@@ -151,7 +190,7 @@ const DashboardPage = () => {
               </div>
               <div className="grow flex flex-col overflow-y-auto pt-4 pr-2">
                 {/* Render each room item */}
-                {roomData.map((room, index) => (
+                {/* {roomData.map((room, index) => (
                   <div
                     key={index}
                     className="p-2 flex items-center gap-x-4 hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
@@ -187,6 +226,9 @@ const DashboardPage = () => {
                       </span>
                     )}
                   </div>
+                ))} */}
+                {roomData.map((room: IRoomListItem, index: Key | null | undefined) => (
+                  <RoomListItem key={index} room={room} room_name={0} />
                 ))}
               </div>
               {/* Button to add a new room */}

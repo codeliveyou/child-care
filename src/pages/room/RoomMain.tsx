@@ -164,7 +164,7 @@ const RoomListPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   // Total number of pages for pagination (static value)
   const [totalPage] = useState<number>(5);
-  const [roomData, setRoomData] = useState<any>([{}]);
+  const [roomData, setRoomData] = useState<any>([]);
 
   // Handler function to navigate to the room creation page
   const handleAddRoomClick = () => {
@@ -175,7 +175,7 @@ const RoomListPage = () => {
     const fetchRoomData = async () => {
       const token = localStorage.getItem('token');
       let userEmail = '';
-      
+
       if (token) {
         try {
           const userResponse = await axios.get(API_LOCATION + '/api/users/me', {
