@@ -4,7 +4,7 @@ import { MdClose } from "react-icons/md";
 
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import apiClient from "../../libs/api";
 import { useAppDispatch, useAppSelector } from "../../store";
