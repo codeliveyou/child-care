@@ -7,7 +7,8 @@ import Input from "../../components/common/Input";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import apiClient from "../../libs/api";
-import { useAppSelector } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { updateCreateUser } from "../../store/reducers/authReducer";
 
 // Static data for different categories with their progress and capacity
 const statisData = [
@@ -160,7 +161,8 @@ type Account = {
   "account_description": string,
   "old_user_password": string,
   "new_user_password": string,
-  "new_password_confirm": string
+  "new_password_confirm": string,
+  "picture_url": string
 }
 
 const initialAccount: Account = {
@@ -169,10 +171,12 @@ const initialAccount: Account = {
   "account_description": "",
   "old_user_password": "",
   "new_user_password": "",
-  "new_password_confirm": ""
+  "new_password_confirm": "",
+  "picture_url": ''
 }
 
 const SettingsPage = () => {
+  const dispatch = useAppDispatch();
   const accountMe = useAppSelector(state => state.auth.createUser)
   const [account, setAccount] = useState<Account>({
     ...initialAccount,
@@ -191,9 +195,8 @@ const SettingsPage = () => {
       return toast.error('Invalid user account data.')
     }
     apiClient.put('/api/users/change-profile-info', account).then((response: any) => {
-      const { message } = response;
-      toast.success(message)
-      setAccount(initialAccount)
+      dispatch(updateCreateUser(response))
+      // setAccount(initialAccount)
     })
   }
 
@@ -201,6 +204,19 @@ const SettingsPage = () => {
     if (profileRef.current) {
       profileRef.current.click();
     }
+  }
+
+  const handlePictureChange = () => {
+    const formData = new FormData()
+    if (profileRef.current && profileRef.current.files) formData.append('profile_picture', profileRef.current.files[0])
+    apiClient.put('/api/users/change-profile-picture', formData).then((response: any) => {
+      const { message, picture_id } = response;
+      console.log('picture url', picture_id)
+      if (picture_id) {
+        toast.success(message)
+        setAccount({ ...account, picture_url: picture_id })
+      }
+    });
   }
 
   return (
@@ -215,14 +231,14 @@ const SettingsPage = () => {
         {/* User profile section */}
         <div className="bg-white rounded-xl flex-1 flex flex-col gap-2.5 p-4 pb-9">
           <img
-            src="/images/avatar.png"
+            src={`http://192.168.130.222:8000/api/users/profile-picture/${account.picture_url}`}
             className="rounded-xl aspect-square object-cover"
             alt="Profile" // Alt text for the profile image
           />
           <Button size="compress" className="font-bold" onClick={handleImageSelect}>
             Byt profil bild
           </Button>
-          <input ref={profileRef} type="file" hidden />
+          <input ref={profileRef} type="file" onChange={handlePictureChange} hidden />
           <div className="pt-4">
             <div className="text-center text-lg font-bold text-primary-background">
               {accountMe.user_name}
