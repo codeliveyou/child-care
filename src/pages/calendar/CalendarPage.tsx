@@ -9,6 +9,7 @@ import TodayEventItem from "../../components/calendar/TodayEventItem";
 
 import EventDialog, { Action, IEvent } from "../../components/dashboard/EventDialog";
 import apiClient from "../../libs/api";
+import { getLocalDate } from "../../libs/date";
 
 // Mock data for events
 // const eventData = [
@@ -198,13 +199,12 @@ const CalendarPage = () => {
     apiClient.get('/api/events/').then((response: any) => {
       setEvents(response.map((eventItem: any) => {
         const { _id, event_name, patient_name, start_time, end_time, description, created_at } = eventItem;
-        const startTime = new Date(start_time), endTime = new Date(end_time);
         return {
           id: _id,
           eventName: event_name,
           patientName: patient_name,
-          startTime: `${startTime.toLocaleDateString('en-US')} ${startTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`,
-          endTime: `${endTime.toLocaleDateString('en-US')} ${endTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`,
+          startTime: getLocalDate(start_time),
+          endTime: getLocalDate(end_time),
           description,
           createdAt: created_at
         }

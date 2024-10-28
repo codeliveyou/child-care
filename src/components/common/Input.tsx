@@ -43,16 +43,16 @@ function Input({
   value = "",
   placeholder = "",
   className = "",
-  onChange = () => {},
-  onKeyPress =() => {},
+  onChange = () => { },
+  onKeyPress = () => { },
 }: InputProps) {
   // Determines the CSS class for the input size based on the size prop
   const sizeClass =
     size === "large"
       ? "py-[11px] px-5 h-[42px] text-base leading-5"
       : size === "small"
-      ? "py-2 px-4 h-[33px] text-xs leading-[18px]"
-      : "";
+        ? "py-2 px-4 h-[33px] text-xs leading-[18px]"
+        : "";
 
   return (
     <input

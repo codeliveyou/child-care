@@ -5,19 +5,9 @@ import { motion } from "framer-motion";
 
 import EventDialog, { Action, IEvent } from "./EventDialog";
 import Button from "../common/Button";
-import { getCurrentWeekDays, getISODate, getISOTime, isDateEqual } from "../../libs/date";
+import { getCurrentWeekDays, getISODate, getLocalDate, getLocalTime, isDateEqual } from "../../libs/date";
 import apiClient from "../../libs/api";
 import toast from "react-hot-toast";
-
-// Define the structure of a weekday event
-interface IWeekdayEvent {
-  id?: string;
-  start: string; // Start time of the event
-  end: string; // End time of the event
-  title: string; // Title of the event
-  description: string; // Description of the event
-  isEmpty?: boolean; // Optional flag to indicate an empty slot
-}
 
 // Define the structure of a weekday item
 interface IWeekdayItem {
@@ -192,7 +182,7 @@ function WeekdayItem({
                 }
               }}
             >
-              {event.isEmpty ? "-" : getISOTime(event.startTime)}
+              {event.isEmpty ? "-" : getLocalTime(event.startTime)}
             </span>
           ))}
           <span className="w-full py-2 text-center text-xs leading-4">
@@ -207,9 +197,9 @@ function WeekdayItem({
             className="flex flex-col gap-y-1 text-primary-text px-2 col-span-2"
           >
             <p className="text-xs leading-4">
-              {getISOTime(activeEvent.startTime)} - {getISOTime(activeEvent.endTime)}
+              {getLocalTime(activeEvent?.startTime)} - {getLocalTime(activeEvent?.endTime)}
             </p>
-            <p className="font-bold leading-5">{activeEvent.eventName}</p>
+            <p className="font-bold leading-5">{activeEvent?.eventName}</p>
             <p className="text-sm leading-4 line-clamp-4">
               {events[eventIndex].description}
             </p>
@@ -247,6 +237,28 @@ function Calendar({ className = "" }: CalendarProps) {
 
   const weekNumber = useMemo(() => Math.floor((weekStartDay.getDate() - 1) / 7) + 1, [weekStartDay]);
 
+  const handleSubmit = (event: IEvent, type: 'create' | 'update' | 'delete') => {
+    if (type === 'update') {
+      apiClient.put(`/api/events/${event.id}`, {
+        "event_name": event.eventName,
+        "patient_name": event.patientName,
+        "start_time": new Date(event.startTime).toISOString(),
+        "end_time": new Date(event.endTime).toISOString(),
+        "description": event.description
+      }).then((response: any) => {
+        const { message } = response;
+        setWeekEvents(weekEvents.map(item => item.id === event.id ? event : item));
+        toast.success(message);
+      })
+    } else if (type === 'delete') {
+      apiClient.delete(`/api/events/${event.id}`).then((response: any) => {
+        const { message } = response;
+        setWeekEvents(weekEvents.filter(item => item.id !== event.id));
+        toast.success(message)
+      })
+    }
+  }
+
   const handlePrevWeekClick = useCallback(() => {
     const prevWeek = new Date(weekStartDay);
     prevWeek.setDate(prevWeek.getDate() - 7);
@@ -259,40 +271,6 @@ function Calendar({ className = "" }: CalendarProps) {
     setWeekStartDay(nextWeek);
   }, [weekStartDay]);
 
-  const handleSubmit = (event: IEvent, type: 'create' | 'update' | 'delete') => {
-    if (type === 'create') {
-      apiClient.post('/api/events/', {
-        "event_name": event.eventName,
-        "patient_name": event.patientName,
-        "start_time": new Date(event.startTime).toISOString(),
-        "end_time": new Date(event.endTime).toISOString(),
-        "description": event.description
-      }).then((response: any) => {
-        const { event_id, message } = response;
-        // setEvents([...events, { ...event, id: event_id }]);
-        toast.success(message);
-      })
-    } else if (type === 'update') {
-      apiClient.put(`/api/events/${event.id}`, {
-        "event_name": event.eventName,
-        "patient_name": event.patientName,
-        "start_time": new Date(event.startTime).toISOString(),
-        "end_time": new Date(event.endTime).toISOString(),
-        "description": event.description
-      }).then((response: any) => {
-        const { message } = response;
-        // setEvents(events.map(item => item.id === event.id ? event : item))
-        toast.success(message);
-      })
-    } else {
-      apiClient.delete(`/api/events/${event.id}`).then((response: any) => {
-        const { message } = response;
-        // setEvents(events.filter(item => item.id !== event.id));
-        toast.success(message)
-      })
-    }
-  }
-
   useEffect(() => {
     const items = getCurrentWeekDays(weekStartDay);
     setWeekdayItems(items.map(item => ({
@@ -304,10 +282,11 @@ function Calendar({ className = "" }: CalendarProps) {
     const weekEndDay = new Date(weekStartDay);
     weekEndDay.setDate(weekStartDay.getDate() + 7);
     apiClient.get(`/api/events/user-events?start_date=${getISODate(weekStartDay)}&end_date=${getISODate(weekEndDay)}`).then((response: any) => {
+      console.log(response)
       const weekEvents: IEvent[] = response.map((item: any) => ({
         id: item._id,
-        startTime: item.start_time,
-        endTime: item.end_time,
+        startTime: getLocalDate(item.start_time),
+        endTime: getLocalDate(item.end_time),
         eventName: item.event_name,
         patientName: item.patient_name,
         description: item.description,

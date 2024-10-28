@@ -39,17 +39,21 @@ export function getCurrentWeekDays(startOfWeek: Date) {
     return weekDays;
 }
 
-export function getISODate(date: string | Date) {
-    return new Date(date).toISOString().split('T')[0] || '';
+export function getLocalDate(date: string | Date) {
+    const localDate = new Date(date);
+    return `${localDate.getMonth() + 1}/${localDate.getDate()}/${localDate.getFullYear()} ${localDate.getHours().toString().padStart(2, '0')}:${localDate.getMinutes().toString().padStart(2, '0')}`
 }
 
-export function getISOTime(date: string | Date) {
-    const dateTime = new Date(date).toISOString();
-    const time = dateTime.split('T')[1];
-    const isoTime = time.split(':').slice(0, 2).join(':');
-    return isoTime;
+export function getISODate(date: string | Date) {
+    return new Date(date).toISOString().split('T')[0];
+}
+
+export function getLocalTime(date: string | Date) {
+    const localTime = new Date(date);
+    return `${localTime.getHours().toString().padStart(2, '0')}:${localTime.getMinutes().toString().padStart(2, '0')}`
 }
 
 export function isDateEqual(source: string | Date, target: string | Date) {
-    return getISODate(source) === getISODate(target);
+    const sourceDate = new Date(source), targetDate = new Date(target);
+    return sourceDate.getFullYear() === targetDate.getFullYear() && sourceDate.getMonth() === targetDate.getMonth() && sourceDate.getDate() === targetDate.getDate();
 }

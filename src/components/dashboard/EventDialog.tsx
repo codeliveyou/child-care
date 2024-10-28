@@ -37,23 +37,6 @@ interface EventDialogProps {
   onSubmit: (event: IEvent, action: 'create' | 'update' | 'delete') => void;
 }
 
-// Utility function to format the day from a datetime string
-// const getDay = (datetime: string) => {
-//   const factors = datetime.split(" ");
-//   const date = factors[0] || "";
-//   return new Date(date).toLocaleDateString("sv-se", {
-//     year: "numeric",
-//     month: "short",
-//     day: "2-digit",
-//   });
-// };
-
-// Utility function to format the time from a datetime string
-// const getTime = (datetime: string) => {
-//   const factors = datetime.split(" ");
-//   return factors[1] || "";
-// };
-
 const initialEvent: IEvent = {
   startTime: '',
   endTime: '',
