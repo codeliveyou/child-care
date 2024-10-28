@@ -43,13 +43,13 @@ const Avatar = ({
       {/* Display the avatar image */}
       <img src={uri} className="w-[55px] h-[55px] rounded-lg" />
       {isNameShown && (
-        <div>
+        <div className="w-full overflow-hidden">
           {/* Display the name when expanded */}
           <p className="font-extrabold text-lg leading-5 text-primary-background text-nowrap">
             {name}
           </p>
           {/* Display the label when expanded */}
-          <p className="font-light text-sm leading-4 text-primary-background text-nowrap">
+          <p className="font-light text-sm leading-4 text-primary-background text-nowrap line-clamp-1">
             {label}
           </p>
         </div>

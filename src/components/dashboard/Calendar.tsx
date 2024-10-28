@@ -1,13 +1,17 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FaChevronDown, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
 
-import EventDialog, { Action } from "./EventDialog";
+import EventDialog, { Action, IEvent } from "./EventDialog";
 import Button from "../common/Button";
+import { getCurrentWeekDays, getISODate, getISOTime, isDateEqual } from "../../libs/date";
+import apiClient from "../../libs/api";
+import toast from "react-hot-toast";
 
 // Define the structure of a weekday event
 interface IWeekdayEvent {
+  id?: string;
   start: string; // Start time of the event
   end: string; // End time of the event
   title: string; // Title of the event
@@ -18,7 +22,7 @@ interface IWeekdayEvent {
 // Define the structure of a weekday item
 interface IWeekdayItem {
   day: number; // Day of the month
-  events: IWeekdayEvent[]; // List of events for the day
+  events: IEvent[]; // List of events for the day
   sleepTime: string; // Sleep time for the day
 }
 
@@ -32,6 +36,7 @@ interface WeekdayItemProps extends IWeekdayItem {
   weekday: number; // Index of the weekday
   isActive?: boolean; // Flag to indicate if the item is active
   onWeekdayChange?: (weekday: number) => void; // Callback function when weekday changes
+  onSubmit: (event: IEvent, action: 'create' | 'update' | 'delete') => void;
 }
 
 // Array of weekday names in abbreviated format
@@ -45,69 +50,84 @@ const weekdayTexts: string[] = [
   "Sön",
 ];
 
-// Sample data for the weekdays
-const weekdayItems: IWeekdayItem[] = [
-  {
-    day: 12,
-    events: [
-      {
-        start: "10:00",
-        end: "13:00",
-        title: "Noah möte",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      },
-      {
-        start: "14:00",
-        end: "15:00",
-        title: "Elsa Rapport",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      },
-    ],
-    sleepTime: "14:00",
-  },
-  {
-    day: 13,
-    events: [
-      {
-        start: "10:00",
-        end: "13:00",
-        title: "Noah möte",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      },
-    ],
-    sleepTime: "23:00",
-  },
-  // Additional weekday items with no events
-  // ...
-  {
-    day: 14,
-    events: [],
-    sleepTime: "23:00",
-  },
-  {
-    day: 15,
-    events: [],
-    sleepTime: "23:00",
-  },
-  {
-    day: 16,
-    events: [],
-    sleepTime: "23:00",
-  },
-  {
-    day: 17,
-    events: [],
-    sleepTime: "23:00",
-  },
-  {
-    day: 18,
-    events: [],
-    sleepTime: "23:00",
-  },
+const monthTexts = [
+  "Jan", // Januari
+  "Feb", // Februari
+  "Mar", // Mars
+  "Apr", // April
+  "Maj", // Maj
+  "Jun", // Juni
+  "Jul", // Juli
+  "Aug", // Augusti
+  "Sep", // September
+  "Okt", // Oktober
+  "Nov", // November
+  "Dec"  // December
 ];
+
+// Sample data for the weekdays
+// const weekdayItems: IWeekdayItem[] = [
+//   {
+//     day: 12,
+//     events: [
+//       {
+//         start: "10:00",
+//         end: "13:00",
+//         title: "Noah möte",
+//         description:
+//           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+//       },
+//       {
+//         start: "14:00",
+//         end: "15:00",
+//         title: "Elsa Rapport",
+//         description:
+//           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+//       },
+//     ],
+//     sleepTime: "14:00",
+//   },
+//   {
+//     day: 13,
+//     events: [
+//       {
+//         start: "10:00",
+//         end: "13:00",
+//         title: "Noah möte",
+//         description:
+//           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+//       },
+//     ],
+//     sleepTime: "23:00",
+//   },
+//   // Additional weekday items with no events
+//   // ...
+//   {
+//     day: 14,
+//     events: [],
+//     sleepTime: "23:00",
+//   },
+//   {
+//     day: 15,
+//     events: [],
+//     sleepTime: "23:00",
+//   },
+//   {
+//     day: 16,
+//     events: [],
+//     sleepTime: "23:00",
+//   },
+//   {
+//     day: 17,
+//     events: [],
+//     sleepTime: "23:00",
+//   },
+//   {
+//     day: 18,
+//     events: [],
+//     sleepTime: "23:00",
+//   },
+// ];
 
 // WeekdayItem component displays details for a single weekday
 function WeekdayItem({
@@ -116,7 +136,8 @@ function WeekdayItem({
   events,
   sleepTime,
   isActive = false,
-  onWeekdayChange = () => {},
+  onWeekdayChange = () => { },
+  onSubmit = () => { }
 }: WeekdayItemProps) {
   const [eventIndex, setEventIndex] = useState<number>(-1); // Index of the currently selected event
   const [eventDialogOpen, setEventDialogOpen] = useState<boolean>(false); // State to control the event dialog visibility
@@ -131,6 +152,13 @@ function WeekdayItem({
     () => isActive && eventIndex !== -1,
     [isActive, eventIndex]
   );
+
+  const activeEvent = useMemo(() => {
+    if (weekdayEvents[eventIndex] && !weekdayEvents[eventIndex].isEmpty) {
+      return weekdayEvents[eventIndex];
+    }
+    return null;
+  }, [weekdayEvents, eventIndex])
 
   return (
     <>
@@ -154,8 +182,8 @@ function WeekdayItem({
                 event.isEmpty
                   ? "text-primary-text"
                   : isActive && index === eventIndex
-                  ? "bg-focused-background"
-                  : "bg-primary-background"
+                    ? "bg-focused-background"
+                    : "bg-primary-background"
               )}
               onClick={() => {
                 if (!event.isEmpty) {
@@ -164,7 +192,7 @@ function WeekdayItem({
                 }
               }}
             >
-              {event.isEmpty ? "-" : event.start}
+              {event.isEmpty ? "-" : getISOTime(event.startTime)}
             </span>
           ))}
           <span className="w-full py-2 text-center text-xs leading-4">
@@ -179,9 +207,9 @@ function WeekdayItem({
             className="flex flex-col gap-y-1 text-primary-text px-2 col-span-2"
           >
             <p className="text-xs leading-4">
-              {events[eventIndex].start} - {events[eventIndex].end}
+              {getISOTime(activeEvent.startTime)} - {getISOTime(activeEvent.endTime)}
             </p>
-            <p className="font-bold leading-5">{events[eventIndex].title}</p>
+            <p className="font-bold leading-5">{activeEvent.eventName}</p>
             <p className="text-sm leading-4 line-clamp-4">
               {events[eventIndex].description}
             </p>
@@ -203,10 +231,8 @@ function WeekdayItem({
           setEventDialogOpen(false);
         }}
         action={Action.Update}
-        day="08/23/2024"
-        time={`${weekdayEvents[eventIndex]?.start} - ${weekdayEvents[eventIndex]?.end}`}
-        title={weekdayEvents[eventIndex]?.title}
-        description={weekdayEvents[eventIndex]?.description}
+        event={activeEvent}
+        onSubmit={onSubmit}
       />
     </>
   );
@@ -215,6 +241,94 @@ function WeekdayItem({
 // Calendar component displays a calendar view with weekday items
 function Calendar({ className = "" }: CalendarProps) {
   const [activeWeekday, setActiveWeekday] = useState<number>(-1); // Index of the currently active weekday
+  const [weekStartDay, setWeekStartDay] = useState<Date>(new Date());
+  const [weekEvents, setWeekEvents] = useState<IEvent[]>([]);
+  const [weekdayItems, setWeekdayItems] = useState<IWeekdayItem[]>([]);
+
+  const weekNumber = useMemo(() => Math.floor((weekStartDay.getDate() - 1) / 7) + 1, [weekStartDay]);
+
+  const handlePrevWeekClick = useCallback(() => {
+    const prevWeek = new Date(weekStartDay);
+    prevWeek.setDate(prevWeek.getDate() - 7);
+    setWeekStartDay(prevWeek);
+  }, [weekStartDay]);
+
+  const handleNextWeekClick = useCallback(() => {
+    const nextWeek = new Date(weekStartDay);
+    nextWeek.setDate(nextWeek.getDate() + 7);
+    setWeekStartDay(nextWeek);
+  }, [weekStartDay]);
+
+  const handleSubmit = (event: IEvent, type: 'create' | 'update' | 'delete') => {
+    if (type === 'create') {
+      apiClient.post('/api/events/', {
+        "event_name": event.eventName,
+        "patient_name": event.patientName,
+        "start_time": new Date(event.startTime).toISOString(),
+        "end_time": new Date(event.endTime).toISOString(),
+        "description": event.description
+      }).then((response: any) => {
+        const { event_id, message } = response;
+        // setEvents([...events, { ...event, id: event_id }]);
+        toast.success(message);
+      })
+    } else if (type === 'update') {
+      apiClient.put(`/api/events/${event.id}`, {
+        "event_name": event.eventName,
+        "patient_name": event.patientName,
+        "start_time": new Date(event.startTime).toISOString(),
+        "end_time": new Date(event.endTime).toISOString(),
+        "description": event.description
+      }).then((response: any) => {
+        const { message } = response;
+        // setEvents(events.map(item => item.id === event.id ? event : item))
+        toast.success(message);
+      })
+    } else {
+      apiClient.delete(`/api/events/${event.id}`).then((response: any) => {
+        const { message } = response;
+        // setEvents(events.filter(item => item.id !== event.id));
+        toast.success(message)
+      })
+    }
+  }
+
+  useEffect(() => {
+    const items = getCurrentWeekDays(weekStartDay);
+    setWeekdayItems(items.map(item => ({
+      day: item.getDate(),
+      events: [],
+      sleepTime: ''
+    })));
+
+    const weekEndDay = new Date(weekStartDay);
+    weekEndDay.setDate(weekStartDay.getDate() + 7);
+    apiClient.get(`/api/events/user-events?start_date=${getISODate(weekStartDay)}&end_date=${getISODate(weekEndDay)}`).then((response: any) => {
+      const weekEvents: IEvent[] = response.map((item: any) => ({
+        id: item._id,
+        startTime: item.start_time,
+        endTime: item.end_time,
+        eventName: item.event_name,
+        patientName: item.patient_name,
+        description: item.description,
+        createdAt: item.created_at,
+      }));
+      setWeekEvents(weekEvents);
+    });
+  }, [weekStartDay]);
+
+  useEffect(() => {
+    const items = getCurrentWeekDays(weekStartDay);
+    setWeekdayItems(_weekdayItems => items.map(item => {
+      const events = weekEvents.filter(event => isDateEqual(item, event.startTime));
+      return {
+        day: item.getDate(),
+        events,
+        sleepTime: ''
+      };
+    })
+    )
+  }, [weekEvents]);
 
   return (
     <div
@@ -230,15 +344,15 @@ function Calendar({ className = "" }: CalendarProps) {
             <span className="w-5 h-5 flex items-center justify-center text-sm cursor-pointer">
               <FaChevronDown />
             </span>
-            <p className="leading-5">Mars 2024</p>
+            <p className="leading-5">{monthTexts[weekStartDay.getMonth()]} {weekStartDay.getFullYear()}</p>
           </div>
         </div>
         <div className="flex py-2">
-          <span className="w-6 h-6 flex items-center justify-center cursor-pointer">
+          <span className="w-6 h-6 flex items-center justify-center cursor-pointer" onClick={handlePrevWeekClick}>
             <FaChevronLeft />
           </span>
-          <p className="grow font-semibold text-xl leading-6">Vecka 2</p>
-          <span className="w-6 h-6 flex items-center justify-center cursor-pointer">
+          <p className="grow font-semibold text-xl leading-6">Vecka {weekNumber}</p>
+          <span className="w-6 h-6 flex items-center justify-center cursor-pointer" onClick={handleNextWeekClick}>
             <FaChevronRight />
           </span>
         </div>
@@ -251,6 +365,7 @@ function Calendar({ className = "" }: CalendarProps) {
               onWeekdayChange={(index) => {
                 setActiveWeekday(index);
               }}
+              onSubmit={handleSubmit}
               {...weekdayItem}
             />
           ))}

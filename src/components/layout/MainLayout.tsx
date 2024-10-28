@@ -22,6 +22,8 @@ import FolderSVG from "../../assets/navbar/Folder.svg?react";
 import SettingsSVG from "../../assets/navbar/Settings.svg?react";
 import { io, Socket } from "socket.io-client";
 import { InitResponse } from "../../pages/room/types";
+import { useAppSelector } from "../../store";
+import config from "../../config";
 
 const API_LOCATION = import.meta.env.VITE_BACKEND_URL
 // Sidebar items with their corresponding icons and paths
@@ -70,6 +72,7 @@ const MainLayout = () => {
   const searchParams = useSearchParams(); // Hook to access URL search parameters
   const isAIPage = pathname === "/room/create/ai-structure"; // Check if the current page is the AI creation page
   const isRoomPage = pathname.startsWith("/room/"); // Check if the current page is a room page
+  const accountMe = useAppSelector(state => state.auth.createUser);
 
   const [isSidebarExpand, setSidebarExpand] = useState<boolean>(false); // State to control sidebar expansion
   const [activeUser, setActiveUser] = useState<string>(""); // State to store the active user
@@ -104,29 +107,29 @@ const MainLayout = () => {
     user_id: string;
   }
 
-  useEffect(() =>  {
+  useEffect(() => {
 
     const socket: Socket = io(API_LOCATION, {
       path: "/socket.io/",
       transports: ['websocket'],
     });
 
-    socket.on("connect", () =>  {
+    socket.on("connect", () => {
       const roomName = localStorage.getItem("roomName");
       const username = localStorage.getItem("username");
-      socket.emit("init", { username: username, role: "creator" , roomName: roomName});
+      socket.emit("init", { username: username, role: "creator", roomName: roomName });
     })
 
     socket.on("init_response", (data: InitResponse) => {
       const patients = data.users.filter(user => user.role === "patient").map(user => ({ ...user, user_id: user.sid }));
-      const guests = data.users.filter(user=> user.role === "guest").map(user => ({ ...user, user_id: user.sid })) || [];
+      const guests = data.users.filter(user => user.role === "guest").map(user => ({ ...user, user_id: user.sid })) || [];
 
       setGuestList(guests);
       setPatientList(patients);
-      
+
     });
 
-  },[]);
+  }, []);
 
   return (
     <div className="bg-light-background flex flex-col w-full h-full py-4 gap-y-4">
@@ -230,9 +233,9 @@ const MainLayout = () => {
             )}
             {/* Avatar */}
             <Avatar
-              uri={"/images/avatar.png"}
-              name="Johan Anders"
-              label="Stream Name It"
+              uri={`${config.api.resource_uri}/${accountMe.picture_id}`}
+              name={accountMe.user_name}
+              label={accountMe.user_email}
               isExpanded={isSidebarExpand}
               className="self-start"
             />

@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa6";
 
-import EventDialog from "../dashboard/EventDialog";
-import { Action } from "../dashboard/EventDialog";
 import { findFirstMondayOfMonth, findLastSundayOfMonth } from "../../libs/date";
 import { twMerge } from "tailwind-merge";
 
@@ -34,9 +32,12 @@ const isEqual = (date1: Date, date2: Date) =>
   date1.getMonth() === date2.getMonth() &&
   date1.getDate() === date2.getDate();
 
-function MonthCalendar() {
+interface IMonthCalendar {
+  onOpenEventDialog: () => void
+}
+
+function MonthCalendar({ onOpenEventDialog }: IMonthCalendar) {
   // State to control the visibility of the EventDialog
-  const [eventDialogOpen, setEventDialogOpen] = useState<boolean>(false);
   const [monthDays, setMonthDays] = useState<Date[]>([]);
   const [currentMonth, setCurrentMonth] = useState<Date>(
     new Date(today.getFullYear(), today.getMonth(), 1)
@@ -84,9 +85,7 @@ function MonthCalendar() {
         {/* Button to open the EventDialog */}
         <button
           className="absolute top-2 right-2 py-2 px-4 bg-primary-background text-white rounded-lg"
-          onClick={() => {
-            setEventDialogOpen(true);
-          }}
+          onClick={onOpenEventDialog}
         >
           <span className="w-6 h-6 flex items-center justify-center">
             <FaPlus />
@@ -159,18 +158,6 @@ function MonthCalendar() {
           {/* Calendar grid showing days of the week and dates */}
         </div>
       </div>
-      {/* Event dialog component */}
-      <EventDialog
-        title=""
-        description=""
-        day=""
-        time=""
-        open={eventDialogOpen}
-        onClose={() => {
-          setEventDialogOpen(false);
-        }}
-        action={Action.Create}
-      />
     </>
   );
 }

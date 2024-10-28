@@ -6,6 +6,7 @@ import AnimatedRoutes from "./components/layout/AnimatedRoutes";
 import { MeetingContext, meteredMeeting } from "./MeetingContext";
 import store from './store';
 import SocketProvider from "./providers/SocketProvider";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           </Router>
         </MeetingContext.Provider>
       </SocketProvider>
+      <Toaster />
     </Provider>
   );
 }
