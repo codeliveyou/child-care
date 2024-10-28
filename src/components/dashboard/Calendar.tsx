@@ -201,7 +201,7 @@ function WeekdayItem({
             </p>
             <p className="font-bold leading-5">{activeEvent?.eventName}</p>
             <p className="text-sm leading-4 line-clamp-4">
-              {events[eventIndex].description}
+              {events[eventIndex]?.description}
             </p>
             <Button
               size="compress"
@@ -257,6 +257,7 @@ function Calendar({ className = "" }: CalendarProps) {
         toast.success(message)
       })
     }
+    setActiveWeekday(-1)
   }
 
   const handlePrevWeekClick = useCallback(() => {

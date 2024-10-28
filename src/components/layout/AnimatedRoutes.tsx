@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
 import AuthLayout from "../../components/layout/AuthLayout";
@@ -32,44 +31,18 @@ import RoomCreateOnboarding2 from "../../pages/room_create/Onboarding/RoomCreate
 import RoomCreateOnboarding3 from "../../pages/room_create/Onboarding/RoomCreateOnboarding3";
 import RoomCreateOnboarding4 from "../../pages/room_create/Onboarding/RoomCreateOnboarding4";
 
-import { useAppDispatch, useAppSelector } from "../../store";
-import { updateCreateUser, userLogin } from "../../store/reducers/authReducer";
-import apiClient, { setupApiToken } from "../../libs/api";
+import { useAppSelector } from "../../store";
 
 // import routes from "../../routes";
 
 function AnimatedRoutes() {
-  const dispatch = useAppDispatch();
   const location = useLocation();
-  const navigate = useNavigate();
 
   const isAuth = useAppSelector(state => state.auth.isAuth)
-  const [isLoading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (isAuth) return;
-    const token = localStorage.getItem('token');
-    if (!token) return;
-    setLoading(true);
-    setupApiToken(token)
-    apiClient.get('/api/users/me').then((response: any) => {
-      const { user_name, user_email, account_description, picture_id } = response;
-      if (user_email) {
-        dispatch(userLogin());
-        dispatch(updateCreateUser({ name: 'user_name', value: user_name }))
-        dispatch(updateCreateUser({ name: 'user_email', value: user_email }))
-        dispatch(updateCreateUser({ name: 'account_description', value: account_description }))
-        dispatch(updateCreateUser({ name: 'picture_id', value: picture_id }))
-        navigate('/')
-      }
-    }).finally(() => {
-      setLoading(false);
-    })
-  }, [isAuth])
 
   // Use the routes configuration to generate the routes for the application
   return (
-    isLoading ? 'Loading...' : <AnimatePresence>
+    <AnimatePresence>
       <Routes location={location} key={location.pathname}>
         <Route path="patient" element={<PatientDashboard />} /> // Patient
         dashboard layout

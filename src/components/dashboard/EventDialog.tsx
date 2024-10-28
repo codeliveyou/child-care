@@ -5,6 +5,7 @@ import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
 import TextField from "../common/TextField";
 import Button from "../common/Button";
+import { getLocalDate } from "../../libs/date";
 
 // Enum to manage the dialog's staging (confirm or editing)
 enum Staging {
@@ -30,6 +31,7 @@ export interface IEvent {
 
 // Props for the EventDialog component
 interface EventDialogProps {
+  currentDay?: Date;
   open: boolean; // Flag to control the dialog visibility
   action: Action; // Action type (create or update)
   event: IEvent | null;
@@ -52,7 +54,8 @@ function EventDialog({
   onClose,
   event: activeEvent,
   action,
-  onSubmit
+  onSubmit,
+  currentDay,
 }: EventDialogProps) {
   const [staging, setStaging] = useState<Staging>(
     action === Action.Create ? Staging.Editing : Staging.Confirm
@@ -84,6 +87,15 @@ function EventDialog({
       setEvent(activeEvent || initialEvent)
     }
   }, [action, activeEvent])
+
+  useEffect(() => {
+    if (currentDay) {
+      setEvent(event => ({
+        ...event, startTime: getLocalDate(currentDay),
+        endTime: getLocalDate(currentDay),
+      }))
+    }
+  }, [currentDay?.toString()])
 
   return (
     <Dialog

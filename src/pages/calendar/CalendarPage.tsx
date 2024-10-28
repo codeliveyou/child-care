@@ -123,6 +123,7 @@ const CalendarPage = () => {
   const [events, setEvents] = useState<IEvent[]>([]);
   const [activeEvent, setActiveEvent] = useState<IEvent | null>(null);
   const [action, setAction] = useState<Action>(Action.Create);
+  const [currentDay, setCurrentDay] = useState<Date>(new Date());
 
   const memoEvents = useMemo(() => {
     return events.map(event => {
@@ -225,7 +226,7 @@ const CalendarPage = () => {
         {/* Left section containing the calendar and today's events */}
         <div className="max-w-[434px] flex flex-col gap-2.5 shrink-0 overflow-y-auto">
           {/* Calendar component displaying the current month */}
-          <MonthCalendar onOpenEventDialog={handleCreateEventClick} />
+          <MonthCalendar selectedDay={currentDay} setSelectedDay={setCurrentDay} onOpenEventDialog={handleCreateEventClick} />
           <div className="grow p-4 pr-1.5 flex flex-col gap-2.5 bg-white rounded-xl overflow-y-auto">
             {/* Section heading for today's events */}
             <p className="text-xl font-semibold">Dagens evenemang</p>
@@ -260,6 +261,7 @@ const CalendarPage = () => {
       </motion.div>
       {/* Event dialog component */}
       <EventDialog
+        currentDay={currentDay}
         event={activeEvent}
         open={eventDialogOpen}
         action={action}

@@ -1,21 +1,44 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import { Provider } from 'react-redux';
 
 import AnimatedRoutes from "./components/layout/AnimatedRoutes";
-// import { createContext } from "react";
 import { MeetingContext, meteredMeeting } from "./MeetingContext";
-import store from './store';
 import SocketProvider from "./providers/SocketProvider";
-import { Toaster } from "react-hot-toast";
+import store from './store';
+import apiClient, { setupApiToken } from "./libs/api";
+import { updateCreateUser, userLogin } from "./store/reducers/authReducer";
 
 function App() {
+  const [isLoading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    setupApiToken(token)
+    setLoading(true);
+    apiClient.get('/api/users/me').then((response: any) => {
+      const { user_name, user_email, account_description, picture_id } = response;
+      if (user_email) {
+        store.dispatch(userLogin());
+        store.dispatch(updateCreateUser({ name: 'user_name', value: user_name }))
+        store.dispatch(updateCreateUser({ name: 'user_email', value: user_email }))
+        store.dispatch(updateCreateUser({ name: 'account_description', value: account_description }))
+        store.dispatch(updateCreateUser({ name: 'picture_id', value: picture_id }))
+      }
+    }).finally(() => {
+      setLoading(false);
+    })
+  }, [])
+
   return (
     <Provider store={store}>
       <SocketProvider>
         <MeetingContext.Provider value={meteredMeeting}>
           <Router>
             {/* The Router component wraps the application to enable routing */}
-            <AnimatedRoutes />
+            {isLoading ? 'Loading...' : <AnimatedRoutes />}
           </Router>
         </MeetingContext.Provider>
       </SocketProvider>

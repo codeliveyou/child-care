@@ -41,7 +41,7 @@ const Avatar = ({
       )}
     >
       {/* Display the avatar image */}
-      <img src={uri} className="w-[55px] h-[55px] rounded-lg" />
+      <img src={uri} className="w-[55px] aspect-square object-cover rounded-lg" />
       {isNameShown && (
         <div className="w-full overflow-hidden">
           {/* Display the name when expanded */}

@@ -34,15 +34,16 @@ const isEqual = (date1: Date, date2: Date) =>
 
 interface IMonthCalendar {
   onOpenEventDialog: () => void
+  selectedDay: Date
+  setSelectedDay: (date: Date) => void
 }
 
-function MonthCalendar({ onOpenEventDialog }: IMonthCalendar) {
+function MonthCalendar({ selectedDay, setSelectedDay, onOpenEventDialog }: IMonthCalendar) {
   // State to control the visibility of the EventDialog
   const [monthDays, setMonthDays] = useState<Date[]>([]);
   const [currentMonth, setCurrentMonth] = useState<Date>(
     new Date(today.getFullYear(), today.getMonth(), 1)
   );
-  const [currentDay, setCurrentDay] = useState<Date>(new Date());
 
   const handlePrevClick = () => {
     const newMonth = new Date(currentMonth);
@@ -139,13 +140,13 @@ function MonthCalendar({ onOpenEventDialog }: IMonthCalendar) {
                     : ""
                 )}
                 onClick={() => {
-                  setCurrentDay(day);
+                  setSelectedDay(day);
                 }}
               >
                 <span
                   className={twMerge(
                     "h-[42px] w-[42px] flex items-center justify-center rounded-full",
-                    isEqual(day, currentDay)
+                    isEqual(day, selectedDay)
                       ? "bg-primary-background text-white"
                       : ""
                   )}

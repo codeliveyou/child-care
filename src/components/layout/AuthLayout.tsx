@@ -1,7 +1,17 @@
-import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
+import { useAppSelector } from "../../store";
+
 function AuthLayout() {
+  const navigate = useNavigate();
+  const isAuth = useAppSelector(state => state.auth.isAuth);
+
+  useEffect(() => {
+    if (isAuth) navigate('/');
+  }, [isAuth])
+
   return (
     <motion.div
       initial={{ opacity: 0 }} // Initial opacity for fade-in effect
