@@ -13,6 +13,7 @@ import RoomHistoryItem, {
 
 import classes from "./RoomMain.module.scss";
 import axios from "axios";
+import { useAppSelector } from "../../store";
 
 // Dummy data representing a list of rooms
 // const dummyRoomData: IRoomListItem[] = [
@@ -165,6 +166,7 @@ const RoomListPage = () => {
   // Total number of pages for pagination (static value)
   const [totalPage] = useState<number>(5);
   const [roomData, setRoomData] = useState<any>([]);
+  const userEmail = useAppSelector(state => state.auth.createUser.user_email);
 
   // Handler function to navigate to the room creation page
   const handleAddRoomClick = () => {
@@ -173,22 +175,6 @@ const RoomListPage = () => {
 
   useEffect(() => {
     const fetchRoomData = async () => {
-      const token = localStorage.getItem('token');
-      let userEmail = '';
-
-      if (token) {
-        try {
-          const userResponse = await axios.get(API_LOCATION + '/api/users/me', {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
-          userEmail = userResponse.data.user_email;
-        } catch (error) {
-          console.error('Error fetching user email:', error);
-        }
-      }
-
       try {
         const response = await axios.post(`${API_LOCATION}/api/room/fetch_rooms_data`, {
           userEmail
