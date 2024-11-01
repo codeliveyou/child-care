@@ -179,6 +179,7 @@ const RoomListPage = () => {
         const response = await axios.post(`${API_LOCATION}/api/room/fetch_rooms_data`, {
           userEmail
         });
+        console.log('roomdata', response.data)
         setRoomData(response.data);
       } catch (err: any) {
         console.log("Error in fetching room data", err);

@@ -7,6 +7,7 @@ export interface IRoomListItem {
   prticipants_count: number; // Date of the last activity
   room_name: string,
   _id: string; // Optional badge number for the room
+  avatar_type: string;
 }
 
 interface RoomListItemProps {
@@ -28,7 +29,7 @@ export default function RoomListItem({ room }: RoomListItemProps) {
       {/* Container for room image */}
       <div className="w-[120px] h-full rounded-lg overflow-hidden relative">
         <img
-          src="/images/room/1.png"
+          src={room.avatar_type}
           alt="Room image"
           className="absolute top-1/2 -translate-y-1/2 w-full"
         />
@@ -38,7 +39,7 @@ export default function RoomListItem({ room }: RoomListItemProps) {
         {/* Display the room name */}
         <p className="font-semibold text-xl leading-7">{room.host}</p>
         <div className="text-disabled-text text-sm leading-4 pb-2">
-            <p>Sista aktiviteten</p>
+          <p>Sista aktiviteten</p>
         </div>
         {/* Display the last activity if available */}
         {/* {room.activity && (
@@ -47,14 +48,14 @@ export default function RoomListItem({ room }: RoomListItemProps) {
             <p>{room.activity}</p>
           </div>
         )} */}
-        
+
       </div>
       {/* Container for last date and badge/icon */}
       <div className="flex flex-col justify-between items-end h-full">
         {/* Display the last activity date */}
         <p className="text-disabled-text text-sm leading-4">{room.created_at}</p>
         {/* Display badge number or default icon */}
-        {room.prticipants_count  ? (
+        {room.prticipants_count ? (
           <span className="rounded-full bg-primary-background w-6 h-6 text-white flex items-center justify-center">
             {room.prticipants_count}
           </span>

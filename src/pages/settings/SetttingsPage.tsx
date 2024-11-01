@@ -210,16 +210,28 @@ const SettingsPage = () => {
   }
 
   const handlePictureChange = () => {
-    const formData = new FormData()
-    if (profileRef.current && profileRef.current.files) formData.append('profile_picture', profileRef.current.files[0])
-    apiClient.put('/api/users/change-profile-picture', formData).then((response: any) => {
-      const { message, picture_id } = response;
-      console.log('picture url', picture_id)
-      if (picture_id) {
-        toast.success(message)
-        setAccount({ ...account, picture_id })
-      }
-    });
+
+    if (profileRef.current && profileRef.current.files && profileRef.current.files[0].type.startsWith('image/')) {
+
+
+
+      const formData = new FormData()
+      if (profileRef.current && profileRef.current.files) formData.append('profile_picture', profileRef.current.files[0])
+      apiClient.put('/api/users/change-profile-picture', formData).then((response: any) => {
+        const { message, picture_id } = response;
+
+        console.log('message', message)
+        if (picture_id) {
+          toast.success(message)
+          setAccount({ ...account, picture_id })
+        }
+      });
+
+    } else {
+      alert("wrong")
+      // toast.error("Please upload an image file")
+
+    }
   }
 
   return (
@@ -241,7 +253,7 @@ const SettingsPage = () => {
           <Button size="compress" className="font-bold" onClick={handleImageSelect}>
             Byt profil bild
           </Button>
-          <input ref={profileRef} type="file" onChange={handlePictureChange} hidden />
+          <input ref={profileRef} type="file" accept="image/*" onChange={handlePictureChange} hidden />
           <div className="pt-4">
             <div className="text-center text-lg font-bold text-primary-background">
               {accountMe.user_name}

@@ -196,6 +196,8 @@ const CalendarPage = () => {
     }
   }
 
+
+
   useEffect(() => {
     apiClient.get('/api/events/').then((response: any) => {
       setEvents(response.map((eventItem: any) => {

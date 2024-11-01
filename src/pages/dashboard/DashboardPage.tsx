@@ -157,7 +157,7 @@ const DashboardPage = () => {
             <div className="text-lg font-bold text-[#374151]">
               Sista aktiviteten
             </div>
-            <div className="flex-1 pr-2 my-5 flex flex-col overflow-y-auto">
+            <div className="flex-1 pr-2 my-5 flex flex-col overflow-y-hidden">
               {/* Render each activity item */}
               {/* {activityData.map((activity, index) => (
                 <LastActivityItem
@@ -167,13 +167,13 @@ const DashboardPage = () => {
                   activity={activity.activity}
                 />
               ))} */}
-              {roomData.length > 0 && roomData.map((room: IRoomListItem, index: Key | null | undefined) => (
+              {roomData.length > 0 && roomData.slice(0, 2).map((room: IRoomListItem, index: Key | null | undefined) => (
                 <RoomListItem key={index} room={room} room_name={0} />
               ))}
             </div>
             {/* Button to view more details */}
             <div className="flex justify-end">
-              <Button size="compress">Läs mer</Button>
+              <Button size="compress" onClick={() => { navigate(`/rooms`); }}>Läs mer</Button>
             </div>
           </div>
 
