@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
 import AppRoutes from "./Routes";
@@ -10,16 +10,13 @@ import { updateCreateUser, userLogin } from "../../store/reducers/authReducer";
 // import routes from "../../routes";
 
 function AnimatedRoutes() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isLoading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/auth');
-      return;
-    }
+    if (!token) return;
     setupApiToken(token)
     setLoading(true);
     apiClient.get('/api/users/me').then((response: any) => {
@@ -31,8 +28,6 @@ function AnimatedRoutes() {
         dispatch(updateCreateUser({ name: 'account_description', value: account_description }))
         dispatch(updateCreateUser({ name: 'picture_id', value: picture_id }))
       }
-    }).catch(() => {
-      navigate('/auth');
     }).finally(() => {
       setLoading(false);
     })

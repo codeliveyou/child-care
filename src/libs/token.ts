@@ -6,3 +6,8 @@ export const setupToken = (token: string) => {
     setupApiToken(token);
   }
 };
+
+export const removeToken = () => {
+  localStorage.removeItem('token');
+  setupApiToken('');
+}

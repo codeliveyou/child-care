@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 import Button from "../../common/Button";
 import { useAppDispatch } from "../../../store";
 import { userLogout } from "../../../store/reducers/authReducer";
+import { removeToken } from "../../../libs/token";
 
 // Props for the SignOutButton component
 type SignOutButtonProps = {
@@ -26,6 +27,7 @@ const SignOutButton = ({
       )}
       onClick={() => {
         dispatch(userLogout());
+        removeToken();
         navigate(redirectUri);
       }} // Navigate to redirectUri on click
     >

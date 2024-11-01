@@ -30,8 +30,12 @@ import RoomCreateOnboarding2 from "../../pages/room_create/Onboarding/RoomCreate
 import RoomCreateOnboarding3 from "../../pages/room_create/Onboarding/RoomCreateOnboarding3";
 import RoomCreateOnboarding4 from "../../pages/room_create/Onboarding/RoomCreateOnboarding4";
 
+import { useAppSelector } from "../../store";
+
 function AppRoutes() {
     const location = useLocation();
+
+    const isAuth = useAppSelector(state => state.auth.isAuth)
 
     return <Routes location={location} key={location.pathname}>
         <Route path="patient" element={<PatientDashboard />} /> // Patient
@@ -64,7 +68,7 @@ function AppRoutes() {
             <Route path="signup-with-bank" element={<RegisterWithBank />} /> //
             Register with bank page
         </Route>
-        <Route path="" element={<MainLayout />}>
+        {isAuth && <> <Route path="" element={<MainLayout />}>
             <Route index element={<DashboardPage />} /> // Default route for
             dashboard
             <Route path="rooms" element={<RoomListPage />} /> // Rooms list page
@@ -74,27 +78,27 @@ function AppRoutes() {
             <Route path="room/:id" element={<RoomPage />} /> // Room details page,
             with dynamic ID
         </Route>
-        <Route path="room" element={<Outlet />}>
+            <Route path="room" element={<Outlet />}>
       // Room-related layout with nested routes
-            <Route path="create" element={<Outlet />}>
+                <Route path="create" element={<Outlet />}>
         // Room creation layout with nested routes
-                <Route index element={<CreateRoomMain />} /> // Default route for
-                room creation main page
-                <Route path="onboarding" element={<RoomCreateOnboardingMain />}>
+                    <Route index element={<CreateRoomMain />} /> // Default route for
+                    room creation main page
+                    <Route path="onboarding" element={<RoomCreateOnboardingMain />}>
           // Onboarding page for room creation
-                    <Route index element={<Navigate to={"step1"} />} />
-                    <Route path="step1" element={<RoomCreateOnboarding1 />} />
-                    <Route path="step2" element={<RoomCreateOnboarding2 />} />
-                    <Route path="step3" element={<RoomCreateOnboarding3 />} />
-                    <Route path="step4" element={<RoomCreateOnboarding4 />} />
-                    <Route path="ai-structure" element={<MainLayout />}>
+                        <Route index element={<Navigate to={"step1"} />} />
+                        <Route path="step1" element={<RoomCreateOnboarding1 />} />
+                        <Route path="step2" element={<RoomCreateOnboarding2 />} />
+                        <Route path="step3" element={<RoomCreateOnboarding3 />} />
+                        <Route path="step4" element={<RoomCreateOnboarding4 />} />
+                        <Route path="ai-structure" element={<MainLayout />}>
             // Main layout for AI structure management
-                        <Route index element={<AIStructureList />} /> // AI structure
-                        list page
+                            <Route index element={<AIStructureList />} /> // AI structure
+                            list page
+                        </Route>
                     </Route>
                 </Route>
-            </Route>
-        </Route>
+            </Route></>}
         <Route path="*" element={<Navigate to={'/auth'} />} />
     </Routes>
 }

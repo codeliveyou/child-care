@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import SearchInput from "../layout/header/SearchInput";
@@ -10,6 +10,7 @@ import apiClient, { setupApiToken } from "../../libs/api";
 import Logo from "../admin/Logo";
 
 function AdminLayout() {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isLoading, setLoading] = useState<boolean>(false);
 
@@ -17,10 +18,12 @@ function AdminLayout() {
     const token = localStorage.getItem('token');
     if (token) setupApiToken(token);
     setLoading(true);
-    apiClient.get('api/admins/me').then((response: any) => {
+    apiClient.get('/api/admins/me').then((response: any) => {
       const { email } = response;
       dispatch(adminLogin());
       dispatch(updateEmail(email));
+    }).catch(() => {
+      navigate('/admin/sign-in');
     }).finally(() => {
       setLoading(false)
     })
