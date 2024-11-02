@@ -1,4 +1,4 @@
-import { Key, useEffect, useState } from "react";
+import { Key, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -11,9 +11,9 @@ import RoomHistoryItem, {
   IRoomHistoryItem,
 } from "../../components/room/RoomHistoryItem";
 
-import classes from "./RoomMain.module.scss";
-import axios from "axios";
 import { useAppSelector } from "../../store";
+import apiClient from "../../libs/api";
+import classes from "./RoomMain.module.scss";
 
 // Dummy data representing a list of rooms
 // const dummyRoomData: IRoomListItem[] = [
@@ -157,6 +157,8 @@ const dummyHistoryData: IRoomHistoryItem[] = [
 const API_LOCATION = import.meta.env.VITE_BACKEND_URL;
 console.log("API", API_LOCATION)
 
+const removePeriod = (source: string) => source.replace(/\./g, '')
+
 // Main component for displaying the list of rooms and their history
 const RoomListPage = () => {
   const navigate = useNavigate();
@@ -164,9 +166,37 @@ const RoomListPage = () => {
   // State to manage the current page of the pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
   // Total number of pages for pagination (static value)
-  const [totalPage] = useState<number>(5);
+  const [totalPage, setTotalPage] = useState<number>(0);
   const [roomData, setRoomData] = useState<any>([]);
   const userEmail = useAppSelector(state => state.auth.createUser.user_email);
+
+  const memoRooms = useMemo(() => {
+    return roomData.map((room: any) => {
+      const date = new Date();
+      let targetDate = new Date().toLocaleDateString('sv-SE', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      targetDate = removePeriod(targetDate).replace(/(\d{2}) (\w{3}) (\d{4})/, (_match, day, month, year) => {
+        return `${day} ${month.charAt(0).toUpperCase() + month.slice(1)} ${year}`;
+      })
+      const weekday = date.toLocaleDateString('sv-SE', { weekday: 'long' });
+
+      return {
+        id: room._id,
+        date: removePeriod(date.toLocaleDateString('sv-SE', { month: 'short', day: '2-digit' })).replace(/(\d{2}) (\w{3})/, (_match, day, month) => {
+          return `${day} ${month.charAt(0).toUpperCase() + month.slice(1)}`;
+        }),
+        time: {
+          start: date.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
+          // end: new Date(event.endTime).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
+          end: ''
+        },
+        weekday: `${weekday[0].toUpperCase()}${weekday.slice(1)}`,
+        targetDate: targetDate,
+        title: room.room_name,
+        description: room.patient_name,
+      };
+    });
+  }, [roomData])
 
   // Handler function to navigate to the room creation page
   const handleAddRoomClick = () => {
@@ -176,11 +206,12 @@ const RoomListPage = () => {
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
-        const response = await axios.post(`${API_LOCATION}/api/room/fetch_rooms_data`, {
+        const response: any[] = await apiClient.post(`${API_LOCATION}/api/room/fetch_rooms_data`, {
           userEmail
         });
-        console.log('roomdata', response.data)
-        setRoomData(response.data);
+        // console.log('roomdata', response)
+        setRoomData(response);
+        setTotalPage(response.length);
       } catch (err: any) {
         console.log("Error in fetching room data", err);
       }
@@ -218,7 +249,7 @@ const RoomListPage = () => {
         <div className={classes.historyList}>
           <div className="grow flex flex-col gap-y-2.5 overflow-y-auto">
             {/* Mapping over dummyHistoryData to render each RoomHistoryItem */}
-            {dummyHistoryData.map((history, index) => (
+            {memoRooms.slice((currentPage - 1) * 10).map((history: any, index: number) => (
               <RoomHistoryItem key={index} history={history} />
             ))}
           </div>

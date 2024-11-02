@@ -157,7 +157,7 @@ const DashboardPage = () => {
             <div className="text-lg font-bold text-[#374151]">
               Sista aktiviteten
             </div>
-            <div className="flex-1 pr-2 my-5 flex flex-col overflow-y-hidden">
+            <div className="flex-1 pr-2 my-5 flex flex-col overflow-y-auto">
               {/* Render each activity item */}
               {/* {activityData.map((activity, index) => (
                 <LastActivityItem
@@ -184,7 +184,7 @@ const DashboardPage = () => {
         <div className="grid grid-cols-3 gap-4 grow overflow-y-auto">
           {/* Room list section */}
           <div className="rounded-xl bg-white p-4 pr-2 h-full overflow-y-auto flex flex-col">
-            <div className="flex flex-col gap-y-2.5 grow overflow-y-auto">
+            <div className="flex flex-col gap-y-2.5 grow ">
               <div className="text-lg font-bold text-primary-text">
                 Rum lista
               </div>

@@ -9,7 +9,7 @@ import TodayEventItem from "../../components/calendar/TodayEventItem";
 
 import EventDialog, { Action, IEvent } from "../../components/dashboard/EventDialog";
 import apiClient from "../../libs/api";
-import { getLocalDate } from "../../libs/date";
+import { getLocalDate, isDateEqual } from "../../libs/date";
 
 // Mock data for events
 // const eventData = [
@@ -89,37 +89,51 @@ import { getLocalDate } from "../../libs/date";
 //   },
 // ];
 
-const todayEventData = [
-  // List of today's events
-  {
-    title: "Möte med Noah och Elsa",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    date: "02 Aug 2024",
-  },
-  // More today's event objects...
-  {
-    title: "Anna besök av personal",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.",
-    date: "02 Aug 2024",
-  },
-  {
-    title: "Elsa besök av personal",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.",
-    date: "02 Aug 2024",
-  },
-];
+// const todayEventData = [
+//   // List of today's events
+//   {
+//     title: "Möte med Noah och Elsa",
+//     description:
+//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+//     date: "02 Aug 2024",
+//   },
+//   // More today's event objects...
+//   {
+//     title: "Anna besök av personal",
+//     description:
+//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.",
+//     date: "02 Aug 2024",
+//   },
+//   {
+//     title: "Elsa besök av personal",
+//     description:
+//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.",
+//     date: "02 Aug 2024",
+//   },
+// ];
 
 const removePeriod = (source: string) => source.replace(/\./g, '')
+const monthTexts = [
+  "Jan", // Januari
+  "Feb", // Februari
+  "Mar", // Mars
+  "Apr", // April
+  "Maj", // Maj
+  "Jun", // Juni
+  "Jul", // Juli
+  "Aug", // Augusti
+  "Sep", // September
+  "Okt", // Oktober
+  "Nov", // November
+  "Dec"  // December
+];
 
 // Main component for Calendar Page
 const CalendarPage = () => {
   // State for current page and total pages for pagination
   const [eventDialogOpen, setEventDialogOpen] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPage] = useState<number>(5);
+  const [totalPage, setTotalPage] = useState<number>(0);
   const [events, setEvents] = useState<IEvent[]>([]);
   const [activeEvent, setActiveEvent] = useState<IEvent | null>(null);
   const [action, setAction] = useState<Action>(Action.Create);
@@ -149,6 +163,20 @@ const CalendarPage = () => {
       };
     });
   }, [events])
+
+  const todayEvents = useMemo(() => {
+    return events.filter(event => {
+      const date = new Date(event.startTime);
+      return isDateEqual(date, new Date());
+    }).map(event => {
+      const date = new Date(event.startTime);
+      return {
+        title: event.eventName,
+        description: event.description,
+        date: `${date.getDate().toString().padStart(2, '0')} ${monthTexts[date.getMonth()]} ${date.getFullYear()}`
+      }
+    })
+  }, [events]);
 
   const handleEventClick = (id: string) => () => {
     setActiveEvent(events.find(item => item.id === id) || null);
@@ -212,6 +240,7 @@ const CalendarPage = () => {
           createdAt: created_at
         }
       }))
+      setTotalPage(Math.ceil(response.length / 10));
     });
   }, []);
 
@@ -234,7 +263,7 @@ const CalendarPage = () => {
             <p className="text-xl font-semibold">Dagens evenemang</p>
             {/* List of today's events */}
             <div className="grow pr-2 overflow-y-auto">
-              {todayEventData.map((eventItem, index) => (
+              {todayEvents.map((eventItem, index) => (
                 <TodayEventItem key={index} {...eventItem} />
               ))}
             </div>
@@ -247,7 +276,7 @@ const CalendarPage = () => {
           <p className="text-xl font-semibold">Evenemang</p>
           <div className="grow flex flex-col pr-2 overflow-y-auto">
             {/* List of all events */}
-            {memoEvents.map((eventItem, index) => (
+            {memoEvents.slice((currentPage - 1) * 10).map((eventItem, index) => (
               <EventListItem key={index} {...eventItem} onEventClick={handleEventClick(eventItem.id || '')} />
             ))}
           </div>

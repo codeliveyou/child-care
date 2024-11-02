@@ -8,6 +8,7 @@ export interface IRoomListItem {
   room_name: string,
   _id: string; // Optional badge number for the room
   avatar_type: string;
+  patient_name: string;
 }
 
 interface RoomListItemProps {
@@ -27,11 +28,11 @@ export default function RoomListItem({ room }: RoomListItemProps) {
       }}
     >
       {/* Container for room image */}
-      <div className="w-[120px] h-full rounded-lg overflow-hidden relative">
+      <div className="w-[75px] h-fit rounded-lg overflow-hidden relative">
         <img
           src={room.avatar_type}
           alt="Room image"
-          className="absolute top-1/2 -translate-y-1/2 w-full"
+          className="w-full aspect-square object-fit"
         />
       </div>
       {/* Container for room name and activity */}
@@ -39,7 +40,7 @@ export default function RoomListItem({ room }: RoomListItemProps) {
         {/* Display the room name */}
         <p className="font-semibold text-xl leading-7">{room.host}</p>
         <div className="text-disabled-text text-sm leading-4 pb-2">
-          <p>Sista aktiviteten</p>
+          <p>{room.patient_name}</p>
         </div>
         {/* Display the last activity if available */}
         {/* {room.activity && (

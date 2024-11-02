@@ -212,9 +212,6 @@ const SettingsPage = () => {
   const handlePictureChange = () => {
 
     if (profileRef.current && profileRef.current.files && profileRef.current.files[0].type.startsWith('image/')) {
-
-
-
       const formData = new FormData()
       if (profileRef.current && profileRef.current.files) formData.append('profile_picture', profileRef.current.files[0])
       apiClient.put('/api/users/change-profile-picture', formData).then((response: any) => {
@@ -228,9 +225,7 @@ const SettingsPage = () => {
       });
 
     } else {
-      alert("wrong")
-      // toast.error("Please upload an image file")
-
+      toast.error("Please upload an image file")
     }
   }
 
