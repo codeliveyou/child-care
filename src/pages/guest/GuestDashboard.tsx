@@ -34,6 +34,7 @@ import {
   // ChatHistory,
 } from "../room/types";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../../libs/api";
 
 const patientList = ["Sara"]; // List of patients
 
@@ -78,8 +79,6 @@ function GuestDashboard() {
   const username = searchParams.get("username") as string;
   const navigate = useNavigate();
   const meteredMeeting = useContext(MeetingContext);
-
-
 
   const handleMicBtn = async (): Promise<void> => {
     if (micShared) {
@@ -129,7 +128,7 @@ function GuestDashboard() {
     setMeetingEnded(true);
 
     // Redirect to guest sign-in page
-    window.location.href = '/auth/guest-signin';
+    window.location.href = "/auth/guest-signin";
   };
 
   async function handleJoinMeeting(roomName: string, username: string) {
@@ -154,7 +153,6 @@ function GuestDashboard() {
           roomURL: `${METERED_DOMAIN}/${roomName}`,
         });
 
-        
         const joinResponseToBackend = await axios.get(
           `${API_LOCATION}/api/room/join?roomName=${roomName}&userName=${username}&role=${role}`
         );
@@ -200,11 +198,11 @@ function GuestDashboard() {
 
     const handleParticipantLeft = (participant: Participant) => {
       // Handle participant left
-      console.log('participant left', participant);
+      console.log("participant left", participant);
       if (participant) {
-        if (participant.name === 'creator') {
+        if (participant.name === "creator") {
           alert("creator left the room");
-          navigate('/auth/guest-signin');
+          navigate("/auth/guest-signin");
         }
       }
     };
@@ -219,9 +217,10 @@ function GuestDashboard() {
     };
 
     const handleMeetingLeft = (item: any) => {
-      if (item) {}
+      if (item) {
+      }
       alert("meeting left");
-    }
+    };
 
     const handleStateChanged = (meetingState: any) => {
       console.log("meeting state changed", meetingState);
@@ -368,7 +367,6 @@ function GuestDashboard() {
       };
     }
   }, [socketInstance]);
-
 
   // Function to send messages
   const sendMessage = () => {

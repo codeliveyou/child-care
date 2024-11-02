@@ -28,6 +28,8 @@ const RoomCreateOnboarding4 = () => {
   const [meetingCreated, setMeetingCreated] = useState(false);
   const [roomName, setRoomName] = useState<string>("");
   const [roomId, setRoomId] = useState<string>("");
+  const [patientPassword, setPatientPassword] = useState<string>("");
+  const [guestPassword, setGuestPassword] = useState<string>("");
 
   // const meteredMeeting = useContext(MeetingContext);
 
@@ -39,12 +41,28 @@ const RoomCreateOnboarding4 = () => {
   }, [meetingCreated]);
 
   useEffect(() => {
+    
     handleCreateMeeting(stateParams.patientName);
   }, []);
 
   const roomIdToClipboard = (roomId: string) => {
     navigator.clipboard.writeText(roomId);
   };
+
+  const generatePassword = (length: number = 10): string => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+    const array = new Uint32Array(length);
+    window.crypto.getRandomValues(array);
+  
+    let password = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = array[i] % characters.length;
+      password += characters[randomIndex];
+    }
+  
+    return password;
+  };
+  
 
   async function handleCreateMeeting(username: string) {
     // Fetch user email using the token
@@ -64,7 +82,11 @@ const RoomCreateOnboarding4 = () => {
       }
     }
 
-    // Calling API to create room
+    const p_pass = generatePassword();
+    const g_pass = generatePassword();
+    setPatientPassword(p_pass);
+    setGuestPassword(g_pass);
+
     console.log("State", stateParams);
     const { data } = await axios.post(API_LOCATION + `/api/room/create`, {
       username,
@@ -75,6 +97,8 @@ const RoomCreateOnboarding4 = () => {
       patientName: stateParams.patientName,
       patientPersonalID: stateParams.patientPersonalID,
       avatarName: stateParams.avatarName,
+      p_pass,
+      g_pass
     });
     // Calling API to fetch Metered Domain
     // const response = await axios.get(API_LOCATION + "/api/room/metered-domain");
@@ -148,6 +172,48 @@ const RoomCreateOnboarding4 = () => {
                 <span
                   className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer"
                   onClick={() => roomIdToClipboard(roomId)}
+                >
+                  <img src="/icons/copy.svg" alt="Copy icon" />
+                </span>
+              </div>
+            </div>
+
+            <div className="w-full flex items-center justify-end gap-x-2.5">
+              <p className="text-lg leading-6 text-light-background">
+                Patient Pass:
+              </p>
+              <div className="relative">
+                <Input
+                  name="patientPassword"
+                  placeholder="#123445456546"
+                  value={patientPassword}
+                  className="border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text rounded-2xl"
+                />
+                {/* Copy icon for patient ID */}
+                <span
+                  className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer"
+                  onClick={() => roomIdToClipboard(patientPassword)}
+                >
+                  <img src="/icons/copy.svg" alt="Copy icon" />
+                </span>
+              </div>
+            </div>
+
+            <div className="w-full flex items-center justify-end gap-x-2.5">
+              <p className="text-lg leading-6 text-light-background">
+                Guest Pass:
+              </p>
+              <div className="relative">
+                <Input
+                  name="guestPassword"
+                  placeholder="#123445456546"
+                  value={guestPassword}
+                  className="border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text rounded-2xl"
+                />
+                {/* Copy icon for patient ID */}
+                <span
+                  className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer"
+                  onClick={() => roomIdToClipboard(guestPassword)}
                 >
                   <img src="/icons/copy.svg" alt="Copy icon" />
                 </span>

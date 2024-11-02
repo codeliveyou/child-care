@@ -7,6 +7,8 @@ import TradeMark from "../../components/user/TradeMark"; // TradeMark component 
 import { useContext, useState } from "react";
 import { MeetingContext } from "../../MeetingContext";
 import { useEffect } from "react";
+import apiClient from "../../libs/api";
+import toast from "react-hot-toast";
 
 interface TrackItem {
   streamId: string;
@@ -23,6 +25,7 @@ interface Participant {
 const PatientLogin = () => {
   const navigate = useNavigate(); // Hook to programmatically navigate between routes
   const [roomName, setRoomName] = useState<string>("");
+  const [patientPassword, setPatientPassword] = useState<string>("");
   const meteredMeeting = useContext(MeetingContext);
 
   const [remoteTracks, setRemoteTracks] = useState<TrackItem[]>([]);
@@ -34,7 +37,6 @@ const PatientLogin = () => {
   if (remoteTracks && onlineUsers && localVideoStream) {
   }
 
-  
   useEffect(() => {
     const handleRemoteTrackStarted = (trackItem: TrackItem) => {
       setRemoteTracks((prevTracks) => [...prevTracks, trackItem]);
@@ -83,6 +85,20 @@ const PatientLogin = () => {
     };
   });
 
+  const patientSignin = async () => {
+    apiClient
+      .post("api/room/check_patient_authentication", {
+        roomName,
+        patientPassword,
+      })
+      .then((response: any) => {
+        if (response.message == "ok") {
+          navigate(`/patient?${new URLSearchParams({ roomname: roomName })}`); // Navigate to the patient page when clicked
+        } else {
+          toast.error("Please enter correct password");
+        }
+      });
+  };
 
   return (
     <div className="w-full h-full grid grid-cols-9 bg-white rounded-lg overflow-hidden">
@@ -111,15 +127,18 @@ const PatientLogin = () => {
                   onChange={(e) => setRoomName(e.target.value)}
                   value={roomName}
                 />
+                <Input
+                  name="patientPassword"
+                  placeholder="Patient password"
+                  className="border border-primary-border/25 text-primary-placeholder bg-white/30"
+                  onChange={(e) => setPatientPassword(e.target.value)}
+                  value={patientPassword}
+                />
               </div>
               {/* Button to navigate to the patient page */}
               <Button
                 className="mt-5 border border-primary-border/25"
-                onClick={() => {
-                  navigate(
-                    `/patient?${new URLSearchParams({ roomname: roomName })}`
-                  ); // Navigate to the patient page when clicked
-                }}
+                onClick={patientSignin}
               >
                 Delta
               </Button>

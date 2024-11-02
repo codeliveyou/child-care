@@ -11,7 +11,8 @@ import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import TradeMark from "../../components/user/TradeMark";
 import { MeetingContext } from "../../MeetingContext";
-
+import apiClient from "../../libs/api";
+import toast from "react-hot-toast";
 
 interface TrackItem {
   streamId: string;
@@ -30,6 +31,7 @@ const GuestLogin = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState<string>("");
   const [roomName, setRoomName] = useState<string>("");
+  const [guestPassword, setGuestPassword] = useState<string>("");
   // const [meetinginfo, setMeetingInfo] = useState<any>({});
   // const [meetingjoined, setMeetingJoined] = useState<boolean>(false);
 
@@ -45,10 +47,18 @@ const GuestLogin = () => {
   const meteredMeeting = useContext(MeetingContext);
 
   async function handleClick() {
-    // navigate("/guest", {
-    //   state: { guestname: username, roomname: roomName },
-    // }); // Navigates to the guest route
-    navigate(`/guest?${new URLSearchParams({ roomname: roomName, username })}`);
+    apiClient
+      .post("api/room/check_guest_authentication", {
+        roomName,
+        guestPassword,
+      })
+      .then((response: any) => {
+        if (response.message == "ok") {
+          navigate(`/guest?${new URLSearchParams({ roomname: roomName })}`); // Navigate to the patient page when clicked
+        } else {
+          toast.error("Please enter correct password");
+        }
+      });
   }
 
   useEffect(() => {
@@ -133,6 +143,13 @@ const GuestLogin = () => {
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
                 value={roomName}
                 onChange={(e) => setRoomName(e.target.value)}
+              />
+              <Input
+                name="password"
+                placeholder="Password"
+                className="border border-primary-border/25 text-primary-placeholder bg-white/30"
+                value={guestPassword}
+                onChange={(e) => setGuestPassword(e.target.value)}
               />
               {/* Button to navigate to guest page upon click */}
               <Button
