@@ -7,9 +7,7 @@ import Pagination from "../../components/room/Pagination";
 import RoomListItem, {
   IRoomListItem,
 } from "../../components/room/RoomListItem";
-import RoomHistoryItem, {
-  IRoomHistoryItem,
-} from "../../components/room/RoomHistoryItem";
+import RoomHistoryItem from "../../components/room/RoomHistoryItem";
 
 import { useAppSelector } from "../../store";
 import apiClient from "../../libs/api";
@@ -78,81 +76,7 @@ import classes from "./RoomMain.module.scss";
 // ];
 
 // Dummy data representing room history
-const dummyHistoryData: IRoomHistoryItem[] = [
-  {
-    date: "14 Juni",
-    time: {
-      start: "10:00",
-      end: "12:00",
-    },
-    weekday: "Mondag",
-    targetDate: "02 Aug 2024",
-    title: "Möte med Noah och Elsa",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  // More history items...
-  {
-    date: "12 Juni",
-    time: {
-      start: "10:00",
-      end: "12:00",
-    },
-    weekday: "Onsdag",
-    targetDate: "02 Aug 2024",
-    title: "Möte Elsa",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    date: "11 Juni",
-    time: {
-      start: "10:00",
-      end: "12:00",
-    },
-    weekday: "Onsdag",
-    targetDate: "02 Aug 2024",
-    title: "Noah rapport",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    date: "4 Juni",
-    time: {
-      start: "10:00",
-      end: "12:00",
-    },
-    weekday: "Onsdag",
-    targetDate: "02 Aug 2024",
-    title: "Noah och Elsa",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    date: "1 Juni",
-    time: {
-      start: "10:00",
-      end: "12:00",
-    },
-    weekday: "Onsdag",
-    targetDate: "02 Aug 2024",
-    title: "Möte och Elsa",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    date: "21 Maj",
-    time: {
-      start: "10:00",
-      end: "12:00",
-    },
-    weekday: "Onsdag",
-    targetDate: "02 Aug 2024",
-    title: "Möte och Anna",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-];
+
 
 const API_LOCATION = import.meta.env.VITE_BACKEND_URL;
 console.log("API", API_LOCATION)

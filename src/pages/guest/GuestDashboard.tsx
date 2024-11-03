@@ -34,7 +34,6 @@ import {
   // ChatHistory,
 } from "../room/types";
 import { useNavigate } from "react-router-dom";
-import apiClient from "../../libs/api";
 
 const patientList = ["Sara"]; // List of patients
 
