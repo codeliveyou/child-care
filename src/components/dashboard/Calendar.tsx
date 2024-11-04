@@ -8,6 +8,7 @@ import Button from "../common/Button";
 import { getCurrentWeekDays, getISODate, getLocalDate, getLocalTime, isDateEqual } from "../../libs/date";
 import apiClient from "../../libs/api";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 // Define the structure of a weekday item
 interface IWeekdayItem {
@@ -119,6 +120,8 @@ const monthTexts = [
 //   },
 // ];
 
+const MILIS_PER_WEEK = 7 * 24 * 3600 * 1000;
+
 // WeekdayItem component displays details for a single weekday
 function WeekdayItem({
   weekday,
@@ -129,6 +132,7 @@ function WeekdayItem({
   onWeekdayChange = () => { },
   onSubmit = () => { }
 }: WeekdayItemProps) {
+  const navigate = useNavigate();
   const [eventIndex, setEventIndex] = useState<number>(-1); // Index of the currently selected event
   const [eventDialogOpen, setEventDialogOpen] = useState<boolean>(false); // State to control the event dialog visibility
 
@@ -185,9 +189,12 @@ function WeekdayItem({
               {event.isEmpty ? "-" : getLocalTime(event.startTime)}
             </span>
           ))}
-          <span className="w-full py-2 text-center text-xs leading-4">
+          {/* <span className="w-full py-2 text-center text-xs leading-4">
             {sleepTime}
-          </span>
+          </span> */}
+          {events.length > 2 && <Button size="small" className="w-full h-[32px]" onClick={() => {
+            navigate('/calendar')
+          }}>Visa alla</Button>}
         </div>
         {isItemActive && (
           <motion.div
@@ -235,7 +242,7 @@ function Calendar({ className = "" }: CalendarProps) {
   const [weekEvents, setWeekEvents] = useState<IEvent[]>([]);
   const [weekdayItems, setWeekdayItems] = useState<IWeekdayItem[]>([]);
 
-  const weekNumber = useMemo(() => Math.floor((weekStartDay.getDate() - 1) / 7) + 1, [weekStartDay]);
+  const weekNumber = useMemo(() => Math.floor((weekStartDay.getTime() - new Date(weekStartDay.getFullYear(), 0, 1).getTime()) / MILIS_PER_WEEK + 1), [weekStartDay]);
 
   const handleSubmit = (event: IEvent, type: 'create' | 'update' | 'delete') => {
     if (type === 'update') {
