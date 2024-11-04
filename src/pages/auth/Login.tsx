@@ -8,7 +8,7 @@ import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import Checkbox from '../../components/common/Checkbox';
 import { useAppDispatch } from '../../store';
-import { updateCreateUser, userLogin } from '../../store/reducers/authReducer';
+import { userLogin } from '../../store/reducers/authReducer';
 import apiClient from '../../libs/api';
 import { setupToken } from '../../libs/token';
 

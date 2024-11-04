@@ -127,7 +127,6 @@ function WeekdayItem({
   weekday,
   day,
   events,
-  sleepTime,
   isActive = false,
   onWeekdayChange = () => { },
   onSubmit = () => { }

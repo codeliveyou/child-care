@@ -15,22 +15,22 @@ import config from "../../config";
 const statisData = [
   {
     name: "Dokumentet",
-    percent: 40,
+    percent: 0,
     capacity: "3Gb",
   },
   {
     name: "Video",
-    percent: 20,
+    percent: 0,
     capacity: "3Gb",
   },
   {
     name: "Meddelande",
-    percent: 40,
+    percent: 0,
     capacity: "3Gb",
   },
   {
     name: "Kalendar",
-    percent: 40,
+    percent: 0,
     capacity: "3Gb",
   },
 ];
@@ -39,11 +39,11 @@ const statisData = [
 const statisCountData = [
   {
     name: "Patienter",
-    count: 34,
+    count: 0,
   },
   {
     name: "Gäst / Deltagare",
-    count: 12,
+    count: 0,
   },
 ];
 

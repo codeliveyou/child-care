@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import TradeMark from "../../../components/user/TradeMark";
 import Button from "../../../components/common/Button";
 import Input from "../../../components/common/Input";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../../store";
 import apiClient from "../../../libs/api";
