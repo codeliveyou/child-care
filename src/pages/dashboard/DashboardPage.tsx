@@ -15,8 +15,6 @@ import RoomListItem, { IRoomListItem } from "../../components/room/RoomListItem"
 import apiClient from "../../libs/api";
 import { useAppSelector } from "../../store";
 
-<<<<<<< HEAD
-=======
 type VideoItem = {
   title: string;
   videoUri: string;
@@ -28,7 +26,6 @@ type ReportItem = {
   title: string,
   lastDate: string,
 }
->>>>>>> 7dc6124a61208771a0f73ca8fc253bc14ba01b0e
 
 const videoData: VideoItem[] = [
   // {
