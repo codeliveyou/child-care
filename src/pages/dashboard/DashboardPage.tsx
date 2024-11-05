@@ -11,87 +11,85 @@ import ReportDialog from "../../components/dashboard/ReportDialog";
 //import MessageIcon from "/Message.svg";
 import DocIcon from "/images/report/doc.svg";
 import PdfIcon from "/images/report/pdf.svg";
-import axios from "axios";
 import RoomListItem, { IRoomListItem } from "../../components/room/RoomListItem";
+import apiClient from "../../libs/api";
+import { useAppSelector } from "../../store";
 
+<<<<<<< HEAD
+=======
+type VideoItem = {
+  title: string;
+  videoUri: string;
+  activity: string;
+}
 
-const videoData = [
-  {
-    title: "Noah möte",
-    videoUri: "/images/video/1.png",
-    activity: "Igår 11:25",
-  },
-  {
-    title: "Noah möte",
-    videoUri: "/images/video/2.png",
-    activity: "Igår 11:25",
-  },
-  {
-    title: "Annas rum - inspelning",
-    videoUri: "/images/video/3.png",
-    activity: "Den 12-02-2024",
-  },
-  {
-    title: "Stella rooms",
-    videoUri: "/images/video/4.png",
-    activity: "Den 24-02-2024",
-  },
+type ReportItem = {
+  type: "doc" | 'pdf',
+  title: string,
+  lastDate: string,
+}
+>>>>>>> 7dc6124a61208771a0f73ca8fc253bc14ba01b0e
+
+const videoData: VideoItem[] = [
+  // {
+  //   title: "Noah möte",
+  //   videoUri: "/images/video/1.png",
+  //   activity: "Igår 11:25",
+  // },
+  // {
+  //   title: "Noah möte",
+  //   videoUri: "/images/video/2.png",
+  //   activity: "Igår 11:25",
+  // },
+  // {
+  //   title: "Annas rum - inspelning",
+  //   videoUri: "/images/video/3.png",
+  //   activity: "Den 12-02-2024",
+  // },
+  // {
+  //   title: "Stella rooms",
+  //   videoUri: "/images/video/4.png",
+  //   activity: "Den 24-02-2024",
+  // },
 ];
 
-const reportData = [
-  {
-    type: "doc",
-    title: "Elsas möte rapport",
-    lastDate: "Igår 11:11",
-  },
-  {
-    type: "pdf",
-    title: "Elsas laddad information",
-    lastDate: "Den 23-03-2024",
-  },
-  {
-    type: "doc",
-    title: "Noah möte rapport",
-    lastDate: "Den 20-03-2024",
-  },
-  {
-    type: "doc",
-    title: "Stella rooms",
-    lastDate: "Den 20-03-2024",
-  },
+const reportData: ReportItem[] = [
+  // {
+  //   type: "doc",
+  //   title: "Elsas möte rapport",
+  //   lastDate: "Igår 11:11",
+  // },
+  // {
+  //   type: "pdf",
+  //   title: "Elsas laddad information",
+  //   lastDate: "Den 23-03-2024",
+  // },
+  // {
+  //   type: "doc",
+  //   title: "Noah möte rapport",
+  //   lastDate: "Den 20-03-2024",
+  // },
+  // {
+  //   type: "doc",
+  //   title: "Stella rooms",
+  //   lastDate: "Den 20-03-2024",
+  // },
 ];
-
-const API_LOCATION = import.meta.env.VITE_BACKEND_URL;
 
 const DashboardPage = () => {
   const navigate = useNavigate();
+  const userEmail = useAppSelector(state => state.auth.createUser.user_email)
   const [videoDialogOpen, setVideoDialogOpen] = useState<boolean>(false); // State to manage video dialog visibility
   const [reportDialogOpen, setReportDialogOpen] = useState<boolean>(false); // State to manage report dialog visibility
   const [roomData, setRoomData] = useState<any>([]);
 
   useEffect(() => {
     const fetchRoomData = async () => {
-      const token = localStorage.getItem('token');
-      let userEmail = '';
-
-      if (token) {
-        try {
-          const userResponse = await axios.get(API_LOCATION + '/api/users/me', {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
-          userEmail = userResponse.data.user_email;
-        } catch (error) {
-          console.error('Error fetching user email:', error);
-        }
-      }
-
       try {
-        const response = await axios.post(`${API_LOCATION}/api/room/fetch_rooms_data`, {
+        const response = await apiClient.post('/api/room/fetch_rooms_data', {
           userEmail
         });
-        setRoomData(response.data);
+        setRoomData(response);
       } catch (err: any) {
         console.log("Error in fetching room data", err);
       }

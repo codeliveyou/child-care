@@ -15,22 +15,22 @@ import config from "../../config";
 const statisData = [
   {
     name: "Dokumentet",
-    percent: 40,
+    percent: 0,
     capacity: "3Gb",
   },
   {
     name: "Video",
-    percent: 20,
+    percent: 0,
     capacity: "3Gb",
   },
   {
     name: "Meddelande",
-    percent: 40,
+    percent: 0,
     capacity: "3Gb",
   },
   {
     name: "Kalendar",
-    percent: 40,
+    percent: 0,
     capacity: "3Gb",
   },
 ];
@@ -39,11 +39,11 @@ const statisData = [
 const statisCountData = [
   {
     name: "Patienter",
-    count: 34,
+    count: 0,
   },
   {
     name: "Gäst / Deltagare",
-    count: 12,
+    count: 0,
   },
 ];
 
@@ -194,12 +194,14 @@ const SettingsPage = () => {
   }
 
   const handleSubmit = () => {
-    if (Object.values(account).some(value => !value) || account.new_user_password !== account.new_password_confirm) {
+    if (!account.user_name || !account.user_email || !account.account_description || !account.old_user_password || account.new_user_password !== account.new_password_confirm) {
       return toast.error('Invalid user account data.')
     }
-    apiClient.put('/api/users/change-profile-info', account).then((response: any) => {
-      dispatch(updateCreateUser(response))
-      // setAccount(initialAccount)
+    apiClient.put('/api/users/change-profile-info', account).then(() => {
+      dispatch(updateCreateUser({ name: 'user_name', value: account.user_name }));
+      dispatch(updateCreateUser({ name: 'user_email', value: account.user_email }));
+      dispatch(updateCreateUser({ name: 'account_description', value: account.account_description }));
+      toast.success('Profile updated.');
     })
   }
 

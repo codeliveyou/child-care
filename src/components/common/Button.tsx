@@ -67,7 +67,7 @@ const Button = ({
             ? "border-primary-border/25 text-primary-text"
             : "border-white text-light-background"
         )
-      : "bg-none border-none"
+      : ""
       ? "text-primary-text"
       : "text-light-background";
 

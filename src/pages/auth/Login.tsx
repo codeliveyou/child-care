@@ -8,7 +8,7 @@ import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import Checkbox from '../../components/common/Checkbox';
 import { useAppDispatch } from '../../store';
-import { updateCreateUser, userLogin } from '../../store/reducers/authReducer';
+import { userLogin } from '../../store/reducers/authReducer';
 import apiClient from '../../libs/api';
 import { setupToken } from '../../libs/token';
 
@@ -38,17 +38,17 @@ const Login = () => {
       const { token } = response;
       dispatch(userLogin());
       setupToken(token);
-      apiClient.get('/api/users/me').then((response: any) => {
-        const { user_name, user_email, account_description, picture_id } = response;
-        if (user_email) {
-          dispatch(userLogin());
-          dispatch(updateCreateUser({ name: 'user_name', value: user_name }))
-          dispatch(updateCreateUser({ name: 'user_email', value: user_email }))
-          dispatch(updateCreateUser({ name: 'account_description', value: account_description }))
-          dispatch(updateCreateUser({ name: 'picture_id', value: picture_id }))
-          navigate('/')
-        }
-      });
+      // apiClient.get('/api/users/me').then((response: any) => {
+      //   const { user_name, user_email, account_description, picture_id } = response;
+      //   if (user_email) {
+      //     dispatch(userLogin());
+      //     dispatch(updateCreateUser({ name: 'user_name', value: user_name }))
+      //     dispatch(updateCreateUser({ name: 'user_email', value: user_email }))
+      //     dispatch(updateCreateUser({ name: 'account_description', value: account_description }))
+      //     dispatch(updateCreateUser({ name: 'picture_id', value: picture_id }))
+      //     navigate('/')
+      //   }
+      // });
       navigate('/'); // Navigates to the home page after successful login
     });
   };

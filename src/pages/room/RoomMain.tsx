@@ -13,74 +13,6 @@ import { useAppSelector } from "../../store";
 import apiClient from "../../libs/api";
 import classes from "./RoomMain.module.scss";
 
-// Dummy data representing a list of rooms
-// const dummyRoomData: IRoomListItem[] = [
-//   {
-//     name: "Elsa rum",
-//     imageUri: "/images/room/1.png",
-//     activity: "Skapades rapport 2024-03-25",
-//     badge: 5,
-//     lastDate: "11:21",
-//   },
-//   // More room items...
-//   {
-//     name: "Noah rum",
-//     imageUri: "/images/room/2.png",
-//     activity: "Skapades nästa möte",
-//     badge: 2,
-//     lastDate: "Igår",
-//   },
-//   {
-//     name: "Anna Lindberg",
-//     imageUri: "/images/room/3.png",
-//     activity: "Video samtal",
-//     badge: 2,
-//     lastDate: "23-03-2024",
-//   },
-//   {
-//     name: "Elsa",
-//     imageUri: "/images/room/4.png",
-//     activity: "Skapades rapport 2024-02-23",
-//     lastDate: "23-02-2024",
-//   },
-//   {
-//     name: "Emily",
-//     imageUri: "/images/room/5.png",
-//     activity: "skapades nästa möte",
-//     lastDate: "12-02-2024",
-//   },
-//   {
-//     name: "Lars Bergstöm",
-//     imageUri: "/images/room/6.png",
-//     activity: "Skapades rapport 2024-01-27",
-//     lastDate: "27-01-2024",
-//   },
-//   {
-//     name: "Noah",
-//     imageUri: "/images/room/7.png",
-//     activity: "Möte med deltagare",
-//     lastDate: "21-01-2024",
-//   },
-//   {
-//     name: "Elsa",
-//     imageUri: "/images/room/8.png",
-//     activity: "Skapades rapport 2024-01-17",
-//     lastDate: "17-01-2024",
-//   },
-//   {
-//     name: "Anna Skogberg",
-//     imageUri: "/images/room/9.png",
-//     activity: "Skapades rapport 2024-01-12",
-//     lastDate: "12-01-2024",
-//   },
-// ];
-
-// Dummy data representing room history
-
-
-const API_LOCATION = import.meta.env.VITE_BACKEND_URL;
-console.log("API", API_LOCATION)
-
 const removePeriod = (source: string) => source.replace(/\./g, '')
 
 // Main component for displaying the list of rooms and their history
@@ -96,7 +28,7 @@ const RoomListPage = () => {
 
   const memoRooms = useMemo(() => {
     return roomData.map((room: any) => {
-      const date = new Date();
+      const date = new Date(room.created_at);
       let targetDate = new Date().toLocaleDateString('sv-SE', { day: '2-digit', month: 'short', year: 'numeric' });
 
       targetDate = removePeriod(targetDate).replace(/(\d{2}) (\w{3}) (\d{4})/, (_match, day, month, year) => {
@@ -130,12 +62,12 @@ const RoomListPage = () => {
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
-        const response: any[] = await apiClient.post(`${API_LOCATION}/api/room/fetch_rooms_data`, {
+        const response: any[] = await apiClient.post('/api/room/fetch_rooms_data', {
           userEmail
         });
         // console.log('roomdata', response)
         setRoomData(response);
-        setTotalPage(response.length);
+        setTotalPage(Math.ceil(response.length / 10));
       } catch (err: any) {
         console.log("Error in fetching room data", err);
       }

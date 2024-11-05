@@ -68,11 +68,24 @@ const sidebarItems = [
 // MainLayout component definition
 const MainLayout = () => {
   const navigate = useNavigate(); // React Router hook for navigation
+  // const location = useLocation();
+  // const search = location.search;
+  // const params = new URLSearchParams(search);
+  // const redirect = params.get("redirect") as string;
   const { pathname } = useLocation(); // React Router hook for current pathname
   const searchParams = useSearchParams(); // Hook to access URL search parameters
   const isAIPage = pathname === "/room/create/ai-structure"; // Check if the current page is the AI creation page
   const isRoomPage = pathname.startsWith("/room/"); // Check if the current page is a room page
   const accountMe = useAppSelector(state => state.auth.createUser);
+  const isAuth = useAppSelector((state) => state.auth.isAuth);
+  const isLoading = useAppSelector((state) => state.loading.isLoading);
+
+
+  useEffect(() => {
+    if (!isAuth && !isLoading) {
+      navigate("/auth");
+    }
+  }, [isAuth, isLoading]);
 
   const [isSidebarExpand, setSidebarExpand] = useState<boolean>(false); // State to control sidebar expansion
   const [activeUser, setActiveUser] = useState<string>(""); // State to store the active user

@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import TradeMark from "../../../components/user/TradeMark";
 import Button from "../../../components/common/Button";
 import Input from "../../../components/common/Input";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { useAppSelector } from "../../../store";
+import apiClient from "../../../libs/api";
 // import { MeetingContext } from "../../../MeetingContext";
 
 interface LocationState {
@@ -17,12 +18,11 @@ interface LocationState {
   voiceType: string;
 }
 
-const API_LOCATION = import.meta.env.VITE_BACKEND_URL;
-
 const RoomCreateOnboarding4 = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const stateParams = location.state as LocationState;
+  const userEmail = useAppSelector(state => state.auth.createUser.user_email);
   // const [username, setUsername] = useState("");
   // const [meetinginfo, setMeetingInfo] = useState({});
   const [meetingCreated, setMeetingCreated] = useState(false);
@@ -41,7 +41,7 @@ const RoomCreateOnboarding4 = () => {
   }, [meetingCreated]);
 
   useEffect(() => {
-    
+
     handleCreateMeeting(stateParams.patientName);
   }, []);
 
@@ -53,34 +53,34 @@ const RoomCreateOnboarding4 = () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
     const array = new Uint32Array(length);
     window.crypto.getRandomValues(array);
-  
+
     let password = '';
     for (let i = 0; i < length; i++) {
       const randomIndex = array[i] % characters.length;
       password += characters[randomIndex];
     }
-  
+
     return password;
   };
-  
+
 
   async function handleCreateMeeting(username: string) {
     // Fetch user email using the token
-    const token = localStorage.getItem("token");
-    let userEmail = "";
+    // const token = localStorage.getItem("token");
+    // let userEmail = "";
 
-    if (token) {
-      try {
-        const userResponse = await axios.get(API_LOCATION + "/api/users/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        userEmail = userResponse.data.user_email;
-      } catch (error) {
-        console.error("Error fetching user email:", error);
-      }
-    }
+    // if (token) {
+    //   try {
+    //     const userResponse = await axios.get(API_LOCATION + "/api/users/me", {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     });
+    //     userEmail = userResponse.data.user_email;
+    //   } catch (error) {
+    //     console.error("Error fetching user email:", error);
+    //   }
+    // }
 
     const p_pass = generatePassword();
     const g_pass = generatePassword();
@@ -88,7 +88,7 @@ const RoomCreateOnboarding4 = () => {
     setGuestPassword(g_pass);
 
     console.log("State", stateParams);
-    const { data } = await axios.post(API_LOCATION + `/api/room/create`, {
+    const data: any = await apiClient.post(`/api/room/create`, {
       username,
       userEmail,
       roomName: stateParams.roomName,
