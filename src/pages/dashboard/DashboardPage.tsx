@@ -14,49 +14,6 @@ import PdfIcon from "/images/report/pdf.svg";
 import axios from "axios";
 import RoomListItem, { IRoomListItem } from "../../components/room/RoomListItem";
 
-// Sample data for activities, rooms, videos, and reports
-// const activityData = [
-//   {
-//     imageUri: "/images/activity/1.png",
-//     title: "Noah rum",
-//     activity: "Skapades rapport 2024-03-25",
-//   },
-//   {
-//     imageUri: "/images/activity/2.png",
-//     title: "Elsa rum",
-//     activity: "Skapades rapport 2024-03-25",
-//   },
-//   {
-//     imageUri: "/images/activity/2.png",
-//     title: "Elsa rum",
-//     activity: "Skapades rapport 2024-03-25",
-//   },
-// ];
-
-// const roomData = [
-//   {
-//     name: "Elsa rum",
-//     imageUri: "/images/dashboard/room/1.png",
-//     badge: 5,
-//   },
-//   {
-//     name: "Noah rum",
-//     imageUri: "/images/dashboard/room/2.png",
-//     activity: "Skapades nästa möte",
-//     badge: 2,
-//   },
-//   {
-//     name: "Anna Lindberg",
-//     imageUri: "/images/dashboard/room/3.png",
-//     activity: "Video samtal",
-//     badge: 2,
-//   },
-//   {
-//     name: "Elsa",
-//     imageUri: "/images/dashboard/room/4.png",
-//     activity: "Skapades rapport 2024-02-23",
-//   },
-// ];
 
 const videoData = [
   {
