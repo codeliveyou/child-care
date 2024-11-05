@@ -40,7 +40,7 @@ const Button = ({
   variant = "contained",
   color = "primary",
   className = "",
-  onClick = () => {},
+  onClick = () => { },
   children,
   ...props
 }: ButtonProps) => {
@@ -49,27 +49,25 @@ const Button = ({
     size === "large"
       ? "h-[42px] py-[11px] px-5 text-base leading-5"
       : size === "small"
-      ? "h-[34px] py-2 px-4 text-sm leading-[17px]"
-      : "h-[37px] py-2 px-4 text-base leading-5";
+        ? "h-[34px] py-2 px-4 text-sm leading-[17px]"
+        : "h-[37px] py-2 px-4 text-base leading-5";
 
   // Determine button variant and color classes based on the variant and color props
   const variantClass =
     variant === "contained"
       ? twMerge(
-          color === "primary"
-            ? "border border-primary-border/25 bg-primary-background text-light-background"
-            : "border-none bg-light-background text-primary-background"
-        )
+        color === "primary"
+          ? "border border-primary-border/25 bg-primary-background text-light-background"
+          : "border-none bg-light-background text-primary-background"
+      )
       : variant === "outlined"
-      ? twMerge(
+        ? twMerge(
           "bg-none border",
           color === "primary"
             ? "border-primary-border/25 text-primary-text"
             : "border-white text-light-background"
         )
-      : ""
-      ? "text-primary-text"
-      : "text-light-background";
+        : "";
 
   return (
     <button
