@@ -12,6 +12,7 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence>
       {isLoading ? 'Loading...' : <AppRoutes />}
+      <AppRoutes />
     </AnimatePresence>
   ); // Render the configured routes
 }
