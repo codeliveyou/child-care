@@ -12,7 +12,6 @@ import apiClient, { setupApiToken } from "./libs/api";
 import { setIsLoading } from "./store/reducers/loadingReducer";
 
 function App() {
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return;
@@ -47,6 +46,7 @@ function App() {
       <Toaster />
     </Provider>
   );
+
 }
 
 export default App;

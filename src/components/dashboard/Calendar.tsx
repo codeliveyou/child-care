@@ -289,7 +289,6 @@ function Calendar({ className = "" }: CalendarProps) {
     const weekEndDay = new Date(weekStartDay);
     weekEndDay.setDate(weekStartDay.getDate() + 7);
     apiClient.get(`/api/events/user-events?start_date=${getISODate(weekStartDay)}&end_date=${getISODate(weekEndDay)}`).then((response: any) => {
-      console.log(response)
       const weekEvents: IEvent[] = response.map((item: any) => ({
         id: item._id,
         startTime: getLocalDate(item.start_time),
