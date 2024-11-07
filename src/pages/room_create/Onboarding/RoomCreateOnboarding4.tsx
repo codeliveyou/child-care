@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import TradeMark from "../../../components/user/TradeMark";
 import Button from "../../../components/common/Button";
 import Input from "../../../components/common/Input";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../../store";
 import apiClient from "../../../libs/api";
+import React from "react";
 // import { MeetingContext } from "../../../MeetingContext";
 
 interface LocationState {
@@ -30,7 +31,7 @@ const RoomCreateOnboarding4 = () => {
   const [roomId, setRoomId] = useState<string>("");
   const [patientPassword, setPatientPassword] = useState<string>("");
   const [guestPassword, setGuestPassword] = useState<string>("");
-
+  const hasCreatedMeeting = useRef(false);
   // const meteredMeeting = useContext(MeetingContext);
 
   useEffect(() => {
@@ -40,9 +41,13 @@ const RoomCreateOnboarding4 = () => {
     }
   }, [meetingCreated]);
 
-  useEffect(() => {
+  let isMounted = true;
 
-    handleCreateMeeting(stateParams.patientName);
+
+  useEffect(()  => {
+      
+      handleCreateMeeting(stateParams.patientName);
+
   }, []);
 
   const roomIdToClipboard = (roomId: string) => {
