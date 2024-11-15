@@ -18,89 +18,89 @@ import FileListItem from "../../components/folder/FileListItem";
 
 const latestFiles: IFileListItem[] = [
   // Example list of latest files with their metadata
-  // {
-  //   name: "Elsas möte rapport",
-  //   size: "10Mb",
-  //   type: "doc",
-  // },
-  // // More file items...
-  // {
-  //   name: "Elsas laddad information",
-  //   size: "15.5Mb",
-  //   type: "pdf",
-  // },
-  // {
-  //   name: "Elsas Statistik",
-  //   size: "123.3Mb",
-  //   type: "xsl",
-  // },
-  // {
-  //   name: "Elsas laddad information",
-  //   size: "15.5Mb",
-  //   type: "pdf",
-  // },
-  // {
-  //   name: "Elsas laddad information",
-  //   size: "15.5Mb",
-  //   type: "pdf",
-  // },
+  {
+    name: "Elsas möte rapport",
+    size: "10Mb",
+    type: "doc",
+  },
+  // More file items...
+  {
+    name: "Elsas laddad information",
+    size: "15.5Mb",
+    type: "pdf",
+  },
+  {
+    name: "Elsas Statistik",
+    size: "123.3Mb",
+    type: "xsl",
+  },
+  {
+    name: "Elsas laddad information",
+    size: "15.5Mb",
+    type: "pdf",
+  },
+  {
+    name: "Elsas laddad information",
+    size: "15.5Mb",
+    type: "pdf",
+  },
 ];
 
 const fileData: IFileTileItem[] = [
   // Example list of files to be displayed as tiles
-  // {
-  //   name: "Elsas laddad information",
-  //   type: "mp4",
-  // },
-  // // More file items...
-  // {
-  //   name: "Elsas möte rapport",
-  //   type: "doc",
-  // },
-  // {
-  //   name: "Elsas laddad information",
-  //   type: "pdf",
-  // },
-  // {
-  //   name: "Elsas möte rapport",
-  //   type: "doc",
-  // },
-  // {
-  //   name: "Elsas laddad information",
-  //   type: "pdf",
-  // },
-  // {
-  //   name: "Elsas Statistik",
-  //   type: "xsl",
-  // },
-  // {
-  //   name: "Elsas laddad information",
-  //   type: "pdf",
-  // },
-  // {
-  //   name: "Elsas 2023",
-  //   type: "xsl",
-  // },
-  // {
-  //   name: "Elsas laddad information",
-  //   type: "mp4",
-  // },
-  // {
-  //   name: "Elsas Statistik",
-  //   type: "xsl",
-  // },
-  // {
-  //   name: "Elsas laddad information",
-  //   type: "pdf",
-  // },
-  // {
-  //   name: "Elsas laddad information",
-  //   type: "pdf",
-  // },
-  // {
-  //   name: "Elsas laddad information",
-  //   type: "mp4",
-  // },
+  {
+    name: "Elsas laddad information",
+    type: "mp4",
+  },
+  // More file items...
+  {
+    name: "Elsas möte rapport",
+    type: "doc",
+  },
+  {
+    name: "Elsas laddad information",
+    type: "pdf",
+  },
+  {
+    name: "Elsas möte rapport",
+    type: "doc",
+  },
+  {
+    name: "Elsas laddad information",
+    type: "pdf",
+  },
+  {
+    name: "Elsas Statistik",
+    type: "xsl",
+  },
+  {
+    name: "Elsas laddad information",
+    type: "pdf",
+  },
+  {
+    name: "Elsas 2023",
+    type: "xsl",
+  },
+  {
+    name: "Elsas laddad information",
+    type: "mp4",
+  },
+  {
+    name: "Elsas Statistik",
+    type: "xsl",
+  },
+  {
+    name: "Elsas laddad information",
+    type: "pdf",
+  },
+  {
+    name: "Elsas laddad information",
+    type: "pdf",
+  },
+  {
+    name: "Elsas laddad information",
+    type: "mp4",
+  },
 ];
 
 const FilesPage = () => {
@@ -133,11 +133,11 @@ const FilesPage = () => {
             {/* Rendering FolderSelect component with folder names */}
             <FolderList
               folders={[
-                // "Elsas rapport",
-                // "Noah",
-                // "Stefan",
-                // "Johan",
-                // "Sparad documentation",
+                "Elsas rapport",
+                "Noah",
+                "Stefan",
+                "Johan",
+                "Sparad documentation",
               ]}
             />
           </div>

@@ -28,49 +28,49 @@ type ReportItem = {
 }
 
 const videoData: VideoItem[] = [
-  // {
-  //   title: "Noah möte",
-  //   videoUri: "/images/video/1.png",
-  //   activity: "Igår 11:25",
-  // },
-  // {
-  //   title: "Noah möte",
-  //   videoUri: "/images/video/2.png",
-  //   activity: "Igår 11:25",
-  // },
-  // {
-  //   title: "Annas rum - inspelning",
-  //   videoUri: "/images/video/3.png",
-  //   activity: "Den 12-02-2024",
-  // },
-  // {
-  //   title: "Stella rooms",
-  //   videoUri: "/images/video/4.png",
-  //   activity: "Den 24-02-2024",
-  // },
+  {
+    title: "Noah möte",
+    videoUri: "/images/video/1.png",
+    activity: "Igår 11:25",
+  },
+  {
+    title: "Noah möte",
+    videoUri: "/images/video/2.png",
+    activity: "Igår 11:25",
+  },
+  {
+    title: "Annas rum - inspelning",
+    videoUri: "/images/video/3.png",
+    activity: "Den 12-02-2024",
+  },
+  {
+    title: "Stella rooms",
+    videoUri: "/images/video/4.png",
+    activity: "Den 24-02-2024",
+  },
 ];
 
 const reportData: ReportItem[] = [
-  // {
-  //   type: "doc",
-  //   title: "Elsas möte rapport",
-  //   lastDate: "Igår 11:11",
-  // },
-  // {
-  //   type: "pdf",
-  //   title: "Elsas laddad information",
-  //   lastDate: "Den 23-03-2024",
-  // },
-  // {
-  //   type: "doc",
-  //   title: "Noah möte rapport",
-  //   lastDate: "Den 20-03-2024",
-  // },
-  // {
-  //   type: "doc",
-  //   title: "Stella rooms",
-  //   lastDate: "Den 20-03-2024",
-  // },
+  {
+    type: "doc",
+    title: "Elsas möte rapport",
+    lastDate: "Igår 11:11",
+  },
+  {
+    type: "pdf",
+    title: "Elsas laddad information",
+    lastDate: "Den 23-03-2024",
+  },
+  {
+    type: "doc",
+    title: "Noah möte rapport",
+    lastDate: "Den 20-03-2024",
+  },
+  {
+    type: "doc",
+    title: "Stella rooms",
+    lastDate: "Den 20-03-2024",
+  },
 ];
 
 const DashboardPage = () => {
