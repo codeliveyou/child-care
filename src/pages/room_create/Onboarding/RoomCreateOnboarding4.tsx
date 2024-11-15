@@ -4,10 +4,9 @@ import { motion } from "framer-motion";
 import TradeMark from "../../../components/user/TradeMark";
 import Button from "../../../components/common/Button";
 import Input from "../../../components/common/Input";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "../../../store";
 import apiClient from "../../../libs/api";
-import React from "react";
 // import { MeetingContext } from "../../../MeetingContext";
 
 interface LocationState {
@@ -20,10 +19,12 @@ interface LocationState {
 }
 
 const RoomCreateOnboarding4 = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const stateParams = location.state as LocationState;
   const userEmail = useAppSelector(state => state.auth.createUser.user_email);
+  const isRoomCreated = useAppSelector(state => state.room.isCreated);
   // const [username, setUsername] = useState("");
   // const [meetinginfo, setMeetingInfo] = useState({});
   const [meetingCreated, setMeetingCreated] = useState(false);
@@ -41,13 +42,9 @@ const RoomCreateOnboarding4 = () => {
     }
   }, [meetingCreated]);
 
-  let isMounted = true;
+  useEffect(() => {
 
-
-  useEffect(()  => {
-      
-      handleCreateMeeting(stateParams.patientName);
-
+    handleCreateMeeting(stateParams.patientName);
   }, []);
 
   const roomIdToClipboard = (roomId: string) => {
