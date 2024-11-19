@@ -3,6 +3,7 @@ export type FileFormat = "doc" | "pdf" | "mp4" | "xsl";
 
 // Interface defining the properties of a file list item
 export interface IFileListItem {
+  id: string;
   name: string; // Name of the file
   type: FileFormat; // Format of the file
   size: string; // Size of the file (e.g., "2 MB")

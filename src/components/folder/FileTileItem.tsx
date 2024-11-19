@@ -3,8 +3,10 @@ export type FileFormat = "doc" | "pdf" | "mp4" | "xsl";
 
 // Interface defining the properties of a file tile item
 export interface IFileTileItem {
+  id: string
   name: string; // Name of the file
   type: FileFormat; // Format of the file
+  date: Date;
 }
 
 // Props for the FileTileItem component, extending IFileTileItem and including a click handler
@@ -16,7 +18,7 @@ interface FileTileItemProps extends IFileTileItem {
 const FileTileItem = ({ name, type, onClick }: FileTileItemProps) => {
   return (
     <div
-      className="py-4 px-1 max-w-36 w-full h-fit flex flex-col items-center gap-4 hover:bg-light-background transition duration-300 rounded-lg cursor-pointer"
+      className="py-4 px-1 max-w-36 w-full h-fit flex flex-col items-center gap-4 hover:bg-light-background transition duration-300 rounded-lg cursor-pointer overflow-x-clip"
       onClick={onClick} // Handle click event
     >
       {/* Icon representing the file type */}
@@ -26,7 +28,7 @@ const FileTileItem = ({ name, type, onClick }: FileTileItemProps) => {
         className="w-16"
       />
       {/* File name */}
-      <p className="font-semibold leading-5 text-center">{name}</p>
+      <p className="font-semibold leading-5">{name}</p>
     </div>
   );
 };

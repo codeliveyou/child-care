@@ -1,15 +1,15 @@
-import { useState } from "react";
 import { IoFolderOutline } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
 
 // Interface defining the props for the FolderList component
 interface FolderListProps {
   folders: string[]; // Array of folder names to display
+  activeFolder: string;
+  onFolderChange: (folder: string) => void;
 }
 
-function FolderList({ folders }: FolderListProps) {
+function FolderList({ folders, activeFolder, onFolderChange }: FolderListProps) {
   // State to keep track of the currently active folder index
-  const [activeIndex, setActiveIndex] = useState<number>(0);
 
   return (
     <div className="flex flex-col gap-y-2.5">
@@ -20,12 +20,12 @@ function FolderList({ folders }: FolderListProps) {
           className={twMerge(
             "py-1 px-4 flex gap-x-4 items-center cursor-pointer rounded-lg",
             // Apply active styles if the folder is the currently selected one
-            index === activeIndex
+            folder === activeFolder
               ? "text-primary-background bg-light-background py-3"
               : "text-primary-text hover:text-primary-background"
           )}
           onClick={() => {
-            setActiveIndex(index); // Set the clicked folder as active
+            onFolderChange(folder);
           }}
         >
           {/* Folder icon */}
@@ -37,7 +37,7 @@ function FolderList({ folders }: FolderListProps) {
             className={twMerge(
               "text-base leading-5",
               // Increase text size if the folder is the currently selected one
-              activeIndex === index ? "text-lg leading-6" : ""
+              folder === activeFolder ? "text-lg leading-6" : ""
             )}
           >
             {folder}
