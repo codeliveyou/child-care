@@ -103,13 +103,13 @@ const DashboardPage = () => {
         className="w-full h-full flex flex-col gap-y-4 text-primary-text"
       >
         {/* Container for the grid layout */}
-        <div className="grid grid-cols-4 gap-4 max-h-[300px]">
+        <div className="grid grid-cols-4 gap-4">
           {/* Section for displaying last activities */}
           <div className="rounded-xl bg-white p-4 pr-1.5 flex flex-col h-full overflow-y-auto">
             <div className="text-lg font-bold text-[#374151]">
               Sista aktiviteten
             </div>
-            <div className="flex-1 pr-2 my-5 flex flex-col overflow-y-auto">
+            <div className="flex-1 pr-2 my-5 flex flex-col h-auto">
               {/* Render each activity item */}
               {/* {activityData.map((activity, index) => (
                 <LastActivityItem
