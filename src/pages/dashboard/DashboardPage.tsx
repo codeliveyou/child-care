@@ -9,11 +9,12 @@ import VideoDialog from "../../components/dashboard/VideoDialog";
 import ReportDialog from "../../components/dashboard/ReportDialog";
 
 //import MessageIcon from "/Message.svg";
-import DocIcon from "/images/report/doc.svg";
-import PdfIcon from "/images/report/pdf.svg";
 import RoomListItem, { IRoomListItem } from "../../components/room/RoomListItem";
 import apiClient from "../../libs/api";
 import { useAppSelector } from "../../store";
+import { FileFormat, IFileTileItem } from "../../components/folder/FileTileItem";
+import { IFileListItem } from "../../components/folder/FileListItem";
+import FileReportItem from "../../components/folder/FileReportItem";
 
 type VideoItem = {
   title: string;
@@ -21,11 +22,6 @@ type VideoItem = {
   activity: string;
 }
 
-type ReportItem = {
-  type: "doc" | 'pdf',
-  title: string,
-  lastDate: string,
-}
 
 const videoData: VideoItem[] = [
   {
@@ -50,28 +46,7 @@ const videoData: VideoItem[] = [
   },
 ];
 
-const reportData: ReportItem[] = [
-  {
-    type: "doc",
-    title: "Elsas möte rapport",
-    lastDate: "Igår 11:11",
-  },
-  {
-    type: "pdf",
-    title: "Elsas laddad information",
-    lastDate: "Den 23-03-2024",
-  },
-  {
-    type: "doc",
-    title: "Noah möte rapport",
-    lastDate: "Den 20-03-2024",
-  },
-  {
-    type: "doc",
-    title: "Stella rooms",
-    lastDate: "Den 20-03-2024",
-  },
-];
+
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -79,7 +54,27 @@ const DashboardPage = () => {
   const [videoDialogOpen, setVideoDialogOpen] = useState<boolean>(false); // State to manage video dialog visibility
   const [reportDialogOpen, setReportDialogOpen] = useState<boolean>(false); // State to manage report dialog visibility
   const [roomData, setRoomData] = useState<any>([]);
+  const [docList, setDocList] =  useState<any>([]);
+  const [reportContent, setReportContent] = useState<string>("");
 
+  const handleFileItemClick =
+  (fileItem: IFileListItem | IFileTileItem) => async () => {
+    // Open dialog based on the file type
+    if (fileItem.file_type === "mp4") setVideoDialogOpen(true);
+    else {
+      setReportDialogOpen(true);
+      apiClient
+        .get(`/api/file_system/file-as-xml/${fileItem.file_id}`)
+        .then((response: any) => {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(response, 'application/xml');
+          const contentText = xmlDoc.getElementsByTagName('Content')[0]?.textContent || '';
+          setReportContent(contentText);
+          setReportDialogOpen(true);
+        });
+    }
+  };
+  
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
@@ -94,6 +89,19 @@ const DashboardPage = () => {
 
     fetchRoomData();
   }, []);
+
+  useEffect(() => {
+    apiClient.get('api/file_system/list-documents').then((response: any) => {
+      console.log('list-documents', response)
+      setDocList(response);
+    })
+  },[])
+
+  useEffect(() => {
+    apiClient.get('api/file_system/list-videos').then((response: any) => {
+      console.log('list-videos', response)
+    })
+  })
 
   return (
     <>
@@ -136,49 +144,11 @@ const DashboardPage = () => {
         <div className="grid grid-cols-3 gap-4 grow overflow-y-auto">
           {/* Room list section */}
           <div className="rounded-xl bg-white p-4 pr-2 h-full overflow-y-auto flex flex-col">
-            <div className="flex flex-col gap-y-2.5 grow ">
+            <div className="flex flex-col gap-y-2.5 grow overflow-y-auto">
               <div className="text-lg font-bold text-primary-text">
                 Rum lista
               </div>
               <div className="grow flex flex-col overflow-y-auto pt-4 pr-2">
-                {/* Render each room item */}
-                {/* {roomData.map((room, index) => (
-                  <div
-                    key={index}
-                    className="p-2 flex items-center gap-x-4 hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
-                    onClick={() => {
-                      navigate(`/room/${index}`); // Navigate to room detail page
-                    }}
-                  >
-                    <div className="w-[72px] h-[72px] rounded-lg overflow-hidden relative">
-                      <img
-                        src={room.imageUri}
-                        alt="Room image"
-                        className="absolute left-1/2 -translate-x-1/2 w-auto h-full"
-                      />
-                    </div>
-                    <div className="flex flex-col justify-between h-full grow">
-                      <p className="font-semibold text-xl leading-6">
-                        {room.name}
-                      </p>
-                      {room.activity && (
-                        <div className="text-disabled-text text-sm leading-4">
-                          <p>Sista aktiviteten</p>
-                          <p>{room.activity}</p>
-                        </div>
-                      )}
-                    </div>
-                    {room.badge ? (
-                      <span className="rounded-full bg-primary-background w-6 h-6 text-white flex items-center justify-center">
-                        {room.badge}
-                      </span>
-                    ) : (
-                      <span className="w-8 h-8 flex items-center justify-center rounded-[4px] bg-light-background">
-                        <img src={MessageIcon} alt="Message icon" />
-                      </span>
-                    )}
-                  </div>
-                ))} */}
                 {roomData.map((room: IRoomListItem, index: Key | null | undefined) => (
                   <RoomListItem key={index} room={room} room_name={0} />
                 ))}
@@ -249,33 +219,40 @@ const DashboardPage = () => {
               </div>
               <div className="grow py-4 flex flex-col gap-4 pr-4 overflow-y-auto">
                 {/* Render each report item */}
-                {reportData.map((reportItem, index) => (
-                  <div
+                {docList.map((reportItem: any, index: number) => (
+                  // <div
+                  //   key={index}
+                  //   className="flex items-center hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
+                  //   onClick={() => {
+                  //     setReportDialogOpen(true); // Open report dialog
+                  //   }}
+                  // >
+                  //   <div className="p-4">
+                  //     <img
+                  //       src={reportItem.file_type === "doc" ? DocIcon : PdfIcon}
+                  //       alt="Report icon"
+                  //       className="w-12"
+                  //     />
+                  //   </div>
+                  //   <div className="py-2.5 px-4 flex flex-col justify-between">
+                  //     <p className="font-semibold text-xl leading-6">
+                  //       {reportItem.filename}
+                  //     </p>
+                  //     {reportItem.upload_date && (
+                  //       <div className="space-y-0.5 text-disabled-text text-sm leading-4">
+                  //         <p>Sista aktiviteten</p>
+                  //         <p>{reportItem.upload_date}</p>
+                  //       </div>
+                  //     )}
+                  //   </div>
+                  // </div>
+                  <FileReportItem
                     key={index}
-                    className="flex items-center hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
-                    onClick={() => {
-                      setReportDialogOpen(true); // Open report dialog
-                    }}
-                  >
-                    <div className="p-4">
-                      <img
-                        src={reportItem.type === "doc" ? DocIcon : PdfIcon}
-                        alt="Report icon"
-                        className="w-12"
-                      />
-                    </div>
-                    <div className="py-2.5 px-4 flex flex-col justify-between">
-                      <p className="font-semibold text-xl leading-6">
-                        {reportItem.title}
-                      </p>
-                      {reportItem.lastDate && (
-                        <div className="space-y-0.5 text-disabled-text text-sm leading-4">
-                          <p>Sista aktiviteten</p>
-                          <p>{reportItem.lastDate}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                    {...reportItem}
+                    file_type={reportItem.file_type as FileFormat}
+                    date={reportItem.upload_date as Date}
+                    onClick={handleFileItemClick(reportItem)}
+                  />
                 ))}
               </div>
               {/* Button to view more details */}
@@ -301,7 +278,7 @@ const DashboardPage = () => {
         }}
         title="Sofia Rapport"
         lastDate="2 Mars, 2024"
-        content=""
+        content={reportContent}
       />
     </>
   );
