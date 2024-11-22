@@ -19,12 +19,10 @@ interface LocationState {
 }
 
 const RoomCreateOnboarding4 = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const stateParams = location.state as LocationState;
   const userEmail = useAppSelector(state => state.auth.createUser.user_email);
-  const isRoomCreated = useAppSelector(state => state.room.isCreated);
   // const [username, setUsername] = useState("");
   // const [meetinginfo, setMeetingInfo] = useState({});
   const [meetingCreated, setMeetingCreated] = useState(false);
@@ -32,7 +30,6 @@ const RoomCreateOnboarding4 = () => {
   const [roomId, setRoomId] = useState<string>("");
   const [patientPassword, setPatientPassword] = useState<string>("");
   const [guestPassword, setGuestPassword] = useState<string>("");
-  const hasCreatedMeeting = useRef(false);
   // const meteredMeeting = useContext(MeetingContext);
 
   useEffect(() => {

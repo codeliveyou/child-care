@@ -2,7 +2,6 @@ import { useState } from "react";
 import { FaChevronLeft } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 import { HiOutlineArrowDownTray } from "react-icons/hi2";
-import XMLViewer from 'react-xml-viewer';
 import Dialog from "../common/Dialog";
 
 // Props for the ReportDialog component

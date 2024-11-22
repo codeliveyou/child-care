@@ -24,8 +24,6 @@ import VideoDialog from "../../components/dashboard/VideoDialog";
 import FileListItem from "../../components/folder/FileListItem";
 import FileDialog from "../../components/dashboard/FileDialog";
 import apiClient from "../../libs/api";
-import axios from "axios";
-import config from "../../config";
 
 // const latestFiles: IFileListItem[] = [
 //   // Example list of latest files with their metadata
