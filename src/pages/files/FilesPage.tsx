@@ -19,40 +19,40 @@ import FileListItem from "../../components/folder/FileListItem";
 import FileDialog from "../../components/dashboard/FileDialog";
 import apiClient from "../../libs/api";
 
-const latestFiles: IFileListItem[] = [
-  // Example list of latest files with their metadata
-  {
-    id: '1',
-    name: "Elsas möte rapport",
-    size: "10Mb",
-    type: "doc",
-  },
-  // More file items...
-  {
-    id: '2',
-    name: "Elsas laddad information",
-    size: "15.5Mb",
-    type: "pdf",
-  },
-  {
-    id: '3',
-    name: "Elsas Statistik",
-    size: "123.3Mb",
-    type: "xsl",
-  },
-  {
-    id: '4',
-    name: "Elsas laddad information",
-    size: "15.5Mb",
-    type: "pdf",
-  },
-  {
-    id: '5',
-    name: "Elsas laddad information",
-    size: "15.5Mb",
-    type: "pdf",
-  },
-];
+// const latestFiles: IFileListItem[] = [
+//   // Example list of latest files with their metadata
+//   {
+//     id: '1',
+//     name: "Elsas möte rapport",
+//     size: "10Mb",
+//     type: "doc",
+//   },
+//   // More file items...
+//   {
+//     id: '2',
+//     name: "Elsas laddad information",
+//     size: "15.5Mb",
+//     type: "pdf",
+//   },
+//   {
+//     id: '3',
+//     name: "Elsas Statistik",
+//     size: "123.3Mb",
+//     type: "xsl",
+//   },
+//   {
+//     id: '4',
+//     name: "Elsas laddad information",
+//     size: "15.5Mb",
+//     type: "pdf",
+//   },
+//   {
+//     id: '5',
+//     name: "Elsas laddad information",
+//     size: "15.5Mb",
+//     type: "pdf",
+//   },
+// ];
 
 const FilesPage = () => {
   const filesRef = useRef<HTMLDivElement>(null);
@@ -64,7 +64,8 @@ const FilesPage = () => {
   const [folderNames, setFolderNames] = useState<string[]>([]);
   const [currentFolder, setCurrentFolder] = useState<string>('');
   const [filesOfFolder, setFilesOfFolder] = useState<IFileTileItem[]>([]);
-  const fileRef = useRef<HTMLInputElement>(null)
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [latestFiles, setLatestFiles] = useState<IFileListItem[]>([]);
 
   const handleFileItemClick =
     (fileItem: IFileListItem | IFileTileItem) => () => {
@@ -121,6 +122,18 @@ const FilesPage = () => {
     })
   }, []);
 
+  useEffect(() => {
+    apiClient.get('api/file_system/recent-files').then((response: any) => {
+      setLatestFiles(response);
+      console.log(response)
+    })
+  }, []);
+
+  function getFileExtension(filename: string): string {
+    const match = filename.match(/\.([^.]+)$/);
+    return match ? match[1] : '';
+  }
+
   return (
     <>
       <motion.div
@@ -170,7 +183,8 @@ const FilesPage = () => {
                   <FileListItem
                     key={index}
                     {...fileItem}
-                    type={fileItem.type as FileFormat}
+                    // file_type={fileItem.file_type as FileFormat}
+                    file_type={getFileExtension(fileItem.filename) as FileFormat}
                     onClick={handleFileItemClick(fileItem)}
                   />
                 ))}

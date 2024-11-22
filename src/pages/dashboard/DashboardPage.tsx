@@ -236,7 +236,7 @@ const DashboardPage = () => {
               </div>
               {/* Button to view more details */}
               <div className="pt-7 self-end">
-                <Button size="compress">Läs mer</Button>
+                <Button size="compress" onClick={() => { navigate(`/files`); }}>Läs mer</Button>
               </div>
             </div>
           </div>
@@ -280,7 +280,7 @@ const DashboardPage = () => {
               </div>
               {/* Button to view more details */}
               <div className="self-end pt-7">
-                <Button size="compress">Läs mer</Button>
+                <Button size="compress" onClick={() => { navigate(`/files`); }}>Läs mer</Button>
               </div>
             </div>
           </div>
