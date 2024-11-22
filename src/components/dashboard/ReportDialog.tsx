@@ -2,13 +2,14 @@ import { useState } from "react";
 import { FaChevronLeft } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 import { HiOutlineArrowDownTray } from "react-icons/hi2";
-
+import XMLViewer from 'react-xml-viewer';
 import Dialog from "../common/Dialog";
 
 // Props for the ReportDialog component
 interface ReportDialogProps {
   open: boolean; // Flag to control dialog visibility
   onClose: () => void; // Callback to close the dialog
+  content: string;
   title: string; // Title of the report
   lastDate: string; // Date of the last report update
 }
@@ -31,7 +32,7 @@ const ToolbarIcon = ({ name }: IToolbarIcon) => {
 };
 
 // Main ReportDialog component
-function ReportDialog({ open, onClose, title, lastDate }: ReportDialogProps) {
+function ReportDialog({ open, onClose,content, title, lastDate }: ReportDialogProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false); // State to toggle between edit and view mode
 
   return (
@@ -118,7 +119,7 @@ function ReportDialog({ open, onClose, title, lastDate }: ReportDialogProps) {
         )}
         {/* Content area with editable text when in editing mode */}
         <div className="grow pt-2 px-8 pr-1 flex flex-col overflow-y-auto">
-          <div
+          {/* <div
             contentEditable={isEditing} // Content becomes editable when in editing mode
             className="pr-6 flex flex-col gap-y-8 outline-none overflow-y-auto scrollbar"
           >
@@ -167,7 +168,9 @@ function ReportDialog({ open, onClose, title, lastDate }: ReportDialogProps) {
               <p>Modern lider av migrän.</p>
               <p>Inga andra signifikanta sjukdomar i familjen.</p>
             </div>
-          </div>
+          </div> */}
+          {/* <XMLViewer xml={content} /> */}
+          <pre>{content}</pre>
         </div>
       </div>
     </Dialog>

@@ -28,49 +28,49 @@ type ReportItem = {
 }
 
 const videoData: VideoItem[] = [
-  // {
-  //   title: "Noah möte",
-  //   videoUri: "/images/video/1.png",
-  //   activity: "Igår 11:25",
-  // },
-  // {
-  //   title: "Noah möte",
-  //   videoUri: "/images/video/2.png",
-  //   activity: "Igår 11:25",
-  // },
-  // {
-  //   title: "Annas rum - inspelning",
-  //   videoUri: "/images/video/3.png",
-  //   activity: "Den 12-02-2024",
-  // },
-  // {
-  //   title: "Stella rooms",
-  //   videoUri: "/images/video/4.png",
-  //   activity: "Den 24-02-2024",
-  // },
+  {
+    title: "Noah möte",
+    videoUri: "/images/video/1.png",
+    activity: "Igår 11:25",
+  },
+  {
+    title: "Noah möte",
+    videoUri: "/images/video/2.png",
+    activity: "Igår 11:25",
+  },
+  {
+    title: "Annas rum - inspelning",
+    videoUri: "/images/video/3.png",
+    activity: "Den 12-02-2024",
+  },
+  {
+    title: "Stella rooms",
+    videoUri: "/images/video/4.png",
+    activity: "Den 24-02-2024",
+  },
 ];
 
 const reportData: ReportItem[] = [
-  // {
-  //   type: "doc",
-  //   title: "Elsas möte rapport",
-  //   lastDate: "Igår 11:11",
-  // },
-  // {
-  //   type: "pdf",
-  //   title: "Elsas laddad information",
-  //   lastDate: "Den 23-03-2024",
-  // },
-  // {
-  //   type: "doc",
-  //   title: "Noah möte rapport",
-  //   lastDate: "Den 20-03-2024",
-  // },
-  // {
-  //   type: "doc",
-  //   title: "Stella rooms",
-  //   lastDate: "Den 20-03-2024",
-  // },
+  {
+    type: "doc",
+    title: "Elsas möte rapport",
+    lastDate: "Igår 11:11",
+  },
+  {
+    type: "pdf",
+    title: "Elsas laddad information",
+    lastDate: "Den 23-03-2024",
+  },
+  {
+    type: "doc",
+    title: "Noah möte rapport",
+    lastDate: "Den 20-03-2024",
+  },
+  {
+    type: "doc",
+    title: "Stella rooms",
+    lastDate: "Den 20-03-2024",
+  },
 ];
 
 const DashboardPage = () => {
@@ -103,13 +103,13 @@ const DashboardPage = () => {
         className="w-full h-full flex flex-col gap-y-4 text-primary-text"
       >
         {/* Container for the grid layout */}
-        <div className="grid grid-cols-4 gap-4 max-h-[300px]">
+        <div className="grid grid-cols-4 gap-4">
           {/* Section for displaying last activities */}
           <div className="rounded-xl bg-white p-4 pr-1.5 flex flex-col h-full overflow-y-auto">
             <div className="text-lg font-bold text-[#374151]">
               Sista aktiviteten
             </div>
-            <div className="flex-1 pr-2 my-5 flex flex-col overflow-y-auto">
+            <div className="flex-1 pr-2 my-5 flex flex-col h-auto">
               {/* Render each activity item */}
               {/* {activityData.map((activity, index) => (
                 <LastActivityItem
@@ -236,7 +236,7 @@ const DashboardPage = () => {
               </div>
               {/* Button to view more details */}
               <div className="pt-7 self-end">
-                <Button size="compress">Läs mer</Button>
+                <Button size="compress" onClick={() => { navigate(`/files`); }}>Läs mer</Button>
               </div>
             </div>
           </div>
@@ -280,7 +280,7 @@ const DashboardPage = () => {
               </div>
               {/* Button to view more details */}
               <div className="self-end pt-7">
-                <Button size="compress">Läs mer</Button>
+                <Button size="compress" onClick={() => { navigate(`/files`); }}>Läs mer</Button>
               </div>
             </div>
           </div>
