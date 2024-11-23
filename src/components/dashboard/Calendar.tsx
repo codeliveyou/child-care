@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FaChevronDown, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
 
@@ -250,46 +250,6 @@ function WeekdayItem({
   );
 }
 
-const WeekSelectDialog = ({
-  isOpen,
-  onClose,
-  onSelect,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onSelect: (date: Date) => void;
-}) => {
-  const [selectedDate, setSelectedDate] = useState<string>(
-    getLocalDate(new Date())
-  );
-
-  const handleSelect = () => {
-    onSelect(new Date(selectedDate));
-    onClose();
-  };
-
-  return (
-    <>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-4">
-            <p className="text-xl font-semibold mb-4">Select Week</p>
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="border p-2 rounded mb-4"
-            />
-            <div className="flex justify-end gap-x-2">
-              <Button onClick={onClose}>Cancel</Button>
-              <Button onClick={handleSelect}>Select</Button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
 
 // Calendar component displays a calendar view with weekday items
 function Calendar({ className = "" }: CalendarProps) {
@@ -300,7 +260,6 @@ function Calendar({ className = "" }: CalendarProps) {
   const [selectedDate, setSelectedDate] = useState<string>(
     getLocalDate(new Date())
   );
-  const [isWeekDialogOpen, setIsWeekDialogOpen] = useState<boolean>(false);
 
   const weekNumber = useMemo(
     () =>
