@@ -5,7 +5,13 @@ import { motion } from "framer-motion";
 
 import EventDialog, { Action, IEvent } from "./EventDialog";
 import Button from "../common/Button";
-import { getCurrentWeekDays, getISODate, getLocalDate, getLocalTime, isDateEqual } from "../../libs/date";
+import {
+  getCurrentWeekDays,
+  getISODate,
+  getLocalDate,
+  getLocalTime,
+  isDateEqual,
+} from "../../libs/date";
 import apiClient from "../../libs/api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +33,7 @@ interface WeekdayItemProps extends IWeekdayItem {
   weekday: number; // Index of the weekday
   isActive?: boolean; // Flag to indicate if the item is active
   onWeekdayChange?: (weekday: number) => void; // Callback function when weekday changes
-  onSubmit: (event: IEvent, action: 'create' | 'update' | 'delete') => void;
+  onSubmit: (event: IEvent, action: "create" | "update" | "delete") => void;
 }
 
 // Array of weekday names in abbreviated format
@@ -53,7 +59,7 @@ const monthTexts = [
   "Sep", // September
   "Okt", // Oktober
   "Nov", // November
-  "Dec"  // December
+  "Dec", // December
 ];
 
 // Sample data for the weekdays
@@ -128,8 +134,8 @@ function WeekdayItem({
   day,
   events,
   isActive = false,
-  onWeekdayChange = () => { },
-  onSubmit = () => { }
+  onWeekdayChange = () => {},
+  onSubmit = () => {},
 }: WeekdayItemProps) {
   const navigate = useNavigate();
   const [eventIndex, setEventIndex] = useState<number>(-1); // Index of the currently selected event
@@ -151,7 +157,7 @@ function WeekdayItem({
       return weekdayEvents[eventIndex];
     }
     return null;
-  }, [weekdayEvents, eventIndex])
+  }, [weekdayEvents, eventIndex]);
 
   return (
     <>
@@ -175,8 +181,8 @@ function WeekdayItem({
                 event.isEmpty
                   ? "text-primary-text"
                   : isActive && index === eventIndex
-                    ? "bg-focused-background"
-                    : "bg-primary-background"
+                  ? "bg-focused-background"
+                  : "bg-primary-background"
               )}
               onClick={() => {
                 if (!event.isEmpty) {
@@ -191,9 +197,17 @@ function WeekdayItem({
           {/* <span className="w-full py-2 text-center text-xs leading-4">
             {sleepTime}
           </span> */}
-          {events.length > 2 && <Button size="small" className="w-full h-[32px]" onClick={() => {
-            navigate('/calendar')
-          }}>Visa alla</Button>}
+          {events.length > 2 && (
+            <Button
+              size="small"
+              className="w-full h-[32px]"
+              onClick={() => {
+                navigate("/calendar");
+              }}
+            >
+              Visa alla
+            </Button>
+          )}
         </div>
         {isItemActive && (
           <motion.div
@@ -203,7 +217,8 @@ function WeekdayItem({
             className="flex flex-col gap-y-1 text-primary-text px-2 col-span-2"
           >
             <p className="text-xs leading-4">
-              {getLocalTime(activeEvent?.startTime)} - {getLocalTime(activeEvent?.endTime)}
+              {getLocalTime(activeEvent?.startTime)} -{" "}
+              {getLocalTime(activeEvent?.endTime)}
             </p>
             <p className="font-bold leading-5">{activeEvent?.eventName}</p>
             <p className="text-sm leading-4 line-clamp-4">
@@ -234,6 +249,47 @@ function WeekdayItem({
   );
 }
 
+const WeekSelectDialog = ({
+  isOpen,
+  onClose,
+  onSelect,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelect: (date: Date) => void;
+}) => {
+  const [selectedDate, setSelectedDate] = useState<string>(
+    getLocalDate(new Date())
+  );
+
+  const handleSelect = () => {
+    onSelect(new Date(selectedDate));
+    onClose();
+  };
+
+  return (
+    <>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-4">
+            <p className="text-xl font-semibold mb-4">Select Week</p>
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="border p-2 rounded mb-4"
+            />
+            <div className="flex justify-end gap-x-2">
+              <Button onClick={onClose}>Cancel</Button>
+              <Button onClick={handleSelect}>Select</Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
 // Calendar component displays a calendar view with weekday items
 function Calendar({ className = "" }: CalendarProps) {
   const [activeWeekday, setActiveWeekday] = useState<number>(-1); // Index of the currently active weekday
@@ -241,30 +297,48 @@ function Calendar({ className = "" }: CalendarProps) {
   const [weekEvents, setWeekEvents] = useState<IEvent[]>([]);
   const [weekdayItems, setWeekdayItems] = useState<IWeekdayItem[]>([]);
 
-  const weekNumber = useMemo(() => Math.floor((weekStartDay.getTime() - new Date(weekStartDay.getFullYear(), 0, 1).getTime()) / MILIS_PER_WEEK + 1), [weekStartDay]);
+  const [isWeekDialogOpen, setIsWeekDialogOpen] = useState<boolean>(false);
 
-  const handleSubmit = (event: IEvent, type: 'create' | 'update' | 'delete') => {
-    if (type === 'update') {
-      apiClient.put(`/api/events/${event.id}`, {
-        "event_name": event.eventName,
-        "patient_name": event.patientName,
-        "start_time": new Date(event.startTime).toISOString(),
-        "end_time": new Date(event.endTime).toISOString(),
-        "description": event.description
-      }).then((response: any) => {
-        const { message } = response;
-        setWeekEvents(weekEvents.map(item => item.id === event.id ? event : item));
-        toast.success(message);
-      })
-    } else if (type === 'delete') {
+  const weekNumber = useMemo(
+    () =>
+      Math.floor(
+        (weekStartDay.getTime() -
+          new Date(weekStartDay.getFullYear(), 0, 1).getTime()) /
+          MILIS_PER_WEEK +
+          1
+      ),
+    [weekStartDay]
+  );
+
+  const handleSubmit = (
+    event: IEvent,
+    type: "create" | "update" | "delete"
+  ) => {
+    if (type === "update") {
+      apiClient
+        .put(`/api/events/${event.id}`, {
+          event_name: event.eventName,
+          patient_name: event.patientName,
+          start_time: new Date(event.startTime).toISOString(),
+          end_time: new Date(event.endTime).toISOString(),
+          description: event.description,
+        })
+        .then((response: any) => {
+          const { message } = response;
+          setWeekEvents(
+            weekEvents.map((item) => (item.id === event.id ? event : item))
+          );
+          toast.success(message);
+        });
+    } else if (type === "delete") {
       apiClient.delete(`/api/events/${event.id}`).then((response: any) => {
         const { message } = response;
-        setWeekEvents(weekEvents.filter(item => item.id !== event.id));
-        toast.success(message)
-      })
+        setWeekEvents(weekEvents.filter((item) => item.id !== event.id));
+        toast.success(message);
+      });
     }
-    setActiveWeekday(-1)
-  }
+    setActiveWeekday(-1);
+  };
 
   const handlePrevWeekClick = useCallback(() => {
     const prevWeek = new Date(weekStartDay);
@@ -278,41 +352,65 @@ function Calendar({ className = "" }: CalendarProps) {
     setWeekStartDay(nextWeek);
   }, [weekStartDay]);
 
+  const handleWeekSelect = (date: Date) => {
+    // Calculate the start of the week (Monday) for the selected date
+    const startOfWeek = new Date(date);
+    const dayOfWeek = startOfWeek.getDay(); // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+
+    // Adjust the date to the previous Monday (if the selected date is not already Monday)
+    const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // If it's Sunday, we need to go back 6 days, else go back to the previous Monday
+    startOfWeek.setDate(startOfWeek.getDate() - daysToMonday);
+
+    // Update the weekStartDay to the new Monday (start of the week)
+    setWeekStartDay(startOfWeek);
+  };
+
   useEffect(() => {
     const items = getCurrentWeekDays(weekStartDay);
-    setWeekdayItems(items.map(item => ({
-      day: item.getDate(),
-      events: [],
-      sleepTime: ''
-    })));
+    setWeekdayItems(
+      items.map((item) => ({
+        day: item.getDate(),
+        events: [],
+        sleepTime: "",
+      }))
+    );
 
     const weekEndDay = new Date(weekStartDay);
     weekEndDay.setDate(weekStartDay.getDate() + 7);
-    apiClient.get(`/api/events/user-events?start_date=${getISODate(weekStartDay)}&end_date=${getISODate(weekEndDay)}`).then((response: any) => {
-      const weekEvents: IEvent[] = response.map((item: any) => ({
-        id: item._id,
-        startTime: getLocalDate(item.start_time),
-        endTime: getLocalDate(item.end_time),
-        eventName: item.event_name,
-        patientName: item.patient_name,
-        description: item.description,
-        createdAt: item.created_at,
-      }));
-      setWeekEvents(weekEvents);
-    });
+    apiClient
+      .get(
+        `/api/events/user-events?start_date=${getISODate(
+          weekStartDay
+        )}&end_date=${getISODate(weekEndDay)}`
+      )
+      .then((response: any) => {
+        const weekEvents: IEvent[] = response.map((item: any) => ({
+          id: item._id,
+          startTime: getLocalDate(item.start_time),
+          endTime: getLocalDate(item.end_time),
+          eventName: item.event_name,
+          patientName: item.patient_name,
+          description: item.description,
+          createdAt: item.created_at,
+        }));
+        setWeekEvents(weekEvents);
+      });
   }, [weekStartDay]);
 
   useEffect(() => {
     const items = getCurrentWeekDays(weekStartDay);
-    setWeekdayItems(_weekdayItems => items.map(item => {
-      const events = weekEvents.filter(event => isDateEqual(item, event.startTime));
-      return {
-        day: item.getDate(),
-        events,
-        sleepTime: ''
-      };
-    })
-    )
+    setWeekdayItems((_weekdayItems) =>
+      items.map((item) => {
+        const events = weekEvents.filter((event) =>
+          isDateEqual(item, event.startTime)
+        );
+        return {
+          day: item.getDate(),
+          events,
+          sleepTime: "",
+        };
+      })
+    );
   }, [weekEvents]);
 
   return (
@@ -326,18 +424,31 @@ function Calendar({ className = "" }: CalendarProps) {
         <div className="w-full flex justify-between">
           <p className="font-semibold text-xl leading-6">Kalender</p>
           <div className="flex items-center gap-x-2.5">
-            <span className="w-5 h-5 flex items-center justify-center text-sm cursor-pointer">
+            <span
+              className="w-5 h-5 flex items-center justify-center text-sm cursor-pointer"
+              onClick={() => setIsWeekDialogOpen(true)}
+            >
               <FaChevronDown />
             </span>
-            <p className="leading-5">{monthTexts[weekStartDay.getMonth()]} {weekStartDay.getFullYear()}</p>
+            <p className="leading-5">
+              {monthTexts[weekStartDay.getMonth()]} {weekStartDay.getFullYear()}
+            </p>
           </div>
         </div>
         <div className="flex py-2">
-          <span className="w-6 h-6 flex items-center justify-center cursor-pointer" onClick={handlePrevWeekClick}>
+          <span
+            className="w-6 h-6 flex items-center justify-center cursor-pointer"
+            onClick={handlePrevWeekClick}
+          >
             <FaChevronLeft />
           </span>
-          <p className="grow font-semibold text-xl leading-6">Vecka {weekNumber}</p>
-          <span className="w-6 h-6 flex items-center justify-center cursor-pointer" onClick={handleNextWeekClick}>
+          <p className="grow font-semibold text-xl leading-6">
+            Vecka {weekNumber}
+          </p>
+          <span
+            className="w-6 h-6 flex items-center justify-center cursor-pointer"
+            onClick={handleNextWeekClick}
+          >
             <FaChevronRight />
           </span>
         </div>
@@ -356,6 +467,13 @@ function Calendar({ className = "" }: CalendarProps) {
           ))}
         </motion.div>
       </div>
+
+      {/* Week Select Dialog */}
+      <WeekSelectDialog
+        isOpen={isWeekDialogOpen}
+        onClose={() => setIsWeekDialogOpen(false)}
+        onSelect={handleWeekSelect}
+      />
     </div>
   );
 }
