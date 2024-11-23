@@ -15,6 +15,7 @@ import {
 import apiClient from "../../libs/api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { FaCalendarAlt } from "react-icons/fa";
 
 // Define the structure of a weekday item
 interface IWeekdayItem {
@@ -296,7 +297,9 @@ function Calendar({ className = "" }: CalendarProps) {
   const [weekStartDay, setWeekStartDay] = useState<Date>(new Date());
   const [weekEvents, setWeekEvents] = useState<IEvent[]>([]);
   const [weekdayItems, setWeekdayItems] = useState<IWeekdayItem[]>([]);
-
+  const [selectedDate, setSelectedDate] = useState<string>(
+    getLocalDate(new Date())
+  );
   const [isWeekDialogOpen, setIsWeekDialogOpen] = useState<boolean>(false);
 
   const weekNumber = useMemo(
@@ -423,16 +426,31 @@ function Calendar({ className = "" }: CalendarProps) {
       <div className="flex flex-col gap-y-1">
         <div className="w-full flex justify-between">
           <p className="font-semibold text-xl leading-6">Kalender</p>
-          <div className="flex items-center gap-x-2.5">
-            <span
-              className="w-5 h-5 flex items-center justify-center text-sm cursor-pointer"
-              onClick={() => setIsWeekDialogOpen(true)}
-            >
-              <FaChevronDown />
-            </span>
-            <p className="leading-5">
+          <div className="flex items-center gap-x-2.5 relative">
+          <p className="leading-5">
               {monthTexts[weekStartDay.getMonth()]} {weekStartDay.getFullYear()}
             </p>
+            <div className="relative w-8 h-8">
+              {/* <FaChevronDown /> */}
+              <input
+                type="date"
+                value={selectedDate}
+                id="date-input"
+                onChange={(e) => {
+                  const newDate = e.target.value;
+                  setSelectedDate(newDate);
+                  handleWeekSelect(new Date(newDate)); // Update the week start date based on selected date
+                }}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+              <label
+                htmlFor="date-input" // Link the label with the input
+                className="cursor-pointer w-8 h-8 flex items-center justify-center text-primary-text"
+              >
+                <FaCalendarAlt className="w-full h-full" />{" "}
+                {/* Calendar Icon */}
+              </label>
+            </div>
           </div>
         </div>
         <div className="flex py-2">
@@ -469,11 +487,11 @@ function Calendar({ className = "" }: CalendarProps) {
       </div>
 
       {/* Week Select Dialog */}
-      <WeekSelectDialog
+      {/* <WeekSelectDialog
         isOpen={isWeekDialogOpen}
         onClose={() => setIsWeekDialogOpen(false)}
         onSelect={handleWeekSelect}
-      />
+      /> */}
     </div>
   );
 }
