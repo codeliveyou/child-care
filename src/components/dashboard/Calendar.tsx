@@ -386,9 +386,7 @@ function Calendar({ className = "" }: CalendarProps) {
         <div className="w-full flex justify-between">
           <p className="font-semibold text-xl leading-6">Kalender</p>
           <div className="flex items-center gap-x-2.5 relative">
-          <p className="leading-5">
-              {monthTexts[weekStartDay.getMonth()]} {weekStartDay.getFullYear()}
-            </p>
+          
             <div className="relative w-8 h-8">
               {/* <FaChevronDown /> */}
               <input
@@ -410,6 +408,11 @@ function Calendar({ className = "" }: CalendarProps) {
                 {/* Calendar Icon */}
               </label>
             </div>
+
+            <p className="leading-5">
+              {monthTexts[weekStartDay.getMonth()]} {weekStartDay.getFullYear()}
+            </p>
+            
           </div>
         </div>
         <div className="flex py-2">
