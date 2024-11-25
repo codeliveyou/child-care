@@ -240,7 +240,7 @@ const CalendarPage = () => {
           createdAt: created_at
         }
       }))
-      setTotalPage(Math.ceil(response.length / 10));
+      setTotalPage(Math.ceil(response.length / 6));
     });
   }, []);
 
@@ -276,7 +276,7 @@ const CalendarPage = () => {
           <p className="text-xl font-semibold">Evenemang</p>
           <div className="grow flex flex-col pr-2 overflow-y-auto">
             {/* List of all events */}
-            {memoEvents.slice((currentPage - 1) * 10).map((eventItem, index) => (
+            {memoEvents.slice((currentPage - 1) * 6, currentPage * 6).map((eventItem, index) => (
               <EventListItem key={index} {...eventItem} onEventClick={handleEventClick(eventItem.id || '')} />
             ))}
           </div>
