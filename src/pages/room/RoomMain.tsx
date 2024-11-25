@@ -67,7 +67,7 @@ const RoomListPage = () => {
         });
         // console.log('roomdata', response)
         setRoomData(response);
-        setTotalPage(Math.ceil(response.length / 10));
+        setTotalPage(Math.ceil(response.length / 6));
       } catch (err: any) {
         console.log("Error in fetching room data", err);
       }
@@ -105,13 +105,12 @@ const RoomListPage = () => {
         <div className={classes.historyList}>
           <div className="grow flex flex-col gap-y-2.5 overflow-y-auto">
             {/* Mapping over dummyHistoryData to render each RoomHistoryItem */}
-            {memoRooms.slice((currentPage - 1) * 10).map((history: any, index: number) => (
+            {memoRooms.slice((currentPage - 1) * 6,  currentPage * 6).map((history: any, index: number) => (
               <RoomHistoryItem key={index} history={history} />
             ))}
           </div>
         </div>
         <div className={classes.pagination}>
-          {/* Pagination component to handle page changes */}
           <Pagination
             currentPage={currentPage}
             totalPage={totalPage}
