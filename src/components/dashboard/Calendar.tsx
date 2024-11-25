@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { FaChevronDown, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
 
@@ -404,7 +404,8 @@ function Calendar({ className = "" }: CalendarProps) {
                 htmlFor="date-input" // Link the label with the input
                 className="cursor-pointer w-8 h-8 flex items-center justify-center text-primary-text"
               >
-                <FaCalendarAlt className="w-full h-full" />{" "}
+                {/* <FaCalendarAlt className="w-full h-full" />{" "} */}
+                <FaChevronDown className="cursor-pointer" />
                 {/* Calendar Icon */}
               </label>
             </div>
@@ -412,7 +413,7 @@ function Calendar({ className = "" }: CalendarProps) {
             <p className="leading-5">
               {monthTexts[weekStartDay.getMonth()]} {weekStartDay.getFullYear()}
             </p>
-            
+
           </div>
         </div>
         <div className="flex py-2">
