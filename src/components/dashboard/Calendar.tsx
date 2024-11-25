@@ -15,7 +15,6 @@ import {
 import apiClient from "../../libs/api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { FaCalendarAlt } from "react-icons/fa";
 
 // Define the structure of a weekday item
 interface IWeekdayItem {
@@ -135,8 +134,8 @@ function WeekdayItem({
   day,
   events,
   isActive = false,
-  onWeekdayChange = () => {},
-  onSubmit = () => {},
+  onWeekdayChange = () => { },
+  onSubmit = () => { },
 }: WeekdayItemProps) {
   const navigate = useNavigate();
   const [eventIndex, setEventIndex] = useState<number>(-1); // Index of the currently selected event
@@ -182,8 +181,8 @@ function WeekdayItem({
                 event.isEmpty
                   ? "text-primary-text"
                   : isActive && index === eventIndex
-                  ? "bg-focused-background"
-                  : "bg-primary-background"
+                    ? "bg-focused-background"
+                    : "bg-primary-background"
               )}
               onClick={() => {
                 if (!event.isEmpty) {
@@ -266,8 +265,8 @@ function Calendar({ className = "" }: CalendarProps) {
       Math.floor(
         (weekStartDay.getTime() -
           new Date(weekStartDay.getFullYear(), 0, 1).getTime()) /
-          MILIS_PER_WEEK +
-          1
+        MILIS_PER_WEEK +
+        1
       ),
     [weekStartDay]
   );
@@ -386,7 +385,7 @@ function Calendar({ className = "" }: CalendarProps) {
         <div className="w-full flex justify-between">
           <p className="font-semibold text-xl leading-6">Kalender</p>
           <div className="flex items-center gap-x-2.5 relative">
-          
+
             <div className="relative w-8 h-8">
               {/* <FaChevronDown /> */}
               <input
