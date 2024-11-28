@@ -12,32 +12,48 @@
 
 /* General scrollbar styles */
 ::-webkit-scrollbar {
-  width: 5px; /* Set the width of the vertical scrollbar */
-  height: 5px; /* Set the height of the horizontal scrollbar */
+  width: 5px;
+  /* Set the width of the vertical scrollbar */
+  height: 5px;
+  /* Set the height of the horizontal scrollbar */
 }
 
 /* Style for the scrollbar track (the area the thumb moves along) */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Set the background color of the scrollbar track */
+  background: #f1f1f1;
+  /* Set the background color of the scrollbar track */
 }
 
 /* Style for the scrollbar handle (the draggable part) */
 ::-webkit-scrollbar-thumb {
-  background: #211DEF; /* Set the color of the scrollbar handle */
-  border-radius: 6px; /* Round the corners of the scrollbar handle */
+  background: #211DEF;
+  /* Set the color of the scrollbar handle */
+  border-radius: 6px;
+  /* Round the corners of the scrollbar handle */
 }
 
 /* Style for the scrollbar handle when hovered */
 ::-webkit-scrollbar-thumb:hover {
-  background: #4441e7; /* Change the color of the scrollbar handle on hover */
+  background: #4441e7;
+  /* Change the color of the scrollbar handle on hover */
 }
 
 /* Image selector styles */
 .image-selector {
-  user-drag: none; /* Prevent image dragging in supported browsers */
-  -webkit-user-drag: none; /* Prevent image dragging in WebKit browsers */
-  user-select: none; /* Prevent text selection */
-  -moz-user-select: none; /* Prevent text selection in Firefox */
-  -webkit-user-select: none; /* Prevent text selection in WebKit browsers */
-  -ms-user-select: none; /* Prevent text selection in Internet Explorer */
+  user-drag: none;
+  /* Prevent image dragging in supported browsers */
+  -webkit-user-drag: none;
+  /* Prevent image dragging in WebKit browsers */
+  user-select: none;
+  /* Prevent text selection */
+  -moz-user-select: none;
+  /* Prevent text selection in Firefox */
+  -webkit-user-select: none;
+  /* Prevent text selection in WebKit browsers */
+  -ms-user-select: none;
+  /* Prevent text selection in Internet Explorer */
+}
+
+.file-max-width {
+  max-width: calc(-542px + 100vw);
 }

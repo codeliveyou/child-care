@@ -201,7 +201,7 @@ const FilesPage = () => {
               <div
                 ref={filesRef}
                 {...events}
-                className="pb-1.5 flex gap-2 overflow-x-auto scrollbar scrollbar-none grow"
+                className="pb-1.5 flex gap-2 overflow-x-auto scrollbar scrollbar-none grow file-max-width"
               >
                 {/* Displaying recent FileListItem components */}
                 {latestFiles.map((fileItem, index) => (
