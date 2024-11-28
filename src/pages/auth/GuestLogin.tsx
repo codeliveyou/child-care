@@ -30,8 +30,7 @@ const GuestLogin = () => {
   // useNavigate hook to programmatically navigate between routes
   const navigate = useNavigate();
   const [username, setUsername] = useState<string>("");
-  const [roomName, setRoomName] = useState<string>("");
-  const [guestPassword, setGuestPassword] = useState<string>("");
+  const [guestId, setGuestID] = useState<string>("");
   // const [meetinginfo, setMeetingInfo] = useState<any>({});
   // const [meetingjoined, setMeetingJoined] = useState<boolean>(false);
 
@@ -49,12 +48,12 @@ const GuestLogin = () => {
   async function handleClick() {
     apiClient
       .post("api/room/check_guest_authentication", {
-        roomName,
-        guestPassword,
+        guestName: username,
+        guestId
       })
       .then((response: any) => {
         if (response.message == "ok") {
-          navigate(`/guest?${new URLSearchParams({ roomname: roomName })}`); // Navigate to the patient page when clicked
+          navigate(`/guest?${new URLSearchParams({ roomname: response.roomName })}`); // Navigate to the patient page when clicked
         } else {
           toast.error("Please enter correct password");
         }
@@ -141,16 +140,10 @@ const GuestLogin = () => {
                 name="keyID"
                 placeholder="Nyckel ID"
                 className="border border-primary-border/25 text-primary-placeholder bg-white/30"
-                value={roomName}
-                onChange={(e) => setRoomName(e.target.value)}
+                value={guestId}
+                onChange={(e) => setGuestID(e.target.value)}
               />
-              <Input
-                name="password"
-                placeholder="Password"
-                className="border border-primary-border/25 text-primary-placeholder bg-white/30"
-                value={guestPassword}
-                onChange={(e) => setGuestPassword(e.target.value)}
-              />
+              
               {/* Button to navigate to guest page upon click */}
               <Button
                 className="mt-4 border border-primary-border/25"

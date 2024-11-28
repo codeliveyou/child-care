@@ -27,8 +27,9 @@ const RoomCreateOnboarding4 = () => {
   // const [meetinginfo, setMeetingInfo] = useState({});
   const [meetingCreated, setMeetingCreated] = useState(false);
   const [roomName, setRoomName] = useState<string>("");
-  const [roomId, setRoomId] = useState<string>("");
+  // const [roomId, setRoomId] = useState<string>("");
   const [guestPassword, setGuestPassword] = useState<string>("");
+  const [patientPassword, setPatientPassword] = useState<string>("");
   // const meteredMeeting = useContext(MeetingContext);
 
   useEffect(() => {
@@ -47,19 +48,19 @@ const RoomCreateOnboarding4 = () => {
     navigator.clipboard.writeText(roomId);
   };
 
-  const generatePassword = (length: number = 10): string => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
-    const array = new Uint32Array(length);
-    window.crypto.getRandomValues(array);
+const generateId = (length: number = 10): string => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const array = new Uint32Array(length);
+  window.crypto.getRandomValues(array);
 
-    let password = '';
-    for (let i = 0; i < length; i++) {
-      const randomIndex = array[i] % characters.length;
-      password += characters[randomIndex];
-    }
+  let id = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = array[i] % characters.length;
+    id += characters[randomIndex];
+  }
 
-    return password;
-  };
+  return id;
+};
 
 
   async function handleCreateMeeting(username: string) {
@@ -81,9 +82,11 @@ const RoomCreateOnboarding4 = () => {
     // }
 
     
-    const g_pass = generatePassword();
+    const guest_id = generateId();
+    const patient_id = generateId();
     
-    setGuestPassword(g_pass);
+    setGuestPassword(guest_id);
+    setPatientPassword(patient_id);
 
     console.log("State", stateParams);
     const data: any = await apiClient.post(`/api/room/create`, {
@@ -95,7 +98,8 @@ const RoomCreateOnboarding4 = () => {
       patientName: stateParams.patientName,
       patientPersonalID: stateParams.patientPersonalID,
       avatarName: stateParams.avatarName,
-      g_pass
+      guest_id,
+      patient_id
     });
     // Calling API to fetch Metered Domain
     // const response = await axios.get(API_LOCATION + "/api/room/metered-domain");
@@ -104,7 +108,7 @@ const RoomCreateOnboarding4 = () => {
 
     // const METERED_DOMAIN = response.data.METERED_DOMAIN;
     const meetingRoomName = data.roomName;
-    setRoomId(meetingRoomName);
+    // setRoomId(meetingRoomName);
 
     // // Calling the join() of Metered SDK
     // const joinResponse = await meteredMeeting.join({
@@ -156,36 +160,16 @@ const RoomCreateOnboarding4 = () => {
             {/* Patient ID input field */}
             <div className="w-full flex items-center justify-end gap-x-2.5">
               <p className="text-lg leading-6 text-light-background">
-                Room ID:
+                Patient ID:
               </p>
               <div className="relative">
                 <Input
                   name="patientID"
                   placeholder="#123445456546"
-                  value={roomId}
-                  className="border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text rounded-2xl"
-                />
-                {/* Copy icon for patient ID */}
-                <span
-                  className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer"
-                  onClick={() => roomIdToClipboard(roomId)}
-                >
-                  <img src="/icons/copy.svg" alt="Copy icon" />
-                </span>
-              </div>
-            </div>
-
-            {/* <div className="w-full flex items-center justify-end gap-x-2.5">
-              <p className="text-lg leading-6 text-light-background">
-                Patient Pass:
-              </p>
-              <div className="relative">
-                <Input
-                  name="patientPassword"
-                  placeholder="#123445456546"
                   value={patientPassword}
                   className="border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text rounded-2xl"
                 />
+                {/* Copy icon for patient ID */}
                 <span
                   className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer"
                   onClick={() => roomIdToClipboard(patientPassword)}
@@ -193,20 +177,19 @@ const RoomCreateOnboarding4 = () => {
                   <img src="/icons/copy.svg" alt="Copy icon" />
                 </span>
               </div>
-            </div> */}
+            </div>
 
             <div className="w-full flex items-center justify-end gap-x-2.5">
               <p className="text-lg leading-6 text-light-background">
-                Guest Pass:
+                Guest ID:
               </p>
               <div className="relative">
                 <Input
-                  name="guestPassword"
+                  name="patientPassword"
                   placeholder="#123445456546"
                   value={guestPassword}
                   className="border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text rounded-2xl"
                 />
-                {/* Copy icon for patient ID */}
                 <span
                   className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer"
                   onClick={() => roomIdToClipboard(guestPassword)}
@@ -215,6 +198,7 @@ const RoomCreateOnboarding4 = () => {
                 </span>
               </div>
             </div>
+            
 
             {/* Guest ID input field */}
             {/* <div className="w-full flex items-center justify-end gap-x-2.5">

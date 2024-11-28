@@ -24,7 +24,7 @@ interface Participant {
 
 const PatientLogin = () => {
   const navigate = useNavigate(); // Hook to programmatically navigate between routes
-  const [roomName, setRoomName] = useState<string>("");
+  const [patientPassword, setPatientPassword] = useState<string>("");
   const meteredMeeting = useContext(MeetingContext);
 
   const [remoteTracks, setRemoteTracks] = useState<TrackItem[]>([]);
@@ -87,11 +87,11 @@ const PatientLogin = () => {
   const patientSignin = async () => {
     apiClient
       .post("api/room/check_patient_authentication", {
-        roomName,
+        patientPassword,
       })
       .then((response: any) => {
         if (response.message == "ok") {
-          navigate(`/patient?${new URLSearchParams({ roomname: roomName })}`); // Navigate to the patient page when clicked
+          navigate(`/patient?${new URLSearchParams({ roomname: response.roomName })}`); // Navigate to the patient page when clicked
         } else {
           toast.error("Only one patient can join");
         }
@@ -122,8 +122,8 @@ const PatientLogin = () => {
                   name="roomID"
                   placeholder="Rum-ID eller Perssonnumer"
                   className="border border-primary-border/25 text-primary-placeholder bg-white/30"
-                  onChange={(e) => setRoomName(e.target.value)}
-                  value={roomName}
+                  onChange={(e) => setPatientPassword(e.target.value)}
+                  value={patientPassword}
                 />
                 {/* <Input
                   name="patientPassword"
