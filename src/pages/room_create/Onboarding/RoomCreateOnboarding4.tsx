@@ -28,7 +28,6 @@ const RoomCreateOnboarding4 = () => {
   const [meetingCreated, setMeetingCreated] = useState(false);
   const [roomName, setRoomName] = useState<string>("");
   const [roomId, setRoomId] = useState<string>("");
-  const [patientPassword, setPatientPassword] = useState<string>("");
   const [guestPassword, setGuestPassword] = useState<string>("");
   // const meteredMeeting = useContext(MeetingContext);
 
@@ -81,9 +80,9 @@ const RoomCreateOnboarding4 = () => {
     //   }
     // }
 
-    const p_pass = generatePassword();
+    
     const g_pass = generatePassword();
-    setPatientPassword(p_pass);
+    
     setGuestPassword(g_pass);
 
     console.log("State", stateParams);
@@ -96,7 +95,6 @@ const RoomCreateOnboarding4 = () => {
       patientName: stateParams.patientName,
       patientPersonalID: stateParams.patientPersonalID,
       avatarName: stateParams.avatarName,
-      p_pass,
       g_pass
     });
     // Calling API to fetch Metered Domain
@@ -177,7 +175,7 @@ const RoomCreateOnboarding4 = () => {
               </div>
             </div>
 
-            <div className="w-full flex items-center justify-end gap-x-2.5">
+            {/* <div className="w-full flex items-center justify-end gap-x-2.5">
               <p className="text-lg leading-6 text-light-background">
                 Patient Pass:
               </p>
@@ -188,7 +186,6 @@ const RoomCreateOnboarding4 = () => {
                   value={patientPassword}
                   className="border border-disabled-text bg-primary-background text-disabled-text placeholder:text-disabled-text rounded-2xl"
                 />
-                {/* Copy icon for patient ID */}
                 <span
                   className="absolute top-1/2 -translate-y-1/2 right-2.5 w-5 h-5 flex items-center justify-center cursor-pointer"
                   onClick={() => roomIdToClipboard(patientPassword)}
@@ -196,7 +193,7 @@ const RoomCreateOnboarding4 = () => {
                   <img src="/icons/copy.svg" alt="Copy icon" />
                 </span>
               </div>
-            </div>
+            </div> */}
 
             <div className="w-full flex items-center justify-end gap-x-2.5">
               <p className="text-lg leading-6 text-light-background">
