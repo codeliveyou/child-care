@@ -54,27 +54,27 @@ const DashboardPage = () => {
   const [videoDialogOpen, setVideoDialogOpen] = useState<boolean>(false); // State to manage video dialog visibility
   const [reportDialogOpen, setReportDialogOpen] = useState<boolean>(false); // State to manage report dialog visibility
   const [roomData, setRoomData] = useState<any>([]);
-  const [docList, setDocList] =  useState<any>([]);
+  const [docList, setDocList] = useState<any>([]);
   const [reportContent, setReportContent] = useState<string>("");
 
   const handleFileItemClick =
-  (fileItem: IFileListItem | IFileTileItem) => async () => {
-    // Open dialog based on the file type
-    if (fileItem.file_type === "mp4") setVideoDialogOpen(true);
-    else {
-      setReportDialogOpen(true);
-      apiClient
-        .get(`/api/file_system/file-as-xml/${fileItem.file_id}`)
-        .then((response: any) => {
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(response, 'application/xml');
-          const contentText = xmlDoc.getElementsByTagName('Content')[0]?.textContent || '';
-          setReportContent(contentText);
-          setReportDialogOpen(true);
-        });
-    }
-  };
-  
+    (fileItem: IFileListItem | IFileTileItem) => async () => {
+      // Open dialog based on the file type
+      if (fileItem.file_type === "mp4") setVideoDialogOpen(true);
+      else {
+        setReportDialogOpen(true);
+        apiClient
+          .get(`/api/file_system/file-as-xml/${fileItem.file_id}`)
+          .then((response: any) => {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(response, 'application/xml');
+            const contentText = xmlDoc.getElementsByTagName('Content')[0]?.textContent || '';
+            setReportContent(contentText);
+            setReportDialogOpen(true);
+          });
+      }
+    };
+
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
@@ -95,7 +95,7 @@ const DashboardPage = () => {
       console.log('list-documents', response)
       setDocList(response);
     })
-  },[])
+  }, [])
 
   useEffect(() => {
     apiClient.get('api/file_system/list-videos').then((response: any) => {
@@ -217,35 +217,9 @@ const DashboardPage = () => {
               <div className="text-lg font-bold text-primary-text">
                 DOCs rapport
               </div>
-              <div className="grow py-4 flex flex-col gap-4 pr-4 overflow-y-auto">
+              <div className="grow py-4 flex flex-col gap-4 pr-4 overflow-y-auto scrollbar-none">
                 {/* Render each report item */}
                 {docList.map((reportItem: any, index: number) => (
-                  // <div
-                  //   key={index}
-                  //   className="flex items-center hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
-                  //   onClick={() => {
-                  //     setReportDialogOpen(true); // Open report dialog
-                  //   }}
-                  // >
-                  //   <div className="p-4">
-                  //     <img
-                  //       src={reportItem.file_type === "doc" ? DocIcon : PdfIcon}
-                  //       alt="Report icon"
-                  //       className="w-12"
-                  //     />
-                  //   </div>
-                  //   <div className="py-2.5 px-4 flex flex-col justify-between">
-                  //     <p className="font-semibold text-xl leading-6">
-                  //       {reportItem.filename}
-                  //     </p>
-                  //     {reportItem.upload_date && (
-                  //       <div className="space-y-0.5 text-disabled-text text-sm leading-4">
-                  //         <p>Sista aktiviteten</p>
-                  //         <p>{reportItem.upload_date}</p>
-                  //       </div>
-                  //     )}
-                  //   </div>
-                  // </div>
                   <FileReportItem
                     key={index}
                     {...reportItem}
