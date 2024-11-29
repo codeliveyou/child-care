@@ -73,19 +73,23 @@ const FilesPage = () => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [latestFiles, setLatestFiles] = useState<IFileListItem[]>([]);
   const [reportContent, setReportContent] = useState<string>("");
+  const [currentVideoLink, setCurrentVideoLink] = useState<string>("");
 
   const handleFileItemClick =
     (fileItem: IFileListItem | IFileTileItem) => async () => {
       // Open dialog based on the file type
-      if (fileItem.file_type === "mp4") setVideoDialogOpen(true);
-      else {
+      if (fileItem.file_type === "mp4") {
+        setVideoDialogOpen(true);
+        setCurrentVideoLink(`http://167.88.170.239/api/file_system/file/${fileItem.file_id}`)
+      } else {
         setReportDialogOpen(true);
         apiClient
           .get(`/api/file_system/file-as-xml/${fileItem.file_id}`)
           .then((response: any) => {
             const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(response, 'application/xml');
-            const contentText = xmlDoc.getElementsByTagName('Content')[0]?.textContent || '';
+            const xmlDoc = parser.parseFromString(response, "application/xml");
+            const contentText =
+              xmlDoc.getElementsByTagName("Content")[0]?.textContent || "";
             setReportContent(contentText);
             setReportDialogOpen(true);
           });
@@ -151,10 +155,8 @@ const FilesPage = () => {
   useEffect(() => {
     apiClient.get("api/file_system/recent-files").then((response: any) => {
       setLatestFiles(response);
-      console.log(response);
     });
   }, []);
-
 
   return (
     <>
@@ -265,6 +267,7 @@ const FilesPage = () => {
         onClose={() => {
           setVideoDialogOpen(false);
         }}
+        source={currentVideoLink}
       />
       <FileDialog
         open={fileDialogOpen}

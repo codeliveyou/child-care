@@ -56,6 +56,8 @@ const DashboardPage = () => {
   const [roomData, setRoomData] = useState<any>([]);
   const [docList, setDocList] = useState<any>([]);
   const [reportContent, setReportContent] = useState<string>("");
+  const [videoList, setVideoList] = useState<any>([]);
+  const [currentVideoLink, setCurrentVideoLink] = useState<string>("");
 
   const handleFileItemClick =
     (fileItem: IFileListItem | IFileTileItem) => async () => {
@@ -100,8 +102,9 @@ const DashboardPage = () => {
   useEffect(() => {
     apiClient.get('api/file_system/list-videos').then((response: any) => {
       console.log('list-videos', response)
+      setVideoList(response);
     })
-  })
+  }, [])
 
   return (
     <>
@@ -175,31 +178,32 @@ const DashboardPage = () => {
               </div>
               <div className="grow flex flex-col overflow-y-auto pt-4 pr-2">
                 {/* Render each video item */}
-                {videoData.map((video, index) => (
+                {videoList.map((video: any, index: number) => (
                   <div
                     key={index}
                     className="p-2 flex items-center gap-x-4 hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
                     onClick={() => {
+                      setCurrentVideoLink(`http://167.88.170.239/api/file_system/file/${video.file_id}`);
                       setVideoDialogOpen(true); // Open video dialog
                     }}
                   >
                     <div className="relative rounded-lg overflow-hidden h-24 w-[200px] shrink-0">
                       <img
-                        src={video.videoUri}
+                        src={`http://167.88.170.239/api/file_system/file/${video.file_id}`}
                         alt="Video thumbnail"
                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full z-0"
                       />
                     </div>
                     <div className="flex flex-col gap-y-1">
                       <p className="font-semibold text-xl leading-6 line-clamp-1">
-                        {video.title}
+                        {video.filename}
                       </p>
-                      {video.activity && (
+                      {/* {video.activity && (
                         <div className="text-disabled-text text-sm leading-4">
                           <p>Sista aktiviteten</p>
                           <p>{video.activity}</p>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 ))}
@@ -243,7 +247,8 @@ const DashboardPage = () => {
         open={videoDialogOpen}
         onClose={() => {
           setVideoDialogOpen(false); // Close video dialog
-        }}
+        }}        
+        source = {currentVideoLink}
       />
       <ReportDialog
         open={reportDialogOpen}

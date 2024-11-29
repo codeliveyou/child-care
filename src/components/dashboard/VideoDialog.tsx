@@ -6,11 +6,12 @@ import Dialog from "../common/Dialog";
 // Type definition for VideoDialog props
 type VideoDialogProps = {
   open: boolean; // Whether the dialog is open
+  source: string;
   onClose: () => void; // Function to call when closing the dialog
 };
 
 // VideoDialog component
-const VideoDialog = ({ open, onClose }: VideoDialogProps) => {
+const VideoDialog = ({ open, source, onClose }: VideoDialogProps) => {
   // Reference to the video element
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -43,29 +44,43 @@ const VideoDialog = ({ open, onClose }: VideoDialogProps) => {
 
   // Effect to handle video element setup and event listeners
   useEffect(() => {
-    if (videoRef.current) {
-      setTotalLength(videoRef.current.duration);
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      setTotalLength(videoElement.duration);
 
       // Update state when video starts playing
-      videoRef.current.addEventListener("play", () => {
+      const handlePlay = () => {
         setIsPlaying(true);
-        setTotalLength(videoRef.current?.duration || 1);
-      });
+        setTotalLength(videoElement.duration || 1);
+      };
 
       // Update state when video is paused
-      videoRef.current.addEventListener("pause", () => {
+      const handlePause = () => {
         setIsPlaying(false);
-      });
+      };
 
       // Reset current time when video ends
-      videoRef.current.addEventListener("ended", () => {
+      const handleEnded = () => {
         setCurrentTime(0);
-      });
+      };
 
       // Update current time state as video plays
-      videoRef.current.addEventListener("timeupdate", () => {
-        setCurrentTime(Math.floor(videoRef.current?.currentTime || 0));
-      });
+      const handleTimeUpdate = () => {
+        setCurrentTime(Math.floor(videoElement.currentTime || 0));
+      };
+
+      videoElement.addEventListener("play", handlePlay);
+      videoElement.addEventListener("pause", handlePause);
+      videoElement.addEventListener("ended", handleEnded);
+      videoElement.addEventListener("timeupdate", handleTimeUpdate);
+
+      // Cleanup event listeners on component unmount
+      return () => {
+        videoElement.removeEventListener("play", handlePlay);
+        videoElement.removeEventListener("pause", handlePause);
+        videoElement.removeEventListener("ended", handleEnded);
+        videoElement.removeEventListener("timeupdate", handleTimeUpdate);
+      };
     }
   }, []); // Empty dependency array to run effect only once
 
@@ -78,16 +93,17 @@ const VideoDialog = ({ open, onClose }: VideoDialogProps) => {
     >
       <div className="relative w-full h-fit">
         {/* Display a placeholder image when video hasn't started */}
-        {currentTime === 0 && (
+        {/* {currentTime === 0 && (
           <img
             src="/images/video/popup.png"
             className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full"
           />
-        )}
+        )} */}
         {/* Video element */}
         <video
           ref={videoRef}
-          src="https://villagefinds.com/assets/customer/videos/hero.mp4"
+          // src="https://villagefinds.com/assets/customer/videos/hero.mp4"
+          src={source}
           className="w-full"
         />
       </div>
