@@ -16,35 +16,6 @@ import { FileFormat, IFileTileItem } from "../../components/folder/FileTileItem"
 import { IFileListItem } from "../../components/folder/FileListItem";
 import FileReportItem from "../../components/folder/FileReportItem";
 
-type VideoItem = {
-  title: string;
-  videoUri: string;
-  activity: string;
-}
-
-
-const videoData: VideoItem[] = [
-  {
-    title: "Noah möte",
-    videoUri: "/images/video/1.png",
-    activity: "Igår 11:25",
-  },
-  {
-    title: "Noah möte",
-    videoUri: "/images/video/2.png",
-    activity: "Igår 11:25",
-  },
-  {
-    title: "Annas rum - inspelning",
-    videoUri: "/images/video/3.png",
-    activity: "Den 12-02-2024",
-  },
-  {
-    title: "Stella rooms",
-    videoUri: "/images/video/4.png",
-    activity: "Den 24-02-2024",
-  },
-];
 
 
 
@@ -188,11 +159,13 @@ const DashboardPage = () => {
                     }}
                   >
                     <div className="relative rounded-lg overflow-hidden h-24 w-[200px] shrink-0">
-                      <img
+                      <video
                         src={`http://167.88.170.239/api/file_system/file/${video.file_id}`}
-                        alt="Video thumbnail"
                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full z-0"
-                      />
+                        preload="metadata"
+                      >
+                        <source src={`http://167.88.170.239/api/file_system/file/${video.file_id}#t=0.1`} type="video/mp4" />
+                      </video>
                     </div>
                     <div className="flex flex-col gap-y-1">
                       <p className="font-semibold text-xl leading-6 line-clamp-1">
