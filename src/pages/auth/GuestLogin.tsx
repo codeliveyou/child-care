@@ -53,7 +53,7 @@ const GuestLogin = () => {
       })
       .then((response: any) => {
         if (response.message == "ok") {
-          navigate(`/guest?${new URLSearchParams({ roomname: response.roomName })}`); // Navigate to the patient page when clicked
+          navigate(`/guest?${new URLSearchParams({ roomname: response.roomName })}&username=${username}`); // Navigate to the patient page when clicked
         } else {
           toast.error("Please enter correct password");
         }

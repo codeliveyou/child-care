@@ -110,6 +110,7 @@ const MainLayout = () => {
 
     setUserType(userType);
     setUserList(userList);
+    console.log('userlist', userList)
     if (!currentUser) setActiveUser(guestList[0]?.username || "");
     else setActiveUser(currentUser);
   }, [searchParams, patientList, guestList]);
