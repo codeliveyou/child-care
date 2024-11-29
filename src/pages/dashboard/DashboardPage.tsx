@@ -217,7 +217,7 @@ const DashboardPage = () => {
               <div className="text-lg font-bold text-primary-text">
                 DOCs rapport
               </div>
-              <div className="grow py-4 flex flex-col gap-4 pr-4 overflow-y-auto scrollbar-none">
+              <div className="grow py-4 flex flex-col gap-4 pr-4 overflow-y-auto">
                 {/* Render each report item */}
                 {docList.map((reportItem: any, index: number) => (
                   <FileReportItem

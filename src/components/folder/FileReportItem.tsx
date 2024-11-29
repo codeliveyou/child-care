@@ -35,7 +35,7 @@ const FileReportItem = ({
         />
       </div>
       <div className="flex flex-col gap-y-1">
-        <p className="font-semibold text-xl leading-6 line-clamp-1">
+        <p className="font-semibold text-xl leading-6 line-clamp-1 break-all">
           {filename}
         </p>
         {date && (
