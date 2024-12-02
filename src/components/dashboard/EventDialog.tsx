@@ -60,17 +60,28 @@ function EventDialog({
   const [staging, setStaging] = useState<Staging>(
     action === Action.Create ? Staging.Editing : Staging.Confirm
   ); // State to manage the dialog's staging (confirm or editing)
-  const [event, setEvent] = useState<IEvent>(activeEvent || initialEvent)
+  const [event, setEvent] = useState<IEvent>(activeEvent || initialEvent);
+  const [error, setError] = useState<string | null>(null); // State for error messages
 
   // Function to handle the save button click
   const handleSaveClick = () => {
+    // Validate that start time is not later than end time
+    const startTime = new Date(event.startTime);
+    const endTime = new Date(event.endTime);
+
+    if (startTime > endTime) {
+      setError("Start time cannot be later than end time.");
+      return;
+    }
+
+    setError(null); // Clear error if validation passes
     onSubmit(event, action === Action.Create ? 'create' : 'update');
-    onClose()
+    onClose();
   };
 
   const handleEventChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setEvent({ ...event, [e.target.name]: e.target.value })
-  }
+    setEvent({ ...event, [e.target.name]: e.target.value });
+  };
 
   useEffect(() => {
     if (action === Action.Update) {
@@ -84,18 +95,18 @@ function EventDialog({
     if (action === Action.Create) {
       setEvent(initialEvent);
     } else {
-      setEvent(activeEvent || initialEvent)
+      setEvent(activeEvent || initialEvent);
     }
-  }, [action, activeEvent])
+  }, [action, activeEvent]);
 
   useEffect(() => {
     if (currentDay) {
       setEvent(event => ({
         ...event, startTime: getLocalDate(currentDay),
         endTime: getLocalDate(currentDay),
-      }))
+      }));
     }
-  }, [currentDay?.toString()])
+  }, [currentDay?.toString()]);
 
   return (
     <Dialog
@@ -137,6 +148,7 @@ function EventDialog({
             <h1 className="mb-4 font-bold text-xl leading-6">
               {action === Action.Create ? "Skapa" : "Redigera"} händelse
             </h1>
+            {error && <p className="text-red-500 text-sm mb-2">{error}</p>} {/* Display error message */}
             <div className="space-y-1 mb-4">
               <p className="pl-2 text-xs">Händelsenamn</p>
               <Input
