@@ -90,26 +90,65 @@ function Dashboard() {
   const adminEmail = useAppSelector(state => state.admin.email);
   const [companyData, setCompanyData] = useState<ICompany[]>([]); // State to manage the list of companies
   const [isCreateOpen, setIsCreateOpen] = useState<boolean>(false); // State to manage the visibility of the create dialog
+  const [totalCompanies, setTotalCompanies] = useState<number>(0); // State for total companies
+  const [totalUsers, setTotalUsers] = useState<number>(0); // State for total users
+  const [totalRooms, setTotalRooms] = useState<number>(0); // State for total rooms
+
 
   // Handler to add a new company to the state
   const handleCompanyCreate = (company: ICompany) => {
     setCompanyData([...companyData, company]);
+    setTotalCompanies(totalCompanies + 1);
   };
 
   useEffect(() => {
-    apiClient.post('api/companys/companies-and-users', { company_admin_email: adminEmail }).then((response: any) => {
-      setCompanyData(response.map((company: any) => {
-        const { company_description, company_email, company_name, created_at, status, use_time, users } = company;
-        return {
-          description: company_description, email: company_email, name: company_name, date: created_at, status, use_time,
-          children: users.map((user: any) => {
-            const { account_description, created_at, status, use_time, user_email, user_name } = user;
-            return { name: user_name, email: user_email, description: account_description, date: created_at, use_time, status };
-          })
-        }
-      }))
-    });
-  }, []);
+    apiClient
+      .post("api/companys/companies-and-users", { company_admin_email: adminEmail })
+      .then((response: any) => {
+        const parsedData = response.map((company: any) => {
+          const { company_description, company_email, company_name, created_at, status, use_time, users } = company;
+
+          // Calculate total users dynamically
+          return {
+            description: company_description,
+            email: company_email,
+            name: company_name,
+            date: created_at,
+            status,
+            use_time,
+            children: users.map((user: any) => {
+              const { account_description, created_at, status, use_time, user_email, user_name } = user;
+              return {
+                name: user_name,
+                email: user_email,
+                description: account_description,
+                date: created_at,
+                use_time,
+                status,
+              };
+            }),
+          };
+        });
+
+        setCompanyData(parsedData);
+        setTotalCompanies(parsedData.length); // Set the total number of companies
+        setTotalUsers(
+          parsedData.reduce((acc: number, company: any) => acc + company.children.length, 0) // Sum up the users of all companies
+        );
+      });
+  }, [adminEmail]);
+
+  // Fetch total rooms (patients) count
+  useEffect(() => {
+    apiClient
+      .get(`/api/admins/total-rooms?admin_email=${adminEmail}`)
+      .then((response: any) => {
+        setTotalRooms(response.total_rooms);
+      })
+      .catch((error) => {
+        console.error("Error fetching total rooms:", error);
+      });
+  }, [adminEmail]);
 
   return (
     <>
@@ -138,19 +177,19 @@ function Dashboard() {
               {/* Displaying various stats such as number of companies, users, etc. */}
               <div className="pt-4 pb-[18px] flex flex-col items-center gap-y-2.5 text-white bg-primary-background rounded-lg">
                 <p className="text-base leading-5">Företag</p>
-                <p className="font-bold text-3xl leading-9">100</p>
+                <p className="font-bold text-3xl leading-9">{totalCompanies}</p> {/* Dynamic total companies */}
               </div>
               <div className="pt-4 pb-[18px] flex flex-col items-center gap-y-2.5 text-white bg-danger-background rounded-lg">
                 <p className="text-base leading-5">Användare</p>
-                <p className="font-bold text-3xl leading-9">345</p>
+                <p className="font-bold text-3xl leading-9">{totalUsers}</p> {/* Dynamic total users */}
               </div>
               <div className="pt-4 pb-[18px] flex flex-col items-center gap-y-2.5 text-white bg-focused-background rounded-lg">
                 <p className="text-base leading-5">Patient</p>
-                <p className="font-bold text-3xl leading-9">1200</p>
+                <p className="font-bold text-3xl leading-9">{totalRooms}</p> {/* Dynamic total rooms */}
               </div>
               <div className="pt-4 pb-[18px] flex flex-col items-center gap-y-2.5 text-white bg-primary-text rounded-lg">
                 <p className="text-base leading-5">Utrymme</p>
-                <p className="font-bold text-3xl leading-9">12Gb / 120Gb</p>
+                <p className="font-bold text-3xl leading-9">0Gb / 120Gb</p>
               </div>
             </div>
           </div>
