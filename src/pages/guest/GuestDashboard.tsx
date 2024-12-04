@@ -605,7 +605,7 @@ function GuestDashboard() {
                     name={msg.from === username ? "Me" : msg.from}
                     role={msg.from === username ? "me" : msg.role}
                     content={msg.message}
-                    // timestamp={msg.timestamp}
+                  // timestamp={msg.timestamp}
                   />
                 ))}
               </div>
@@ -638,6 +638,7 @@ function GuestDashboard() {
         title="Sofia Rapport"
         lastDate="2 Mars, 2024"
         content=""
+        fileId=""
       />
     </>
   );

@@ -3,47 +3,52 @@ import { twMerge } from "tailwind-merge";
 import { useOnClickOutside } from "usehooks-ts";
 import { AnimatePresence, motion } from "framer-motion";
 
+// Helper function to check if an element is inside a portal (e.g., MUI pickers)
+const isElementInPortal = (event: Event) => {
+  const portalClass = "MuiPickersPopper-root"; // Class added by MUI pickers
+  let target = event.target as HTMLElement | null;
+  while (target) {
+    if (target.classList?.contains(portalClass)) {
+      return true;
+    }
+    target = target.parentElement;
+  }
+  return false;
+};
+
 type MaxWidth = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "screen";
 type Animation = "to-bottom" | "to-left";
 
 interface DialogProps extends PropsWithChildren {
-  // Controls whether the dialog is open or closed
   open: boolean;
-  // Function to call when the dialog should be closed
   onClose: () => void;
-  // Optional additional CSS classes for the outer container
   className?: string;
-  // Optional maximum width of the dialog
   maxWidth?: MaxWidth;
-  // Optional animation type for dialog entrance and exit
   animation?: Animation;
 }
 
-/**
- * Dialog component is a modal that displays content with optional animations and width settings.
- *
- * @param {DialogProps} props - Component properties including visibility, styling, and animations.
- * @param {boolean} props.open - Determines if the dialog is currently visible.
- * @param {() => void} props.onClose - Function to be called when the dialog should be closed.
- * @param {string} [props.className=""] - Optional additional CSS classes to apply to the dialog.
- * @param {MaxWidth} [props.maxWidth="sm"] - Defines the maximum width of the dialog.
- * @param {Animation} [props.animation="to-bottom"] - Defines the animation style for the dialog.
- * @param {React.ReactNode} props.children - The content to display inside the dialog.
- * @returns {JSX.Element} The rendered Dialog component.
- */
 function Dialog({
   open,
   className = "",
   maxWidth = "sm",
   animation = "to-bottom",
   children,
-  onClose = () => {},
+  onClose = () => { },
 }: DialogProps) {
-  // Ref to manage the dialog element and handle outside clicks
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  // Hook to detect clicks outside the dialog and trigger the onClose function
-  useOnClickOutside(dialogRef, onClose);
+  // Custom hook: only close if the click is outside the dialog and not in a portal
+  const handleClickOutside = (event: FocusEvent | MouseEvent | TouchEvent) => {
+    // Ensure the event target is not inside a portal
+    if (isElementInPortal(event)) return;
+
+    // Ensure the event target is outside the dialog
+    if (dialogRef.current && !dialogRef.current.contains(event.target as Node)) {
+      onClose();
+    }
+  };
+
+  useOnClickOutside(dialogRef, handleClickOutside);
 
   return (
     <AnimatePresence mode="wait">
@@ -62,22 +67,22 @@ function Dialog({
               animation === "to-bottom"
                 ? { y: "-100vh" }
                 : animation === "to-left"
-                ? { x: "100vw" }
-                : {}
+                  ? { x: "100vw" }
+                  : {}
             }
             animate={
               animation === "to-bottom"
                 ? { y: 0 }
                 : animation === "to-left"
-                ? { x: 0 }
-                : {}
+                  ? { x: 0 }
+                  : {}
             }
             exit={
               animation === "to-bottom"
                 ? { y: "-100vh" }
                 : animation === "to-left"
-                ? { x: "100vw" }
-                : {}
+                  ? { x: "100vw" }
+                  : {}
             }
             transition={{
               type: "spring",
@@ -90,16 +95,16 @@ function Dialog({
               maxWidth === "xs"
                 ? "max-w-[450px]"
                 : maxWidth === "sm"
-                ? "max-w-screen-sm"
-                : maxWidth === "md"
-                ? "max-w-screen-md"
-                : maxWidth === "lg"
-                ? "max-w-screen-lg"
-                : maxWidth === "xl"
-                ? "max-w-screen-xl"
-                : maxWidth === "2xl"
-                ? "max-w-screen-2xl"
-                : "max-w-full",
+                  ? "max-w-screen-sm"
+                  : maxWidth === "md"
+                    ? "max-w-screen-md"
+                    : maxWidth === "lg"
+                      ? "max-w-screen-lg"
+                      : maxWidth === "xl"
+                        ? "max-w-screen-xl"
+                        : maxWidth === "2xl"
+                          ? "max-w-screen-2xl"
+                          : "max-w-full",
               className
             )}
           >

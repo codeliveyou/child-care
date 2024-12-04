@@ -1,11 +1,13 @@
-import { ChangeEvent, useEffect, useState } from "react";
-
+import { useEffect, useState } from "react";
 import Dialog from "../common/Dialog";
 import Input from "../common/Input";
-import Checkbox from "../common/Checkbox";
 import TextField from "../common/TextField";
 import Button from "../common/Button";
-import { getLocalDate } from "../../libs/date";
+import Checkbox from "../common/Checkbox";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
+import dayjs from 'dayjs';
 
 // Enum to manage the dialog's staging (confirm or editing)
 enum Staging {
@@ -48,7 +50,6 @@ const initialEvent: IEvent = {
   createdAt: ''
 }
 
-// EventDialog component for displaying and editing event details
 function EventDialog({
   open,
   onClose,
@@ -63,7 +64,6 @@ function EventDialog({
   const [event, setEvent] = useState<IEvent>(activeEvent || initialEvent);
   const [error, setError] = useState<string | null>(null); // State for error messages
 
-  // Function to handle the save button click
   const handleSaveClick = () => {
     // Validate that start time is not later than end time
     const startTime = new Date(event.startTime);
@@ -79,8 +79,11 @@ function EventDialog({
     onClose();
   };
 
-  const handleEventChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setEvent({ ...event, [e.target.name]: e.target.value });
+  const handleDateChange = (field: 'startTime' | 'endTime') => (value: any) => {
+    setEvent((prevEvent) => ({
+      ...prevEvent,
+      [field]: value.toISOString(),
+    }));
   };
 
   useEffect(() => {
@@ -102,34 +105,38 @@ function EventDialog({
   useEffect(() => {
     if (currentDay) {
       setEvent(event => ({
-        ...event, startTime: getLocalDate(currentDay),
-        endTime: getLocalDate(currentDay),
+        ...event,
+        startTime: currentDay.toISOString(),
+        endTime: currentDay.toISOString(),
       }));
     }
   }, [currentDay?.toString()]);
 
   return (
     <Dialog
-      open={open} // Dialog visibility controlled by open prop
-      onClose={onClose} // Close dialog callback
+      open={open}
+      onClose={onClose}
       className="text-primary-text bg-white rounded-lg p-8"
-      maxWidth={staging === Staging.Confirm ? "sm" : "xs"} // Adjust dialog width based on staging
+      maxWidth={staging === Staging.Confirm ? "sm" : "xs"}
     >
       <div className="px-2 flex flex-col gap-y-1 text-primary-text">
         {staging === "confirm" ? (
           <>
             {/* Display event details in confirm stage */}
             <p className="text-xl leading-6 font-bold"></p>
-            <p className="text-xs">
-              { }
-            </p>
+            <p className="text-xs">{ }</p>
             <p className="font-bold leading-5">{event.eventName}</p>
             <p className="font-light leading-4 text-sm">{event.description}</p>
             <div className="flex justify-end">
-              <Button size="small" variant="text" className="text-[#FF3E4C]" onClick={() => {
-                onSubmit(event, 'delete');
-                onClose();
-              }}>
+              <Button
+                size="small"
+                variant="text"
+                className="text-[#FF3E4C]"
+                onClick={() => {
+                  onSubmit(event, 'delete');
+                  onClose();
+                }}
+              >
                 Ta bort
               </Button>
               <Button
@@ -156,7 +163,7 @@ function EventDialog({
                 placeholder="Noah och Elsa"
                 className="w-full"
                 value={event.eventName}
-                onChange={handleEventChange}
+                onChange={(e) => setEvent({ ...event, eventName: e.target.value })}
               />
             </div>
             <div className="space-y-1 mb-4">
@@ -166,34 +173,32 @@ function EventDialog({
                 placeholder="Noah"
                 className="w-full"
                 value={event.patientName}
-                onChange={handleEventChange}
+                onChange={(e) => setEvent({ ...event, patientName: e.target.value })}
               />
             </div>
             <div className="space-y-1 mb-4">
               <p className="pl-2 text-xs">Tid</p>
-              <div className="flex gap-x-1">
-                <div className="space-y-1 grow">
-                  <Input
-                    name="startTime"
-                    placeholder="12/03/2024 11:00"
-                    className="text-center w-full"
-                    value={event.startTime}
-                    onChange={handleEventChange}
-                  />
-                  <p className="pl-2 text-disabled-text text-xs">Start tid</p>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <div className="flex gap-x-1">
+                  <div className="space-y-1 grow">
+                    <DesktopDateTimePicker
+                      label="Start Time"
+                      value={dayjs(event.startTime)}
+                      onChange={handleDateChange("startTime")}
+                    />
+
+                    <p className="pl-2 text-disabled-text text-xs">Start tid</p>
+                  </div>
+                  <div className="space-y-1 grow">
+                    <DesktopDateTimePicker
+                      label="End Time"
+                      value={dayjs(event.endTime)}
+                      onChange={handleDateChange('endTime')}
+                    />
+                    <p className="pl-2 text-disabled-text text-xs">Slut tid</p>
+                  </div>
                 </div>
-                <span className="text-sm leading-4 mt-2">:</span>
-                <div className="space-y-1 grow">
-                  <Input
-                    name="endTime"
-                    placeholder="12/03/2024 13:00"
-                    className="text-center w-full"
-                    value={event.endTime}
-                    onChange={handleEventChange}
-                  />
-                  <p className="pl-2 text-disabled-text text-xs">Slut tid</p>
-                </div>
-              </div>
+              </LocalizationProvider>
               <Checkbox
                 label="Ange bara start tid"
                 className="text-xs leading-4 text-disabled-text"
@@ -203,10 +208,10 @@ function EventDialog({
               <p className="pl-2 text-xs">Beskrivning</p>
               <TextField
                 name="description"
-                placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
                 className="w-full leading-5"
                 value={event.description}
-                onChange={handleEventChange}
+                onChange={(e) => setEvent({ ...event, description: e.target.value })}
               />
             </div>
             <div className="self-end">
@@ -221,4 +226,4 @@ function EventDialog({
   );
 }
 
-export default EventDialog; // Export the EventDialog component for use in other parts of the application
+export default EventDialog;

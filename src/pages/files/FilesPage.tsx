@@ -25,41 +25,6 @@ import FileListItem from "../../components/folder/FileListItem";
 import FileDialog from "../../components/dashboard/FileDialog";
 import apiClient from "../../libs/api";
 
-// const latestFiles: IFileListItem[] = [
-//   // Example list of latest files with their metadata
-//   {
-//     id: '1',
-//     name: "Elsas möte rapport",
-//     size: "10Mb",
-//     type: "doc",
-//   },
-//   // More file items...
-//   {
-//     id: '2',
-//     name: "Elsas laddad information",
-//     size: "15.5Mb",
-//     type: "pdf",
-//   },
-//   {
-//     id: '3',
-//     name: "Elsas Statistik",
-//     size: "123.3Mb",
-//     type: "xsl",
-//   },
-//   {
-//     id: '4',
-//     name: "Elsas laddad information",
-//     size: "15.5Mb",
-//     type: "pdf",
-//   },
-//   {
-//     id: '5',
-//     name: "Elsas laddad information",
-//     size: "15.5Mb",
-//     type: "pdf",
-//   },
-// ];
-
 const FilesPage = () => {
   const filesRef = useRef<HTMLDivElement>(null);
   const { events } = useDraggable(filesRef as MutableRefObject<HTMLElement>);
@@ -73,16 +38,28 @@ const FilesPage = () => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [latestFiles, setLatestFiles] = useState<IFileListItem[]>([]);
   const [reportContent, setReportContent] = useState<string>("");
+  const [currentFileName, setCurrentFileName] = useState<string>("");
+  const [currentFileDate, setCurrentFileDate] = useState<string>("");
   const [currentVideoLink, setCurrentVideoLink] = useState<string>("");
+  const [currentFileId, setCurrentFileId] = useState<string>("");
 
   const handleFileItemClick =
     (fileItem: IFileListItem | IFileTileItem) => async () => {
       // Open dialog based on the file type
       if (fileItem.file_type === "mp4") {
         setVideoDialogOpen(true);
-        setCurrentVideoLink(`http://167.88.170.239/api/file_system/file/${fileItem.file_id}`)
+        setCurrentVideoLink(`${apiClient.defaults.baseURL}/api/file_system/file/${fileItem.file_id}`);
       } else {
         setReportDialogOpen(true);
+        setCurrentFileName(fileItem.filename);
+        setCurrentFileDate(
+          new Date(fileItem.date).toLocaleDateString("sv-SE", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        );
+        setCurrentFileId(fileItem.file_id);
         apiClient
           .get(`/api/file_system/file-as-xml/${fileItem.file_id}`)
           .then((response: any) => {
@@ -259,8 +236,9 @@ const FilesPage = () => {
           setReportDialogOpen(false);
         }}
         content={reportContent}
-        title="Sofia Rapport"
-        lastDate="2 Mars, 2024"
+        title={currentFileName} // Dynamically set the title
+        lastDate={currentFileDate} // Dynamically set the created date
+        fileId={currentFileId}
       />
       <VideoDialog
         open={videoDialogOpen}

@@ -29,6 +29,9 @@ const DashboardPage = () => {
   const [reportContent, setReportContent] = useState<string>("");
   const [videoList, setVideoList] = useState<any>([]);
   const [currentVideoLink, setCurrentVideoLink] = useState<string>("");
+  const [currentFileName, setCurrentFileName] = useState<string>("");
+  const [currentFileDate, setCurrentFileDate] = useState<string>("");
+  const [currentFileId, setCurrentFileId] = useState<string>("");
 
   const handleFileItemClick =
     (fileItem: IFileListItem | IFileTileItem) => async () => {
@@ -36,6 +39,15 @@ const DashboardPage = () => {
       if (fileItem.file_type === "mp4") setVideoDialogOpen(true);
       else {
         setReportDialogOpen(true);
+        setCurrentFileId(fileItem.file_id);
+        setCurrentFileName(fileItem.filename);
+        setCurrentFileDate(
+          new Date(fileItem.date).toLocaleDateString("sv-SE", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        );
         apiClient
           .get(`/api/file_system/file-as-xml/${fileItem.file_id}`)
           .then((response: any) => {
@@ -66,9 +78,18 @@ const DashboardPage = () => {
   useEffect(() => {
     apiClient.get('api/file_system/list-documents').then((response: any) => {
       console.log('list-documents', response)
-      setDocList(response);
+      setDocList(
+        response.map((item: any) => ({
+          file_id: item.file_id,
+          filename: item.filename,
+          // file_type: item.file_type === 'document' ? 'doc' : item.file_type === 'video' ? 'mp4' : '',
+          file_type: item.file_type,
+          date: new Date(item.upload_date),
+        })));
     })
   }, [])
+
+
 
   useEffect(() => {
     apiClient.get('api/file_system/list-videos').then((response: any) => {
@@ -171,12 +192,6 @@ const DashboardPage = () => {
                       <p className="font-semibold text-xl leading-6 line-clamp-1">
                         {video.filename}
                       </p>
-                      {/* {video.activity && (
-                        <div className="text-disabled-text text-sm leading-4">
-                          <p>Sista aktiviteten</p>
-                          <p>{video.activity}</p>
-                        </div>
-                      )} */}
                     </div>
                   </div>
                 ))}
@@ -220,17 +235,18 @@ const DashboardPage = () => {
         open={videoDialogOpen}
         onClose={() => {
           setVideoDialogOpen(false); // Close video dialog
-        }}        
-        source = {currentVideoLink}
+        }}
+        source={currentVideoLink}
       />
       <ReportDialog
         open={reportDialogOpen}
         onClose={() => {
-          setReportDialogOpen(false); // Close report dialog
+          setReportDialogOpen(false);
         }}
-        title="Sofia Rapport"
-        lastDate="2 Mars, 2024"
         content={reportContent}
+        title={currentFileName} // Dynamically set the title
+        lastDate={currentFileDate} // Dynamically set the created date
+        fileId={currentFileId}
       />
     </>
   );

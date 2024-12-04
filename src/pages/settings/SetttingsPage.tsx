@@ -185,25 +185,61 @@ const SettingsPage = () => {
     user_name: accountMe.user_name,
     user_email: accountMe.user_email,
     account_description: accountMe.account_description,
-    picture_id: accountMe.picture_id
-  })
+    picture_id: accountMe.picture_id,
+  });
   const profileRef = useRef<HTMLInputElement>(null)
 
   const handleAccountChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAccount({ ...account, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = () => {
-    if (!account.user_name || !account.user_email || !account.account_description || !account.old_user_password || account.new_user_password !== account.new_password_confirm) {
-      return toast.error('Invalid user account data.')
+  // Submit profile information
+  const handleProfileInfoSubmit = () => {
+    if (!account.user_name || !account.user_email || !account.account_description) {
+      return toast.error("Invalid profile information.");
     }
-    apiClient.put('/api/users/change-profile-info', account).then(() => {
-      dispatch(updateCreateUser({ name: 'user_name', value: account.user_name }));
-      dispatch(updateCreateUser({ name: 'user_email', value: account.user_email }));
-      dispatch(updateCreateUser({ name: 'account_description', value: account.account_description }));
-      toast.success('Profile updated.');
-    })
-  }
+
+    apiClient
+      .put("/api/users/change-profile-info", {
+        user_name: account.user_name,
+        user_email: account.user_email,
+        account_description: account.account_description,
+      })
+      .then(() => {
+        dispatch(updateCreateUser({ name: "user_name", value: account.user_name }));
+        dispatch(updateCreateUser({ name: "user_email", value: account.user_email }));
+        dispatch(updateCreateUser({ name: "account_description", value: account.account_description }));
+        toast.success("Profile updated.");
+      })
+      .catch((err) => {
+        toast.error("Failed to update profile. " + (err.response?.data?.error || ""));
+      });
+  };
+
+  // Submit password change
+  const handlePasswordChangeSubmit = () => {
+    if (!account.old_user_password || !account.new_user_password || account.new_user_password !== account.new_password_confirm) {
+      return toast.error("Invalid password information.");
+    }
+
+    apiClient
+      .put("/api/users/change-password", {
+        old_user_password: account.old_user_password,
+        new_user_password: account.new_user_password,
+      })
+      .then(() => {
+        setAccount({
+          ...account,
+          old_user_password: "",
+          new_user_password: "",
+          new_password_confirm: "",
+        });
+        toast.success("Password updated.");
+      })
+      .catch((err) => {
+        toast.error("Failed to update password. " + (err.response?.data?.error || ""));
+      });
+  };
 
   const handleImageSelect = () => {
     if (profileRef.current) {
@@ -323,9 +359,9 @@ const SettingsPage = () => {
       </div>
       <div className="flex flex-col gap-2.5 flex-1">
         {/* AI settings section */}
-        <div className="p-4 flex flex-col gap-6 bg-white rounded-xl">
+        <div className="p-4 flex flex-col gap-5 bg-white rounded-xl">
           <p className="font-bold leading-4">AI inställningar</p>
-          <div className="flex flex-col gap-2 pt-4">
+          <div className="flex flex-col gap-2 pt-0">
             <div className="font-bold">AI-svars mönster</div>
             <Input
               name="answer"
@@ -338,65 +374,54 @@ const SettingsPage = () => {
               className="border border-primary-border/25 bg-white/30"
             />
           </div>
-          <p className="text-disabled-text text-xs leading-4">
+          {/* <p className="text-disabled-text text-xs leading-4">
             List, separated by commas, all the words for which you can choose
             the right answer.
-          </p>
+          </p> */}
           <div className="flex">
             <Button size="compress">Lägg till mönster</Button>
           </div>
         </div>
         {/* Profile settings section */}
-        <div className="grow p-4 pr-1.5 flex flex-col gap-y-2.5 bg-white rounded-xl overflow-y-auto">
-          <div className="grow pr-2 flex flex-col gap-y-2.5 overflow-y-auto">
+        <div className="grow p-4 pr-1.5 flex flex-col gap-y-0 bg-white rounded-xl overflow-y-auto">
+          <div className="grow pr-2 flex flex-col gap-y-2.5 overflow-y-auto scrollbar-none">
             <div className="flex flex-col gap-2.5">
               <div className="font-bold text-xl">Profil inställningar</div>
-              <Input
-                name="user_name"
-                value={account.user_name}
-                className="border border-primary-border/25 bg-white/30"
-                onChange={handleAccountChange}
-              />
-              <Input
-                name="user_email"
-                value={account.user_email}
-                className="border border-primary-border/25 bg-white/30"
-                onChange={handleAccountChange}
-              />
-              <Input
-                name="account_description"
-                value={account.account_description}
-                className="border border-primary-border/25 bg-white/30"
-                onChange={handleAccountChange}
-              />
+              <Input name="user_name" value={account.user_name} onChange={handleAccountChange} />
+              <Input name="user_email" value={account.user_email} onChange={handleAccountChange} />
+              <Input name="account_description" value={account.account_description} onChange={handleAccountChange} />
             </div>
+          </div>
+          <div className="flex justify-end pt-4 pr-4">
+            <Button size="compress" onClick={handleProfileInfoSubmit}>Spara</Button>
+          </div>
+        </div>
+        <div className="grow p-4 pr-1.5 flex flex-col gap-y-0 bg-white rounded-xl overflow-y-auto">
+          <div className="grow pr-2 flex flex-col gap-y-2.5 overflow-y-auto scrollbar-none">
             <div className="grow flex flex-col justify-end gap-2.5">
               <p className="font-bold text-xl">Lösenord</p>
               <Input
                 name="old_user_password"
                 value={account.old_user_password}
                 placeholder="Nuvarande lösenord"
-                className="border border-primary-border/25 bg-white/30"
                 onChange={handleAccountChange}
               />
               <Input
                 name="new_user_password"
                 value={account.new_user_password}
                 placeholder="Nytt lösenord"
-                className="border border-primary-border/25 bg-white/30"
                 onChange={handleAccountChange}
               />
               <Input
                 name="new_password_confirm"
                 value={account.new_password_confirm}
                 placeholder="Upprepa lösenord"
-                className="border border-primary-border/25 bg-white/30"
                 onChange={handleAccountChange}
               />
             </div>
           </div>
           <div className="flex justify-end pt-4 pr-4">
-            <Button size="compress" onClick={handleSubmit}>Ändra lösenord</Button>
+            <Button size="compress" onClick={handlePasswordChangeSubmit}>Ändra lösenord</Button>
           </div>
         </div>
       </div>

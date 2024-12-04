@@ -3,6 +3,7 @@ import { FaChevronLeft } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 import { HiOutlineArrowDownTray } from "react-icons/hi2";
 import Dialog from "../common/Dialog";
+import apiClient from "../../libs/api";
 
 // Props for the ReportDialog component
 interface ReportDialogProps {
@@ -11,6 +12,7 @@ interface ReportDialogProps {
   content: string;
   title: string; // Title of the report
   lastDate: string; // Date of the last report update
+  fileId: string; // ID of the file to download
 }
 
 // Props for the ToolbarIcon component
@@ -31,8 +33,34 @@ const ToolbarIcon = ({ name }: IToolbarIcon) => {
 };
 
 // Main ReportDialog component
-function ReportDialog({ open, onClose,content, title, lastDate }: ReportDialogProps) {
+function ReportDialog({ open, onClose, content, title, lastDate, fileId }: ReportDialogProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false); // State to toggle between edit and view mode
+
+  const handleDownload = async () => {
+    try {
+      const response = await apiClient.get(`/api/file_system/download/${fileId}`, {
+        responseType: "blob", // Ensure the response is treated as a file
+      });
+
+      // Create a temporary URL for the file blob
+      const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+      const fileLink = document.createElement("a");
+      fileLink.href = fileURL;
+
+      // Set the download attribute to specify the filename
+      fileLink.setAttribute("download", title || "downloaded-file");
+      document.body.appendChild(fileLink);
+
+      // Trigger the download
+      fileLink.click();
+
+      // Clean up
+      fileLink.parentNode?.removeChild(fileLink);
+      window.URL.revokeObjectURL(fileURL);
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+    }
+  };
 
   return (
     <Dialog
@@ -62,7 +90,10 @@ function ReportDialog({ open, onClose,content, title, lastDate }: ReportDialogPr
           <div className="grow flex justify-end">
             {/* Download button, only visible when not in editing mode */}
             {!isEditing && (
-              <div className="flex items-center gap-x-1 text-disabled-text">
+              <div
+                className="flex items-center gap-x-1 text-disabled-text cursor-pointer"
+                onClick={handleDownload} // Add the download handler
+              >
                 <p className="text-sm leading-4">Ladda ner</p>
                 <span className="w-6 h-6 flex items-center justify-center">
                   <HiOutlineArrowDownTray size={20} />
@@ -118,56 +149,6 @@ function ReportDialog({ open, onClose,content, title, lastDate }: ReportDialogPr
         )}
         {/* Content area with editable text when in editing mode */}
         <div className="grow pt-2 px-8 pr-1 flex flex-col overflow-y-auto">
-          {/* <div
-            contentEditable={isEditing} // Content becomes editable when in editing mode
-            className="pr-6 flex flex-col gap-y-8 outline-none overflow-y-auto scrollbar"
-          >
-            <h1 className="text-5xl font-semibold">Medicinsk Rapport</h1>
-            <div className="leading-5 font-semibold">
-              <p>Patientinformation:</p>
-              <p>Namn: Sofia Andersson</p>
-              <p>Ålder: 42 år</p>
-              <p>Kön: Kvinna</p>
-              <p>Personnummer: 890512-1234</p>
-              <p>Datum för besök: 29 mars 2024</p>
-            </div>
-            <h2 className="text-2xl leading-8 font-semibold">
-              Besöksorsak: Patienten söker vård för ihållande huvudvärk och
-              yrsel sedan två veckor tillbaka.
-            </h2>
-            <div className="leading-5">
-              <p className="font-bold">Symtom:</p>
-              <p>
-                Huvudvärk: Patienten beskriver huvudvärken som dunkande och
-                lokaliserad till båda tinningarna samt pannan. Smärtan är
-                intensiv och försämrar patientens förmåga att utföra dagliga
-                aktiviteter.
-              </p>
-              <p>
-                Yrsel: Patienten upplever episoder av yrsel, särskilt vid snabba
-                huvudrörelser eller vid resning från sittande eller liggande
-                ställning.
-              </p>
-            </div>
-            <div className="leading-5">
-              <p className="font-bold">Tidigare sjukdomshistoria:</p>
-              <p>
-                Tidigare diagnoser inkluderar migrän och lindrigt förhöjt
-                blodtryck.
-              </p>
-              <p>Inga tidigare operationer eller allvarliga sjukdomar.</p>
-            </div>
-            <div className="leading-5">
-              <p className="font-bold">Nuvarande medicinering:</p>
-              <p>Paracetamol vid behov för huvudvärk.</p>
-              <p>Amlodipin för blodtryckskontroll.</p>
-            </div>
-            <div className="leading-5">
-              <p className="font-bold">Familjehistoria:</p>
-              <p>Modern lider av migrän.</p>
-              <p>Inga andra signifikanta sjukdomar i familjen.</p>
-            </div>
-          </div> */}
           {/* <XMLViewer xml={content} /> */}
           <pre>{content}</pre>
         </div>
