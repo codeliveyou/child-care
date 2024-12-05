@@ -6,7 +6,7 @@ export interface IFileTileItem {
   file_id: string
   filename: string; // Name of the file
   file_type: FileFormat; // Format of the file
-  date: Date;
+  upload_date: Date;
 }
 
 // Props for the FileTileItem component, extending IFileTileItem and including a click handler

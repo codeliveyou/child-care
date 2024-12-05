@@ -53,7 +53,7 @@ const FilesPage = () => {
         setReportDialogOpen(true);
         setCurrentFileName(fileItem.filename);
         setCurrentFileDate(
-          new Date(fileItem.date).toLocaleDateString("sv-SE", {
+          new Date(fileItem.upload_date).toLocaleDateString("sv-SE", {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -100,7 +100,7 @@ const FilesPage = () => {
               .split(".")
               .slice()
               .reverse()[0] as FileFormat,
-            date: new Date(),
+            upload_date: new Date(),
           },
         ]);
       });
@@ -111,15 +111,7 @@ const FilesPage = () => {
     apiClient
       .get(`/api/file_system/list-files?folder_name=${currentFolder}`)
       .then((response: any) => {
-        setFilesOfFolder(
-          response.map((item: any) => ({
-            file_id: item.file_id,
-            filename: item.filename,
-            // file_type: item.file_type === 'document' ? 'doc' : item.file_type === 'video' ? 'mp4' : '',
-            file_type: item.file_type,
-            date: new Date(item.upload_date),
-          }))
-        );
+        setFilesOfFolder(response);
       });
   }, [currentFolder]);
 

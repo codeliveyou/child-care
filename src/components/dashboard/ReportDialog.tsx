@@ -36,29 +36,15 @@ const ToolbarIcon = ({ name }: IToolbarIcon) => {
 function ReportDialog({ open, onClose, content, title, lastDate, fileId }: ReportDialogProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false); // State to toggle between edit and view mode
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
     try {
-      const response = await apiClient.get(`/api/file_system/download/${fileId}`, {
-        responseType: "blob", // Ensure the response is treated as a file
-      });
+      // Construct the direct URL to the backend API
+      const downloadUrl = `${apiClient.defaults.baseURL}/api/file_system/download/${fileId}`;
 
-      // Create a temporary URL for the file blob
-      const fileURL = window.URL.createObjectURL(new Blob([response.data]));
-      const fileLink = document.createElement("a");
-      fileLink.href = fileURL;
-
-      // Set the download attribute to specify the filename
-      fileLink.setAttribute("download", title || "downloaded-file");
-      document.body.appendChild(fileLink);
-
-      // Trigger the download
-      fileLink.click();
-
-      // Clean up
-      fileLink.parentNode?.removeChild(fileLink);
-      window.URL.revokeObjectURL(fileURL);
+      // Redirect the browser to the backend API endpoint
+      window.location.href = downloadUrl;
     } catch (error) {
-      console.error("Error downloading the file:", error);
+      console.error("Error triggering the download:", error);
     }
   };
 
@@ -92,13 +78,14 @@ function ReportDialog({ open, onClose, content, title, lastDate, fileId }: Repor
             {!isEditing && (
               <div
                 className="flex items-center gap-x-1 text-disabled-text cursor-pointer"
-                onClick={handleDownload} // Add the download handler
+                onClick={handleDownload} // Trigger the download
               >
                 <p className="text-sm leading-4">Ladda ner</p>
                 <span className="w-6 h-6 flex items-center justify-center">
                   <HiOutlineArrowDownTray size={20} />
                 </span>
               </div>
+
             )}
           </div>
 

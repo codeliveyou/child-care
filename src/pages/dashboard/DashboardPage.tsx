@@ -42,7 +42,7 @@ const DashboardPage = () => {
         setCurrentFileId(fileItem.file_id);
         setCurrentFileName(fileItem.filename);
         setCurrentFileDate(
-          new Date(fileItem.date).toLocaleDateString("sv-SE", {
+          new Date(fileItem.upload_date).toLocaleDateString("sv-SE", {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -76,17 +76,10 @@ const DashboardPage = () => {
   }, []);
 
   useEffect(() => {
-    apiClient.get('api/file_system/list-documents').then((response: any) => {
-      console.log('list-documents', response)
-      setDocList(
-        response.map((item: any) => ({
-          file_id: item.file_id,
-          filename: item.filename,
-          // file_type: item.file_type === 'document' ? 'doc' : item.file_type === 'video' ? 'mp4' : '',
-          file_type: item.file_type,
-          date: new Date(item.upload_date),
-        })));
-    })
+    apiClient.get('api/file_system/list-documents')
+      .then((response: any) => {
+        setDocList(response);
+      })
   }, [])
 
 

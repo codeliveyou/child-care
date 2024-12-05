@@ -6,7 +6,7 @@ export interface IFileReportItem {
   file_id: string;
   filename: string; // Name of the file
   file_type: FileFormat; // Format of the file
-  date: string;
+  upload_date: string;
 }
 
 // Props for the FileReportItem component, extending IFileReportItem and including a click handler
@@ -18,7 +18,7 @@ interface FileReportItemProps extends IFileReportItem {
 const FileReportItem = ({
   filename,
   file_type,
-  date,
+  upload_date,
   onClick,
 }: FileReportItemProps) => {
   return (
@@ -38,10 +38,10 @@ const FileReportItem = ({
         <p className="font-semibold text-xl leading-6 line-clamp-1 break-all">
           {filename}
         </p>
-        {date && (
+        {upload_date && (
           <div className="space-y-0.5 text-disabled-text text-sm leading-4">
             <p>Sista aktiviteten</p>
-            <p>{date}</p>
+            <p>{upload_date}</p>
           </div>
         )}
       </div>

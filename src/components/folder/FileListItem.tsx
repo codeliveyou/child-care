@@ -7,7 +7,7 @@ export interface IFileListItem {
   filename: string; // Name of the file
   file_type: FileFormat; // Format of the file
   file_size: string; // Size of the file (e.g., "2 MB")
-  date: Date;
+  upload_date: Date;
 }
 
 // Props for the FileListItem component, extending IFileListItem and including a click handler
