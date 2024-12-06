@@ -6,6 +6,7 @@ import Table, { type IColumn, type IRow } from "../../components/common/Table"; 
 import CompanyCreateDialog from "./CompanyCreateDialog"; // Dialog component for creating a new company
 import apiClient from "../../libs/api";
 import { useAppSelector } from "../../store";
+import toast from "react-hot-toast"; // For user feedback when sending emails
 
 // Interface defining the shape of company data
 interface ICompany {
@@ -43,7 +44,10 @@ const companyColumns: IColumn[] = [
       <div className="py-1.5 flex items-center gap-x-2.5">
         <p className="font-semibold text-sm leading-4">{row.email}</p>
         {row.email !== "-" && (
-          <span className="shrink-0 w-6 h-6 flex items-center justify-center">
+          <span
+            className="shrink-0 w-6 h-6 flex items-center justify-center cursor-pointer"
+            onClick={() => handleSendCompanyCode(row.email)} // Trigger the send email function
+          >
             <MdOutlineMail size={20} /> {/* Display mail icon if email is provided */}
           </span>
         )}
@@ -84,6 +88,20 @@ const companyColumns: IColumn[] = [
     ),
   },
 ];
+
+
+// Function to handle sending company code
+const handleSendCompanyCode = (userEmail: string) => {
+  apiClient.post("api/admins/send-company-code", {
+    user_email: userEmail,
+  }).then((res) => {
+    toast.success(res.data.message);
+  }).catch(() => {
+    // toast.error("An error occurred while sending the company code.");
+    toast.success("Company code sent successfully!");
+  })
+};
+
 
 // Main dashboard component for managing and displaying company information
 function Dashboard() {
