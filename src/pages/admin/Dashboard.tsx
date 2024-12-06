@@ -103,12 +103,14 @@ function Dashboard() {
 
   useEffect(() => {
     apiClient
-      .post("api/companys/companies-and-users", { company_admin_email: adminEmail })
+      .post("api/admins/companies-and-users", { company_admin_email: adminEmail })
       .then((response: any) => {
-        const parsedData = response.map((company: any) => {
+        const { companies_and_users_data, total_rooms } = response;
+
+        // Process companies and users data
+        const parsedData = companies_and_users_data.map((company: any) => {
           const { company_description, company_email, company_name, created_at, status, use_time, users } = company;
 
-          // Calculate total users dynamically
           return {
             description: company_description,
             email: company_email,
@@ -130,25 +132,19 @@ function Dashboard() {
           };
         });
 
+        // Set state values
         setCompanyData(parsedData);
         setTotalCompanies(parsedData.length); // Set the total number of companies
         setTotalUsers(
           parsedData.reduce((acc: number, company: any) => acc + company.children.length, 0) // Sum up the users of all companies
         );
+        setTotalRooms(total_rooms); // Set the total rooms from the response
+      })
+      .catch((error) => {
+        console.error("Error fetching companies, users, and total rooms:", error);
       });
   }, [adminEmail]);
 
-  // Fetch total rooms (patients) count
-  useEffect(() => {
-    apiClient
-      .get(`/api/admins/total-rooms?admin_email=${adminEmail}`)
-      .then((response: any) => {
-        setTotalRooms(response.total_rooms);
-      })
-      .catch((error) => {
-        console.error("Error fetching total rooms:", error);
-      });
-  }, [adminEmail]);
 
   return (
     <>
