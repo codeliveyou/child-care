@@ -75,8 +75,7 @@ function ReportDialog({ open, onClose, content, title, lastDate, fileId, isPdf }
       setIsEditing(false);
 
     } catch (error) {
-      console.error("Error saving document:", error);
-      alert("Failed to save document.");
+      toast.error("Failed to save document.");
     }
   };
 
