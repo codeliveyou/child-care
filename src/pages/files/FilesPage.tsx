@@ -232,7 +232,7 @@ const FilesPage = () => {
               </Button>
               <input
                 ref={fileRef}
-                accept=".txt, .docx, .xsl, .pdf, .mp4"
+                accept=".docx, .xsl, .pdf, .mp4"
                 type="file"
                 onChange={handleFileChange}
                 hidden
