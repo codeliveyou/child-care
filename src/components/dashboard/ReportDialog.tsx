@@ -4,6 +4,7 @@ import { MdClose } from "react-icons/md";
 import { HiOutlineArrowDownTray } from "react-icons/hi2";
 import Dialog from "../common/Dialog";
 import apiClient from "../../libs/api";
+import toast from "react-hot-toast";
 
 interface ReportDialogProps {
   open: boolean;
@@ -31,7 +32,14 @@ const ToolbarIcon = ({ name }: IToolbarIcon) => {
 
 function ReportDialog({ open, onClose, content, title, lastDate, fileId, isPdf }: ReportDialogProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editedContent, setEditedContent] = useState<string>(content);
   const [pdfUrl, setPdfUrl] = useState<string>("");
+
+  useEffect(() => {
+    if (open) {
+      setEditedContent(content); // Update editedContent when the dialog opens or content changes
+    }
+  }, [open, content]);
 
   // Update PDF URL when fileId or isPdf changes
   useEffect(() => {
@@ -41,6 +49,36 @@ function ReportDialog({ open, onClose, content, title, lastDate, fileId, isPdf }
       setPdfUrl(""); // Clear the URL if not a PDF
     }
   }, [isPdf, fileId]);
+
+  const handleSave = async () => {
+    try {
+      // Format the content as XML
+      const xmlContent = `
+        <Document>
+          <Content>${editedContent}</Content>
+        </Document>
+      `;
+
+      const response: any = await apiClient.post(
+        `/api/file_system/save-document/${fileId}`,
+        xmlContent,
+        {
+          headers: {
+            'Content-Type': 'application/xml',
+          },
+        }
+      );
+
+      const { message } = response; // No TypeScript complaints now
+      toast.success(message);
+      setEditedContent(editedContent);
+      setIsEditing(false);
+
+    } catch (error) {
+      console.error("Error saving document:", error);
+      alert("Failed to save document.");
+    }
+  };
 
   const handleDownload = () => {
     try {
@@ -90,7 +128,7 @@ function ReportDialog({ open, onClose, content, title, lastDate, fileId, isPdf }
           </div>
           <button
             className="py-2 px-4 rounded-lg text-white text-sm leading-4 bg-primary-background outline-none"
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
           >
             {isEditing ? "Spara" : "Edit"}
           </button>
@@ -145,10 +183,19 @@ function ReportDialog({ open, onClose, content, title, lastDate, fileId, isPdf }
                   <ToolbarIcon name="link" />
                 </div>
               </div>
+
             )}
-            <div className="grow pt-2 px-8 pr-1 flex flex-col overflow-y-auto">
-              <pre>{content}</pre>
-            </div>
+            {isEditing ? (
+              <textarea
+                className="grow w-full border border-gray-300 rounded-md p-2 resize-none h-96"
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+              ></textarea>
+            ) : (
+              <pre
+                className="h-96 overflow-y-auto whitespace-pre-wrap break-words p-4"
+              >{editedContent}</pre>
+            )}
           </>
         )}
       </div>
