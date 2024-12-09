@@ -32,6 +32,7 @@ function FileDialog({
       <div className="px-2 flex flex-col gap-y-2.5 text-primary-text">
 
         {/* Display event details in confirm stage */}
+        Skapa ett mapp
         <Input name="name" value={folderName} onChange={handleNameChange} />
         <div className="flex justify-end">
           <Button size="small" variant="text" className="text-[#FF3E4C]" onClick={onClose}>
@@ -45,7 +46,7 @@ function FileDialog({
               setFolderName('');
             }}
           >
-            Redigera
+            Skapa
           </Button>
         </div>
       </div>

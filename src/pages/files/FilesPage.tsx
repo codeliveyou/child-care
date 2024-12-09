@@ -42,14 +42,34 @@ const FilesPage = () => {
   const [currentFileDate, setCurrentFileDate] = useState<string>("");
   const [currentVideoLink, setCurrentVideoLink] = useState<string>("");
   const [currentFileId, setCurrentFileId] = useState<string>("");
+  const [isPdf, setIsPdf] = useState<boolean>(false);
 
   const handleFileItemClick =
     (fileItem: IFileListItem | IFileTileItem) => async () => {
-      // Open dialog based on the file type
+      // Check if the file is a PDF
+      const isPdf = fileItem.file_type.toLowerCase() === "pdf";
+      setIsPdf(isPdf);
+
       if (fileItem.file_type === "mp4") {
         setVideoDialogOpen(true);
         setCurrentVideoLink(`${apiClient.defaults.baseURL}/api/file_system/file/${fileItem.file_id}`);
+      } else if (isPdf) {
+        // Handle PDF files
+        setReportDialogOpen(true);
+        setCurrentFileName(fileItem.filename);
+        setCurrentFileDate(
+          new Date(fileItem.upload_date).toLocaleDateString("sv-SE", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        );
+        setCurrentFileId(fileItem.file_id);
+        // Directly fetch and display the PDF
+        const pdfUrl = `${apiClient.defaults.baseURL}/api/file_system/file-as-pdf/${fileItem.file_id}`;
+        setReportContent(pdfUrl); // Store PDF URL for use in the dialog
       } else {
+        // Handle non-PDF files using the original XML logic
         setReportDialogOpen(true);
         setCurrentFileName(fileItem.filename);
         setCurrentFileDate(
@@ -68,10 +88,10 @@ const FilesPage = () => {
             const contentText =
               xmlDoc.getElementsByTagName("Content")[0]?.textContent || "";
             setReportContent(contentText);
-            setReportDialogOpen(true);
           });
       }
     };
+
 
   const handleNameSubmit = (name: string) => {
     apiClient
@@ -231,6 +251,7 @@ const FilesPage = () => {
         title={currentFileName} // Dynamically set the title
         lastDate={currentFileDate} // Dynamically set the created date
         fileId={currentFileId}
+        isPdf={isPdf}
       />
       <VideoDialog
         open={videoDialogOpen}

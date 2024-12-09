@@ -32,14 +32,19 @@ const DashboardPage = () => {
   const [currentFileName, setCurrentFileName] = useState<string>("");
   const [currentFileDate, setCurrentFileDate] = useState<string>("");
   const [currentFileId, setCurrentFileId] = useState<string>("");
+  const [isPdf, setIsPdf] = useState<boolean>(false);
 
   const handleFileItemClick =
     (fileItem: IFileListItem | IFileTileItem) => async () => {
       // Open dialog based on the file type
-      if (fileItem.file_type === "mp4") setVideoDialogOpen(true);
-      else {
+      const isPdf = fileItem.file_type.toLowerCase() === "pdf";
+      setIsPdf(isPdf);
+      if (fileItem.file_type === "mp4") {
+        setVideoDialogOpen(true);
+        setCurrentVideoLink(`${apiClient.defaults.baseURL}/api/file_system/file/${fileItem.file_id}`);
+      } else if (isPdf) {
+        // Handle PDF files
         setReportDialogOpen(true);
-        setCurrentFileId(fileItem.file_id);
         setCurrentFileName(fileItem.filename);
         setCurrentFileDate(
           new Date(fileItem.upload_date).toLocaleDateString("sv-SE", {
@@ -48,14 +53,30 @@ const DashboardPage = () => {
             day: "numeric",
           })
         );
+        setCurrentFileId(fileItem.file_id);
+        // Directly fetch and display the PDF
+        const pdfUrl = `${apiClient.defaults.baseURL}/api/file_system/file-as-pdf/${fileItem.file_id}`;
+        setReportContent(pdfUrl); // Store PDF URL for use in the dialog
+      } else {
+        // Handle non-PDF files using the original XML logic
+        setReportDialogOpen(true);
+        setCurrentFileName(fileItem.filename);
+        setCurrentFileDate(
+          new Date(fileItem.upload_date).toLocaleDateString("sv-SE", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        );
+        setCurrentFileId(fileItem.file_id);
         apiClient
           .get(`/api/file_system/file-as-xml/${fileItem.file_id}`)
           .then((response: any) => {
             const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(response, 'application/xml');
-            const contentText = xmlDoc.getElementsByTagName('Content')[0]?.textContent || '';
+            const xmlDoc = parser.parseFromString(response, "application/xml");
+            const contentText =
+              xmlDoc.getElementsByTagName("Content")[0]?.textContent || "";
             setReportContent(contentText);
-            setReportDialogOpen(true);
           });
       }
     };
@@ -81,8 +102,6 @@ const DashboardPage = () => {
         setDocList(response);
       })
   }, [])
-
-
 
   useEffect(() => {
     apiClient.get('api/file_system/list-videos').then((response: any) => {
@@ -168,17 +187,17 @@ const DashboardPage = () => {
                     key={index}
                     className="p-2 flex items-center gap-x-4 hover:bg-light-background transition duration-300 cursor-pointer rounded-lg"
                     onClick={() => {
-                      setCurrentVideoLink(`http://167.88.170.239/api/file_system/file/${video.file_id}`);
+                      setCurrentVideoLink(`${apiClient.defaults.baseURL}/api/file_system/file/${video.file_id}`);
                       setVideoDialogOpen(true); // Open video dialog
                     }}
                   >
                     <div className="relative rounded-lg overflow-hidden h-24 w-[200px] shrink-0">
                       <video
-                        src={`http://167.88.170.239/api/file_system/file/${video.file_id}`}
+                        src={`${apiClient.defaults.baseURL}/api/file_system/file/${video.file_id}`}
                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full z-0"
                         preload="metadata"
                       >
-                        <source src={`http://167.88.170.239/api/file_system/file/${video.file_id}#t=0.1`} type="video/mp4" />
+                        <source src={`${apiClient.defaults.baseURL}/api/file_system/file/${video.file_id}#t=0.1`} type="video/mp4" />
                       </video>
                     </div>
                     <div className="flex flex-col gap-y-1">
@@ -227,7 +246,7 @@ const DashboardPage = () => {
       <VideoDialog
         open={videoDialogOpen}
         onClose={() => {
-          setVideoDialogOpen(false); // Close video dialog
+          setVideoDialogOpen(false);
         }}
         source={currentVideoLink}
       />
@@ -240,6 +259,7 @@ const DashboardPage = () => {
         title={currentFileName} // Dynamically set the title
         lastDate={currentFileDate} // Dynamically set the created date
         fileId={currentFileId}
+        isPdf={isPdf}
       />
     </>
   );

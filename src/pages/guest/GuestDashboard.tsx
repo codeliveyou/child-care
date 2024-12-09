@@ -639,6 +639,7 @@ function GuestDashboard() {
         lastDate="2 Mars, 2024"
         content=""
         fileId=""
+        isPdf={false}
       />
     </>
   );
