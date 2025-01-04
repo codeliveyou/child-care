@@ -2,3 +2,4 @@ node_modules/
 a.conf
 dist/
 .env
+public/webviewer

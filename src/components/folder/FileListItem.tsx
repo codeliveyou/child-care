@@ -1,5 +1,5 @@
 // Type definition for supported file formats
-export type FileFormat = "doc" | "pdf" | "mp4" | "xsl";
+export type FileFormat = "doc" | "pdf" | "mp4";
 
 // Interface defining the properties of a file list item
 export interface IFileListItem {
