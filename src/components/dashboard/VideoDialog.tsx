@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
 import Dialog from "../common/Dialog";
 
@@ -7,11 +7,13 @@ import Dialog from "../common/Dialog";
 type VideoDialogProps = {
   open: boolean; // Whether the dialog is open
   source: string;
+  title: string;
+  date: string;
   onClose: () => void; // Function to call when closing the dialog
 };
 
 // VideoDialog component
-const VideoDialog = ({ open, source, onClose }: VideoDialogProps) => {
+const VideoDialog = ({ open, source, title, date, onClose }: VideoDialogProps) => {
   // Reference to the video element
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -21,14 +23,14 @@ const VideoDialog = ({ open, source, onClose }: VideoDialogProps) => {
   const [totalLength, setTotalLength] = useState<number>(1);
   // State to check if the video is currently playing
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  // State for mute/unmute
+  const [isMuted, setIsMuted] = useState<boolean>(false);
 
   // Memoized label for the current playback time
   const timeLabel = useMemo(() => {
     const mins = Math.floor(currentTime / 60);
-    const secs = currentTime % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs
-      .toString()
-      .padStart(2, "0")}`;
+    const secs = Math.floor(currentTime % 60);
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   }, [currentTime]);
 
   // Function to handle play/pause button clicks
@@ -42,47 +44,41 @@ const VideoDialog = ({ open, source, onClose }: VideoDialogProps) => {
     }
   };
 
+  const handleMuteToggle = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted); // Update state based on the muted property
+    }
+  };
+
   // Effect to handle video element setup and event listeners
   useEffect(() => {
     const videoElement = videoRef.current;
-    if (videoElement) {
-      setTotalLength(videoElement.duration);
 
-      // Update state when video starts playing
-      const handlePlay = () => {
-        setIsPlaying(true);
-        setTotalLength(videoElement.duration || 1);
-      };
+    if (videoElement && open) {
+      const handleLoadedMetadata = () => setTotalLength(videoElement.duration || 1);
+      const handleTimeUpdate = () => setCurrentTime(videoElement.currentTime || 0);
+      const handlePlay = () => setIsPlaying(true);
+      const handlePause = () => setIsPlaying(false);
 
-      // Update state when video is paused
-      const handlePause = () => {
-        setIsPlaying(false);
-      };
-
-      // Reset current time when video ends
-      const handleEnded = () => {
-        setCurrentTime(0);
-      };
-
-      // Update current time state as video plays
-      const handleTimeUpdate = () => {
-        setCurrentTime(Math.floor(videoElement.currentTime || 0));
-      };
-
+      videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+      videoElement.addEventListener("timeupdate", handleTimeUpdate);
       videoElement.addEventListener("play", handlePlay);
       videoElement.addEventListener("pause", handlePause);
-      videoElement.addEventListener("ended", handleEnded);
-      videoElement.addEventListener("timeupdate", handleTimeUpdate);
 
-      // Cleanup event listeners on component unmount
+      if (open) {
+        videoElement.load();
+        setCurrentTime(0);
+      }
+
       return () => {
+        videoElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        videoElement.removeEventListener("timeupdate", handleTimeUpdate);
         videoElement.removeEventListener("play", handlePlay);
         videoElement.removeEventListener("pause", handlePause);
-        videoElement.removeEventListener("ended", handleEnded);
-        videoElement.removeEventListener("timeupdate", handleTimeUpdate);
       };
     }
-  }, []); // Empty dependency array to run effect only once
+  }, [open]); // Empty dependency array to run effect only once
 
   return (
     <Dialog
@@ -93,26 +89,20 @@ const VideoDialog = ({ open, source, onClose }: VideoDialogProps) => {
     >
       <div className="relative w-full h-fit">
         {/* Display a placeholder image when video hasn't started */}
-        {/* {currentTime === 0 && (
-          <img
-            src="/images/video/popup.png"
-            className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full"
-          />
-        )} */}
         {/* Video element */}
         <video
           ref={videoRef}
-          // src="https://villagefinds.com/assets/customer/videos/hero.mp4"
           src={source}
           className="w-full"
+          controls={false}
         />
       </div>
       <div className="absolute top-0 py-2 px-4 flex justify-between items-center w-full">
         {/* Title and close button */}
-        <p className="text-xl leading-6 text-white">Noah möte</p>
+        <p className="text-xl leading-6 text-white">{title}</p>
         <div className="flex gap-x-3 items-center">
           <p className="text-sm leading-4 text-light-background font-normal">
-            Igår 11:25
+            {date}
           </p>
           <span
             className="w-6 h-6 flex items-center justify-center text-white text-xl cursor-pointer"
@@ -144,9 +134,36 @@ const VideoDialog = ({ open, source, onClose }: VideoDialogProps) => {
           ></div>
         </div>
         {/* Volume and fullscreen buttons */}
-        <div className="flex py-0.5 px-2 gap-x-2.5">
+
+        {/* <div className="flex py-0.5 px-2 gap-x-2.5">
           <span className="w-6 h-6 flex items-center justify-center cursor-pointer">
             <img src="/icons/video/volumn.svg" alt="Volume icon" />
+          </span>
+          <span className="w-6 h-6 flex items-center justify-center cursor-pointer">
+            <img src="/icons/video/fullscreen.svg" alt="Fullscreen icon" />
+          </span>
+        </div> */}
+        {/* <div className="flex py-0.5 px-2 gap-x-2.5">
+          <span
+            className="w-6 h-6 flex items-center justify-center cursor-pointer"
+            onClick={handleMuteToggle} // Mute/unmute toggle
+          >
+            <img
+              src={isMuted ? "/icons/video/mute.svg" : "/icons/video/volume.svg"}
+              alt="Mute/Unmute icon"
+            />
+          </span>
+          <span className="w-6 h-6 flex items-center justify-center cursor-pointer">
+            <img src="/icons/video/fullscreen.svg" alt="Fullscreen icon" />
+          </span>
+        </div> */}
+        <div className="flex py-0.5 px-2 gap-x-2.5">
+          {/* Mute/Unmute Button */}
+          <span
+            className="w-6 h-6 flex items-center justify-center cursor-pointer text-white text-xl"
+            onClick={handleMuteToggle}
+          >
+            {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
           </span>
           <span className="w-6 h-6 flex items-center justify-center cursor-pointer">
             <img src="/icons/video/fullscreen.svg" alt="Fullscreen icon" />
