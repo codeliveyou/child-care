@@ -11,6 +11,8 @@ import { useAppDispatch } from '../../store';
 import { userLogin } from '../../store/reducers/authReducer';
 import apiClient from '../../libs/api';
 import { setupToken } from '../../libs/token';
+import store from '../../store';
+import { updateCreateUser } from '../../store/reducers/authReducer'
 
 interface LoginUser {
   email: string;
@@ -35,20 +37,16 @@ const Login = () => {
   const handleSubmit = () => {
     apiClient.post('api/users/login', loginUser).then((response: any) => {
       toast.success('Login success.');
-      const { token } = response;
+      const { token, user_name, user_email, account_description, picture_id } = response;
       dispatch(userLogin());
       setupToken(token);
-      // apiClient.get('/api/users/me').then((response: any) => {
-      //   const { user_name, user_email, account_description, picture_id } = response;
-      //   if (user_email) {
-      //     dispatch(userLogin());
-      //     dispatch(updateCreateUser({ name: 'user_name', value: user_name }))
-      //     dispatch(updateCreateUser({ name: 'user_email', value: user_email }))
-      //     dispatch(updateCreateUser({ name: 'account_description', value: account_description }))
-      //     dispatch(updateCreateUser({ name: 'picture_id', value: picture_id }))
-      //     navigate('/')
-      //   }
-      // });
+      if (user_email) {
+        store.dispatch(userLogin());
+        store.dispatch(updateCreateUser({ name: 'user_name', value: user_name }))
+        store.dispatch(updateCreateUser({ name: 'user_email', value: user_email }))
+        store.dispatch(updateCreateUser({ name: 'account_description', value: account_description }))
+        store.dispatch(updateCreateUser({ name: 'picture_id', value: picture_id }))
+      }
       navigate('/'); // Navigates to the home page after successful login
     });
   };
