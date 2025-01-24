@@ -185,6 +185,9 @@ function EventDialog({
                       label="Start Time"
                       value={dayjs(event.startTime)}
                       onChange={handleDateChange("startTime")}
+                      ampm={false}
+                      minutesStep={1}
+                      timeSteps={{ minutes: 1 }}
                     />
 
                     <p className="pl-2 text-disabled-text text-xs">Start tid</p>
@@ -194,6 +197,9 @@ function EventDialog({
                       label="End Time"
                       value={dayjs(event.endTime)}
                       onChange={handleDateChange('endTime')}
+                      ampm={false}
+                      minutesStep={1}
+                      timeSteps={{ minutes: 1 }}
                     />
                     <p className="pl-2 text-disabled-text text-xs">Slut tid</p>
                   </div>

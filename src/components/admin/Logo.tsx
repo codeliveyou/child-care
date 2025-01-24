@@ -21,7 +21,7 @@ function Logo({ className = "" }: LogoProps) {
         className
       )}
     >
-      Childcare
+      Carrotech Childcare
     </div>
   );
 }

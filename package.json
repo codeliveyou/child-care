@@ -11,10 +11,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.5",
-    "@emotion/styled": "^11.13.5",
-    "@mui/material": "^6.1.10",
-    "@mui/x-date-pickers": "^7.23.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.4.1",
+    "@mui/x-date-pickers": "^7.24.1",
     "@pdftron/webviewer": "^11.1.1",
     "@reduxjs/toolkit": "^2.2.7",
     "@syncfusion/ej2-documenteditor": "^27.2.5",
