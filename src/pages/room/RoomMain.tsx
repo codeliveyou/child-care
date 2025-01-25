@@ -86,7 +86,7 @@ const RoomListPage = () => {
     >
       {/* Panel displaying the list of rooms */}
       <div className={classes.roomListPanel}>
-        <p>Rums list</p>
+        <p>Rum listning</p>
         {/* Button to add a new room */}
         <Button size="compress" onClick={handleAddRoomClick}>
           Lägg till rum
@@ -101,11 +101,11 @@ const RoomListPage = () => {
 
       {/* Panel displaying the room history */}
       <div className={classes.historyPanel}>
-        <p>Rums historik lista</p>
+        <p>Rum historik lista</p>
         <div className={classes.historyList}>
           <div className="grow flex flex-col gap-y-2.5 overflow-y-auto">
             {/* Mapping over dummyHistoryData to render each RoomHistoryItem */}
-            {memoRooms.slice((currentPage - 1) * 6,  currentPage * 6).map((history: any, index: number) => (
+            {memoRooms.slice((currentPage - 1) * 6, currentPage * 6).map((history: any, index: number) => (
               <RoomHistoryItem key={index} history={history} />
             ))}
           </div>
